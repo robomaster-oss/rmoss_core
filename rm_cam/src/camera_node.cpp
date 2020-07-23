@@ -65,7 +65,7 @@ void CameraNode::capThread() {
                         std::chrono::milliseconds((int)time_diff_ms));
                 } else if (time_diff_ms > 0) {  // 0-1000ms
                     std::this_thread::sleep_for(std::chrono::microseconds(
-                        (int)(time_diff_ms  * 1000));
+                        (int)(time_diff_ms  * 1000)));
                 } else {
                     // pass
                 }

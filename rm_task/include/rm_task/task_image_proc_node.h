@@ -20,22 +20,23 @@
 
 namespace rm_task {
     //图像处理相关任务基类.如自动瞄准任务，能量机关任务
-    class TaskImageProcNode: public rclcpp::Node
+    class TaskImageProcNode
     {
     public:
-        TaskImageProcNode(std::string node_name);
+        TaskImageProcNode(rclcpp::Node::SharedPtr &nh);
         ~TaskImageProcNode(){}; 
     private:
         void mainTask();
         void imgSubCb(const sensor_msgs::msg::Image::ConstSharedPtr & msg);
     protected:
-        void start(std::string topic_name);
         void setRunFlag(bool flag);
+        rclcpp::Node::SharedPtr this_node() { return nh_;}
     public:
         virtual void taskImageProcess(cv::Mat& img,double img_stamp)=0;
         virtual void taskImageWait(){};
         virtual void taskSleep(){};
     private:
+        rclcpp::Node::SharedPtr nh_;
         //tool
         image_transport::Subscriber img_sub_;//订阅图片数据
         std::thread task_thread_;

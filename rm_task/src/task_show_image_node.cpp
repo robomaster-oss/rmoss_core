@@ -14,11 +14,9 @@ using namespace cv;
 using namespace std;
 using namespace rm_task;
 
-TaskShowImageNode::TaskShowImageNode(std::string node_name,std::string conf_path)
-                        :TaskImageProcNode(node_name){
-    //set conf path
-    conf_path_ = conf_path;
-    start("/top_camera/image_raw");
+TaskShowImageNode::TaskShowImageNode(rclcpp::Node::SharedPtr &nh)
+                        :TaskImageProcNode(nh){
+    nh_ = nh;
     setRunFlag(true);
     cout<<"task show image init"<<endl;
 }
@@ -33,7 +31,6 @@ void TaskShowImageNode::taskImageWait(){
     cout<<"task show image,wait get image"<<endl;
 }
 void TaskShowImageNode::taskSleep(){
-    
     cout<<"task show image,sleep......"<<endl;
 }
 

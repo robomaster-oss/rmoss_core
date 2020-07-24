@@ -36,6 +36,11 @@ ament_target_dependencies(${PROJECT_NAME}
 add_executable(task_show_image nodes/task_show_image.cpp)
 target_link_libraries(task_show_image ${PROJECT_NAME})
 
+# Install launch directories
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
 # Install include directories
 install(DIRECTORY include/
   DESTINATION include

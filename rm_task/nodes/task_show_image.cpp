@@ -15,14 +15,13 @@ using namespace rm_task;
 
 int main(int argc, char * argv[])
 {
+  //creat ros2 node
   rclcpp::init(argc, argv);
-
+  auto node = std::make_shared<rclcpp::Node>("task_show_image");
   // create a node
-  auto node = std::make_shared<TaskShowImageNode>("show_image_node","test_path");
-
+  auto task_node = std::make_shared<TaskShowImageNode>(node);
   // run node until it's exited
   rclcpp::spin(node);
-
   //clean up 
   rclcpp::shutdown();
   return 0;

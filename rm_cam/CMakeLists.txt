@@ -48,6 +48,7 @@ target_link_libraries(task_sim_cam_image ${PROJECT_NAME})
 install(DIRECTORY launch res
   DESTINATION share/${PROJECT_NAME}
 )
+
 # Install include directories
 install(DIRECTORY include/
   DESTINATION include

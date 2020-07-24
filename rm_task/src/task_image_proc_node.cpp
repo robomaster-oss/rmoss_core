@@ -8,31 +8,28 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-
-#include <iostream>
-#include "rm_task/task_image_proc_node.h"
-
 #include <cv_bridge/cv_bridge.h>
+#include "rm_task/task_image_proc_node.h"
 
 using namespace cv;
 using namespace std;
 using namespace rm_task;
 
-TaskImageProcNode::TaskImageProcNode(std::string node_name) 
-                                        : rclcpp::Node(node_name){
+TaskImageProcNode::TaskImageProcNode(rclcpp::Node::SharedPtr &nh){
     //init flag
     run_flag_=false;
     initflag_=false;
     get_img_flag_=false;
-}
-
-void TaskImageProcNode::start(std::string topic_name){
+    nh_ = nh;
+    //
+    std::string topic_name = nh_->declare_parameter("cam_topic_name", "camera/image_raw");
     //create image subscriber
-    img_sub_= image_transport::create_subscription(this, topic_name, std::bind(
+    img_sub_= image_transport::create_subscription(nh_.get(), topic_name, std::bind(
       &TaskImageProcNode::imgSubCb, this, std::placeholders::_1), "raw");
     //task thread
     task_thread_= std::thread(&TaskImageProcNode::mainTask, this);
 }
+
 
 void TaskImageProcNode::imgSubCb(const sensor_msgs::msg::Image::ConstSharedPtr & msg){
     if(run_flag_){

@@ -22,15 +22,14 @@ namespace rm_task {
     //
     class TaskShowImageNode : public TaskImageProcNode{
     public:
-        TaskShowImageNode(std::string node_name,std::string conf_path);
+        TaskShowImageNode(rclcpp::Node::SharedPtr &nh);
         ~TaskShowImageNode(){};
     private:
-        int initTask();
         void taskImageProcess(cv::Mat& img,double img_stamp);
         void taskImageWait();
         void taskSleep();
     private:
-        std::string conf_path_;
+        rclcpp::Node::SharedPtr nh_;
     };
 }
 #endif //RM_TASK_TASK_SHOW_IMAGE_NODE_H

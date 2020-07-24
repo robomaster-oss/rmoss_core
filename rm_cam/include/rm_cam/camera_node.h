@@ -13,8 +13,6 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <image_transport/image_transport.h>
-#include <sensor_msgs/msg/image.hpp>
-#include <std_msgs/msg/header.hpp>
 #include <opencv2/opencv.hpp>
 #include <thread>
 #include <string>
@@ -23,16 +21,17 @@
 
 namespace rm_cam {
     //a general ros node class example for camera.
-   class CameraNode : public rclcpp::Node
-   {
-   public:
-     CameraNode(std::string node_name);
-     ~CameraNode();
-   public:
-     int init(CamDevInterface *cam_intercace,std::string topic_name="camera/image_raw");
-   private:
-     void capThread(); 
+    class CameraNode
+    {
+    public:
+        CameraNode();
+        ~CameraNode();
+    public:
+        int init(rclcpp::Node::SharedPtr &nh,CamDevInterface *cam_intercace);
     private:
+        void capThread(); 
+    private:
+        rclcpp::Node::SharedPtr nh_;
         //tool
         image_transport::Publisher img_pub_;
         //ros::ServiceServer srv_start_, srv_stop_;
@@ -41,7 +40,7 @@ namespace rm_cam {
         bool run_flag_;
         std::thread cam_thread_;
         int64_t fps_period_us_;
-  };
+    };
 }
 
 #endif //RM_CAM_CAMERA_NODE_H

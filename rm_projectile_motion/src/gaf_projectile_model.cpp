@@ -32,11 +32,11 @@ int GafProjectileModel::forward(float given_angle, float given_x, float &h, floa
         t0 = v * sin(given_angle) / GRAVITY;
         x0 = v * cos(given_angle) * t0;
         y0 = GRAVITY * t0 * t0 / 2;
-        if (given_x < x0) {  //只有上升阶段，退化成抛物线模型
+        if (given_x < x0) {  //只有上升阶段,退化成抛物线模型
             t = given_x / (v * cos(given_angle));
             h = v * sin(given_angle) * t - GRAVITY * t * t / 2;
             return 1;
-        } else {           //先上升，后下降
+        } else {           //先上升,后下降
             float t1, x1;  //下降阶段
             x1 = given_x - x0;
             t1 = (exp(bullet_model_kx_ * x1) - 1) /

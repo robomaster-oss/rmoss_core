@@ -17,7 +17,7 @@ namespace rm_cam {
     //the usb camera (UVC) device, based on opencv
     class UsbCamDev : public CamDevInterface{
     public:
-        UsbCamDev(const std::string dev_path = "/dev/video0",const std::string conf_path = "");
+        UsbCamDev(const std::string dev_path);
         ~UsbCamDev();
     public:
         bool open();
@@ -25,13 +25,10 @@ namespace rm_cam {
         int capImg(cv::Mat &img);
         bool setParameter(CamParameter parameter,int value);
         bool getParameter(CamParameter parameter,int& value);
-        bool setParameters(std::string config_path);
-
     private:
         bool setExposure(int value);
     private:
         std::string dev_path_;
-        std::string conf_path_;
         cv::VideoCapture cap_;
         //parameters
         int cam_height_;

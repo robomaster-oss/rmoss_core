@@ -20,15 +20,19 @@ using namespace rm_task;
 
 TaskImageProcNode::TaskImageProcNode(std::string node_name) 
                                         : rclcpp::Node(node_name){
-    std::cout << node_name << std::endl;
     //init flag
     run_flag_=false;
     initflag_=false;
     get_img_flag_=false;
+}
+
+void TaskImageProcNode::start(std::string topic_name){
+    //create image subscriber
+    img_sub_= image_transport::create_subscription(this, topic_name, std::bind(
+      &TaskImageProcNode::imgSubCb, this, std::placeholders::_1), "raw");
     //task thread
     task_thread_= std::thread(&TaskImageProcNode::mainTask, this);
 }
-
 
 void TaskImageProcNode::imgSubCb(const sensor_msgs::msg::Image::ConstSharedPtr & msg){
     if(run_flag_){
@@ -42,16 +46,9 @@ void TaskImageProcNode::imgSubCb(const sensor_msgs::msg::Image::ConstSharedPtr &
 }
 
 void TaskImageProcNode::mainTask() {
-    //init task
-    if(initTask()==0){
-        initflag_ = true;
-    }
-    //create image subscriber
-    img_sub_= image_transport::create_subscription(this, topic_name_, std::bind(
-      &TaskImageProcNode::imgSubCb, this, std::placeholders::_1), "raw");
     //run task 
     while(rclcpp::ok()) {
-        if(initflag_ && run_flag_){
+        if(run_flag_){
             if(get_img_flag_){//表示获取到图片
                 taskImageProcess(img_,img_stamp_);
                 get_img_flag_=false;//处理完，置位
@@ -66,16 +63,8 @@ void TaskImageProcNode::mainTask() {
     }
 }
 
-void TaskImageProcNode::setTopicName(std::string topic_name){
-    topic_name_ = topic_name;
-}
-
 void TaskImageProcNode::setRunFlag(bool flag){
     run_flag_=flag;
-}
-
-bool TaskImageProcNode::isInitOK(){
-    return initflag_;
 }
 
 

@@ -19,7 +19,7 @@ namespace rm_cam {
     //the simulated camera device by using image, based on opencv
     class SimCamImageDev : public CamDevInterface{
     public:
-        SimCamImageDev(const std::string image_path,int fps = 30);
+        SimCamImageDev(const std::string image_path);
         ~SimCamImageDev();
     public:
         bool open();

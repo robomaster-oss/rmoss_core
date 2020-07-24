@@ -37,6 +37,17 @@ ament_target_dependencies(${PROJECT_NAME}
 add_executable(task_usb_cam nodes/task_usb_cam.cpp)
 target_link_libraries(task_usb_cam ${PROJECT_NAME})
 
+add_executable(task_sim_cam_image nodes/task_sim_cam_image.cpp)
+target_link_libraries(task_sim_cam_image ${PROJECT_NAME})
+
+#add_executable(task_sim_cam_video nodes/task_sim_cam_video.cpp)
+#target_link_libraries(task_sim_cam_video ${PROJECT_NAME})
+
+
+# Install launch res directories
+install(DIRECTORY launch res
+  DESTINATION share/${PROJECT_NAME}
+)
 # Install include directories
 install(DIRECTORY include/
   DESTINATION include
@@ -48,7 +59,7 @@ install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION bin
 )
 # Install executables
-install(TARGETS task_usb_cam
+install(TARGETS task_usb_cam task_sim_cam_image
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -8,21 +8,24 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#include "rm_cam/camera_node.h"
 #include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/msg/image.hpp>
+#include <std_msgs/msg/header.hpp>
+#include "rm_cam/camera_node.h"
 
 using namespace cv;
 using namespace std;
 using namespace rm_cam;
 
-CameraNode::CameraNode(std::string node_name): rclcpp::Node(node_name)
+CameraNode::CameraNode()
 {
     run_flag_ = false;  
 }
 
 CameraNode::~CameraNode() {}
 
-int CameraNode::init(CamDevInterface *cam_intercace,std::string topic_name) {
+int CameraNode::init(rclcpp::Node::SharedPtr &nh,CamDevInterface *cam_intercace) {
+    nh_ = nh;
     cam_intercace_ = cam_intercace;
     //set fps
     int fps;
@@ -32,12 +35,13 @@ int CameraNode::init(CamDevInterface *cam_intercace,std::string topic_name) {
         fps_period_us_=1;
     }
     //create image publisher
-    img_pub_ = image_transport::create_publisher(this, topic_name);
+    std::string topic_name = nh_->declare_parameter("cam_topic_name", "camera/image_raw");
+    img_pub_ = image_transport::create_publisher(nh_.get(), topic_name);
     // start cam thread
     cam_thread_ = std::thread(&CameraNode::capThread, this);
     // start the camera
     run_flag_ = true;
-    RCLCPP_INFO(this->get_logger(), "init():cam thread start.");
+    RCLCPP_INFO(nh_->get_logger(), "init():cam thread start.");
     return 0;
 }
 
@@ -70,7 +74,7 @@ void CameraNode::capThread() {
                     // pass
                 }
             } else {
-                RCLCPP_INFO(this->get_logger(), "capThread():cap err!");
+                RCLCPP_INFO(nh_->get_logger(), "capThread():cap err!");
                 std::this_thread::sleep_for(std::chrono::milliseconds(20));
             }
         } else {
@@ -78,6 +82,6 @@ void CameraNode::capThread() {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
     }
-    RCLCPP_INFO(this->get_logger(), "capThread():cap thread exit!");
+    RCLCPP_INFO(nh_->get_logger(), "capThread():cap thread exit!");
 }
 

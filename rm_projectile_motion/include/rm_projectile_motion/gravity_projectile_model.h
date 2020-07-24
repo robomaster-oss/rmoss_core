@@ -15,7 +15,7 @@
 
 namespace rm_projectile_motion {
 
-//考虑重力的弹道重力修正工具。
+//考虑重力的弹道重力修正工具.
 class GravityProjectileModel : public IterationProjectileModel {
    public:
     GravityProjectileModel(){};

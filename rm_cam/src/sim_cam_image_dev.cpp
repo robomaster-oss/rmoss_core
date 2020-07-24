@@ -15,10 +15,10 @@ using namespace rm_cam;
 using namespace cv;
 using namespace std;
 
-SimCamImageDev::SimCamImageDev(const std::string image_path,int fps) { 
+SimCamImageDev::SimCamImageDev(const std::string image_path) { 
     is_open_ = false;
+    cam_fps_ = 30;
     image_path_ = image_path;
-    cam_fps_ = fps;
 }
 
 SimCamImageDev::~SimCamImageDev() {}
@@ -27,7 +27,7 @@ bool SimCamImageDev::open(){
     img_ = imread(image_path_);
     if (img_.empty()) {
         cout << "image sim cam error,please check image path:" << image_path_ << endl;
-        return -1;
+        return false;
     } 
     cam_width_=img_.cols;
     cam_height_=img_.rows;

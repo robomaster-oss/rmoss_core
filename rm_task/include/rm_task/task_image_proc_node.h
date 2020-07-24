@@ -29,11 +29,9 @@ namespace rm_task {
         void mainTask();
         void imgSubCb(const sensor_msgs::msg::Image::ConstSharedPtr & msg);
     protected:
-        void setTopicName(std::string topic_name);
+        void start(std::string topic_name);
         void setRunFlag(bool flag);
-        bool isInitOK();
     public:
-        virtual int initTask()=0;
         virtual void taskImageProcess(cv::Mat& img,double img_stamp)=0;
         virtual void taskImageWait(){};
         virtual void taskSleep(){};
@@ -42,7 +40,6 @@ namespace rm_task {
         image_transport::Subscriber img_sub_;//订阅图片数据
         std::thread task_thread_;
         //data
-        std::string topic_name_;
         cv::Mat imgbuf_, img_; //获取的图片，以及缓存图片
         bool initflag_;
         bool get_img_flag_;//使用flag实现多线程同步机制

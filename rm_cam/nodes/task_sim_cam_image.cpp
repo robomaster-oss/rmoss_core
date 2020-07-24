@@ -15,7 +15,7 @@
  ***************************************************************************/
 #include <rclcpp/rclcpp.hpp>
 #include "rm_cam/camera_node.h"
-#include "rm_cam/usb_cam_dev.h"
+#include "rm_cam/sim_cam_image_dev.h"
 
 using namespace rm_cam;
 
@@ -23,16 +23,14 @@ int main(int argc, char * argv[])
 {
   //creat ros2 node
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<rclcpp::Node>("task_usb_cam");
+  auto node = std::make_shared<rclcpp::Node>("task_sim_cam");
   //declare parameter
-  std::string dev_name = node->declare_parameter("usb_cam_path", "/dev/video0");
-  int wigth = node->declare_parameter("cam_wigth", 640);
-  int height = node->declare_parameter("cam_height", 480);
+  node->declare_parameter("image_path");
+  rclcpp::Parameter str_param = node->get_parameter("image_path");
+  std::string image_name = str_param.as_string();
   int fps = node->declare_parameter("cam_fps", 10);
   //create device
-  auto cam_dev = std::make_shared<UsbCamDev>(dev_name);
-  cam_dev->setParameter(ResolutionWidth, wigth);
-  cam_dev->setParameter(ResolutionHeight, height);
+  auto cam_dev = std::make_shared<SimCamImageDev>(image_name);
   cam_dev->setParameter(Fps, fps);
   cam_dev->open();
   // create a camera node

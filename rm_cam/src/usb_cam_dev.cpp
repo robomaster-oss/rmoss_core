@@ -15,30 +15,14 @@ using namespace cv;
 using namespace std;
 using namespace rm_cam;
 
-UsbCamDev::UsbCamDev(const std::string dev_path ,const std::string conf_path ) {
+UsbCamDev::UsbCamDev(const std::string dev_path) {
     is_open_ = false;
     //
     dev_path_ = dev_path;
-    conf_path_ = conf_path;
     //
     cam_width_ = 640;
     cam_height_ = 480;
     cam_fps_ = 20;
-    // FileStorage f(config_path, FileStorage::READ);
-    // if (!f.isOpened()) {
-    //     cerr << "Failed to open " << config_path << endl;
-    //     return false;
-    // }
-    // //Resolution
-    // f["cam_width"] >> cam_width_;
-    // f["cam_height"] >> cam_height_;
-    // //Fps
-    // f["cam_fps"] >> cam_fps_;
-    // //Exposure
-    // int value;
-    // f["cam_exposure"] >> value;
-    // setExposure(value);
-    // f.release();
 }
 
 UsbCamDev::~UsbCamDev() {}
@@ -95,11 +79,9 @@ bool UsbCamDev::setParameter(CamParameter parameter, int value) {
     switch (parameter) {
         case ResolutionWidth:
             cam_width_=value;
-            cap_.set(cv::CAP_PROP_FRAME_WIDTH, cam_width_);
             return true;
         case ResolutionHeight:
             cam_height_=value;
-            cap_.set(cv::CAP_PROP_FRAME_HEIGHT, cam_height_);
             return true;   
         case Exposure:
             return setExposure(value);

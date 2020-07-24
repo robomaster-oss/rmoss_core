@@ -18,14 +18,11 @@ TaskShowImageNode::TaskShowImageNode(std::string node_name,std::string conf_path
                         :TaskImageProcNode(node_name){
     //set conf path
     conf_path_ = conf_path;
-}
-
-int TaskShowImageNode::initTask(){
-    setTopicName("/top_camera/image_raw");
+    start("/top_camera/image_raw");
     setRunFlag(true);
     cout<<"task show image init"<<endl;
-    return 0;
 }
+
 
 void TaskShowImageNode::taskImageProcess(cv::Mat& img,double img_stamp){
     imshow("show_img",img);

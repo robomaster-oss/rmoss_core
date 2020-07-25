@@ -1,29 +1,18 @@
-/****************************************************************************
- *  Copyright (C) 2019 RoboMasterOS.
+/*******************************************************************************
+ *  Copyright (c) 2020 robomaster-oss, All rights reserved.
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify it 
+ *  under the terms of the MIT License, See the MIT License for more details.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of 
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  You should have received a copy of the MIT License along with this program.
+ *  If not, see <https://opensource.org/licenses/MIT/>.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- *  file  : fixed_packet.cpp
- *  brief : 定长数据包封装
- *  author: gezp
- *  email : 1350824033@qq.com
- *  date  : 2019-1-02
- ***************************************************************************/
+ ******************************************************************************/
+
 #include <cstring>
-#include "robot_base/fixed_packet.h"
+#include "rm_base/fixed_packet.h"
 
-using namespace robot_base;
-
+using namespace rm_base;
 
 FixedPacket::FixedPacket(){
     len_=16;

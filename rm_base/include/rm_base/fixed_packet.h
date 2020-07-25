@@ -1,34 +1,24 @@
-/****************************************************************************
- *  Copyright (C) 2019 RoboMasterOS.
+/*******************************************************************************
+ *  Copyright (c) 2020 robomaster-oss, All rights reserved.
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify it 
+ *  under the terms of the MIT License, See the MIT License for more details.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of 
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  You should have received a copy of the MIT License along with this program.
+ *  If not, see <https://opensource.org/licenses/MIT/>.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- *  file  : fixed_packet.h
- *  brief : 定长数据包封装
- *  author: gezp
- *  email : 1350824033@qq.com
- *  date  : 2019-4-02
- ***************************************************************************/
+ ******************************************************************************/
 
-#ifndef ROBOT_BASE_FIXED_PACKED_H
-#define ROBOT_BASE_FIXED_PACKED_H
+#ifndef RM_BASE_FIXED_PACKED_H
+#define RM_BASE_FIXED_PACKED_H
 
 #include "string.h"
 
 #define FIXED_PACKET_MAX_LEN 64
 
-namespace robot_base{
+namespace rm_base{
 
+//定长数据包封装
 class FixedPacket {
 public:
     FixedPacket();
@@ -70,7 +60,6 @@ int FixedPacket::loadData(T const& data,int index){
 };
 
 /**************自定义解析数据***********************/
-
 template <typename T>
 int FixedPacket::unloadData(T &data,int index){
     int data_len=sizeof(T);
@@ -85,4 +74,4 @@ int FixedPacket::unloadData(T &data,int index){
 }
 
 
-#endif //ROBOT_BASE_FIXED_PACKED_H
+#endif //RM_BASE_FIXED_PACKED_H

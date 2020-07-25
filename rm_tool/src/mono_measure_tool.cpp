@@ -15,17 +15,11 @@ using namespace std;
 using namespace cv;
 using namespace rm_tool; 
 
-int MonoMeasureTool::init(string filename)
+int MonoMeasureTool::init(cv::Mat intrinsic_matrix,cv::Mat distortion_coeffs)
 {
-	FileStorage f(filename, FileStorage::READ);
-        if (!f.isOpened())
-        {
-            cerr << "Failed to open " << filename << endl;
-            return 1;
-        }
-	f["intrinsic_matrix"] >> intrinsic_matrix_;
-	f["distortion_coeffs"] >> distortion_coeffs_;
-	f.release();
+    intrinsic_matrix_ = intrinsic_matrix.clone();
+	distortion_coeffs_ = distortion_coeffs.clone();
+    return 0;
 }
 
 int MonoMeasureTool::solvePnP4Points(vector<Point2f>& points2d,vector<Point3f>& points3d,cv::Point3f &position)

@@ -24,26 +24,26 @@ class MonoMeasureTool {
     cv::Point3f position_;
 
    public:
-    int init(std::string filename);
-    //////////3d点坐标求解（use solve pnp）
-    // points2d: input,一组图像上的2d点（4个点）
-    // points3d: input,一组3d点（世界坐标系），对应图像上的点（4个点）
-	// position: output,世界坐标系原点在相机坐标系下的位置。
-	// return :state
-    int solvePnP4Points(std::vector<cv::Point2f>& points2d,
-                        std::vector<cv::Point3f>& points3d,
-                        cv::Point3f& position);
-	//////3d点坐标求解
-	//p: intput,图像上点坐标
-	//distance: input,已知的真实距离
-	//return :对应的真实3d点坐标 
-    cv::Point3f imagePoint2CameraFrame(cv::Point2f p, double distance);
-	//////视角求解
-	//p: intput,图像上点坐标
-    //pitch: output,视角pitch
-	//yaw: output,视角yaw
-	//return :state 
-    int imagePoint2ViewAngle(cv::Point2f p, float& pitch, float& yaw);
+       int init(cv::Mat intrinsic_matrix, cv::Mat distortion_coeffs);
+       //////////3d点坐标求解（use solve pnp）
+       // points2d: input,一组图像上的2d点（4个点）
+       // points3d: input,一组3d点（世界坐标系），对应图像上的点（4个点）
+       // position: output,世界坐标系原点在相机坐标系下的位置。
+       // return :state
+       int solvePnP4Points(std::vector<cv::Point2f> &points2d,
+                           std::vector<cv::Point3f> &points3d,
+                           cv::Point3f &position);
+       //////3d点坐标求解
+       //p: intput,图像上点坐标
+       //distance: input,已知的真实距离
+       //return :对应的真实3d点坐标
+       cv::Point3f imagePoint2CameraFrame(cv::Point2f p, double distance);
+       //////视角求解
+       //p: intput,图像上点坐标
+       //pitch: output,视角pitch
+       //yaw: output,视角yaw
+       //return :state
+       int imagePoint2ViewAngle(cv::Point2f p, float &pitch, float &yaw);
 };
 
 }  // namespace rm_tool

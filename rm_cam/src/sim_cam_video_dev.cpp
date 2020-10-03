@@ -27,10 +27,10 @@ SimCamVideoDev::~SimCamVideoDev(){
 
 bool SimCamVideoDev::open(){
     if(cap_.open(video_path_)){
-        cam_height_=cap_.get(CV_CAP_PROP_FRAME_HEIGHT);
-        cam_width_=cap_.get(CV_CAP_PROP_FRAME_WIDTH);
-        total_frames_=cap_.get(CV_CAP_PROP_FRAME_COUNT);
-        cam_fps_ = cap_.get(CV_CAP_PROP_FPS);
+        cam_height_=cap_.get(CAP_PROP_FRAME_HEIGHT);
+        cam_width_=cap_.get(CAP_PROP_FRAME_WIDTH);
+        total_frames_=cap_.get(CAP_PROP_FRAME_COUNT);
+        cam_fps_ = cap_.get(CAP_PROP_FPS);
         is_open_=true;
         return true;
     }else{
@@ -49,7 +49,7 @@ int SimCamVideoDev::capImg(cv::Mat &img){
             current_frame++;
             if(current_frame>total_frames_-2){
                 current_frame=0;
-                cap_.set(CV_CAP_PROP_POS_FRAMES,0);
+                cap_.set(CAP_PROP_POS_FRAMES,0);
             }
             return 0;
         }else{

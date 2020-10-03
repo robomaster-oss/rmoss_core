@@ -51,7 +51,7 @@ void DebugTool::draw4Point4f(cv::Mat &img, cv::Point2f *point2fs,int type) {
 void DebugTool::drawConvexHull(cv::Mat &img,std::vector<cv::Point2f> points,int type){
     if(is_debug){
         Scalar color=getColor(type);
-        for( int j = 0; j < points.size()-1; j++ )
+        for( size_t j = 0; j < points.size()-1; j++ )
             line( img, points[j], points[j+1], color, 1, 8 );
         line( img, points[0], points[points.size()-1], color, 1, 8 );
     }

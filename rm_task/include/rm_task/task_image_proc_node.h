@@ -12,7 +12,7 @@
 #define RM_TASK_TASK_IMAGE_PROC_NODE_H
 
 #include <rclcpp/rclcpp.hpp>
-#include <image_transport/image_transport.h>
+#include <image_transport/image_transport.hpp>
 #include <sensor_msgs/msg/image.hpp>
 #include <opencv2/opencv.hpp>
 #include <thread>

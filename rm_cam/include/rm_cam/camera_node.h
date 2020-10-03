@@ -12,7 +12,7 @@
 #define RM_CAM_CAMERA_NODE_H
 
 #include <rclcpp/rclcpp.hpp>
-#include <image_transport/image_transport.h>
+#include <image_transport/image_transport.hpp>
 #include <opencv2/opencv.hpp>
 #include <thread>
 #include <string>

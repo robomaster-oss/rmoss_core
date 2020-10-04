@@ -7,7 +7,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     return LaunchDescription([
         Node(package='rm_cam',
-            node_executable='task_usb_cam',
+            executable='task_usb_cam',
             parameters=[
                 {'cam_topic_name': 'usb_cam/image_raw'},
                 {'usb_cam_path': '/dev/video0'},

@@ -15,7 +15,7 @@
 using namespace rm_base;
 
 FixedPacket::FixedPacket(){
-    len_=16;
+    len_=32;
     recv_buf_len_=0;
     memset(buffer_, 0, len_);
     flag_= false;

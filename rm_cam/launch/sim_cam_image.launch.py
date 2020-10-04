@@ -5,15 +5,14 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    image_name="1.bmp"
-    image_path = os.path.join(get_package_share_directory('rm_cam'), 'res/',image_name)
+    image_path = os.path.join(get_package_share_directory('rm_cam'), "res/test.jpg")
     return LaunchDescription([
         Node(package='rm_cam',
-            node_executable='task_sim_cam_image',
+            executable='task_sim_cam_image',
             parameters=[
                 {'cam_topic_name': 'sim_cam/image_raw'},
                 {'image_path': image_path},
-                {'cam_fps': 20}
+                {'cam_fps': 30}
             ],
             output='screen')
     ])

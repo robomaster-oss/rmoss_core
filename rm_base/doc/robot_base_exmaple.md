@@ -1,31 +1,10 @@
-/*******************************************************************************
- *  Copyright (c) 2020 robomaster-oss, All rights reserved.
- *
- *  This program is free software: you can redistribute it and/or modify it 
- *  under the terms of the MIT License, See the MIT License for more details.
- *
- *  You should have received a copy of the MIT License along with this program.
- *  If not, see <https://opensource.org/licenses/MIT/>.
- *
- ******************************************************************************/
+# robot_base_example详细说明
 
-#include "rm_base/robot_base_example.h"
-#include "rm_base/protocol_example.h"
-#include <thread>
+### 1.数据包发送
 
-using namespace rm_base;
+* 基于ROS Topic开发，当收到gimbal控制Topic时，将topic中的消息转化为FixedPacket，再使用sendPacket()函数发送即可。
 
-RobotBaseExample::RobotBaseExample(rclcpp::Node::SharedPtr &nh, CommDevInterface *trans_dev)
-{
-    //init
-    nh_=nh;
-    packet_tool_ = std::make_shared<FixedPacketTool>(trans_dev);
-    //sub
-    gimbal_ctrl_sub_ = nh_->create_subscription<rm_msgs::msg::GimbalControl>("gimbal_control", 10, std::bind(&RobotBaseExample::gimbalCallback, this, std::placeholders::_1));
-    //task thread
-    mcu_listen_thread_= std::thread(&RobotBaseExample::mcuListenThread, this);
-}
-
+```c++
 void RobotBaseExample::gimbalCallback(const rm_msgs::msg::GimbalControl::SharedPtr msg)
 {
     FixedPacket packet;
@@ -39,6 +18,14 @@ void RobotBaseExample::gimbalCallback(const rm_msgs::msg::GimbalControl::SharedP
     std::this_thread::sleep_for(std::chrono::milliseconds(5));
 }
 
+```
+
+### 2.数据包接收
+
+* 采用轮询接收方式，这里创建了了一个单独的新线程去监听设备，即mcuListenThread()函数。
+* 在while中使用recvPacket()函数进行包接收，然后进行包中的数据处理。
+
+```c++
 void RobotBaseExample::mcuListenThread()
 {
     FixedPacket packet;
@@ -64,3 +51,5 @@ void RobotBaseExample::mcuListenThread()
         }
     }
 }
+```
+

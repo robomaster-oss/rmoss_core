@@ -3,10 +3,10 @@
 <package format="3">
   <!-- TODO: Make this a metapackage, see
        https://github.com/ros2/ros2/issues/408 -->
-  <name>rmoss</name>
+  <name>rmoss_core</name>
   <version>1.0.0</version>
   <description>Meta-package for rmoss core.</description>
-  <maintainer email="1350824033@qq.com">zhenpeng ge</maintainer>
+  <maintainer email="zhenpeng.ge@qq.com">zhenpeng ge</maintainer>
   <license>MIT License</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

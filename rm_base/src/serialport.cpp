@@ -4,14 +4,10 @@
 ///@file:serial_port.cpp
 ///@brief: ubuntu下 通用串口模块源文件
 ///实现串口通信。参考RM2017@uestc代码
-///@vesion 1.0
-///@author: Gezp
-///@email: 1350824033@qq.com
-///@date: 2017.12.15
 ///修订历史：
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "robot_base/serial_port.h"
+#include "rm_base/serialport.h"
 #include <stdio.h>      /*标准输入输出定义*/
 #include <stdlib.h>     /*标准函数库定义*/
 #include <unistd.h>     /*Unix 标准函数定义*/
@@ -110,7 +106,7 @@ int SerialPort::paramSet(int m_speed, int m_flow_ctrl, int m_databits, int m_sto
     }
 
     //设置串口输入波特率和输出波特率
-    for(int i = 0; i < sizeof(speed_arr) / sizeof(int);  i++)
+    for(size_t i = 0; i < sizeof(speed_arr) / sizeof(int);  i++)
     {
         if(m_speed == name_arr[i])
         {
@@ -219,6 +215,7 @@ int SerialPort::paramSet(int m_speed, int m_flow_ctrl, int m_databits, int m_sto
         err = e_activate_t;
     }
     err = e_true_t;
+    return 0;
 }
 
 int SerialPort::Recv(unsigned char *rcv_buf,int data_len)

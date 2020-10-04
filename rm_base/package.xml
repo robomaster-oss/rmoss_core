@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>rm_cam</name>
-  <version>1.0.0</version>
+  <name>rm_base</name>
+  <version>0.1.0</version>
   <description>
-    robomaster camera package,it offers a simple usb camera and simulated camera ros node,
-    and defines a stardard camera interface to help developer create own camera ros node 
+    robomaster base package for communication with embedded system
   </description>
   <maintainer email="zhenpeng.ge@qq.com">zhenpeng ge</maintainer>
   <license>MIT</license>
@@ -13,14 +12,12 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <build_depend>rclcpp</build_depend>
+  <build_depend>rm_msgs</build_depend>
   <build_depend>sensor_msgs</build_depend>
-  <build_depend>image_transport</build_depend>
-  <build_depend>cv_bridge</build_depend>
 
   <exec_depend>rclcpp</exec_depend>
+  <build_depend>rm_msgs</build_depend>
   <exec_depend>sensor_msgs</exec_depend>
-  <exec_depend>image_transport</exec_depend>
-  <exec_depend>cv_bridge</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

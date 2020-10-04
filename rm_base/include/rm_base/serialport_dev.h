@@ -9,21 +9,21 @@
  *
  ******************************************************************************/
 
-#ifndef RM_BASE_TRANS_DEV_SERIALPORT_H
-#define RM_BASE_TRANS_DEV_SERIALPORT_H
+#ifndef RM_BASE_SERIALPORT_DEV_H
+#define RM_BASE_SERIALPORT_DEV_H
 
-#include "rm_base/trans_dev_interface.h"
-#include "rm_base/serial_port.h"
+#include "rm_base/comm_dev_interface.h"
+#include "rm_base/serialport.h"
 
 namespace rm_base{
 
 //串口数据传输设备，符合通用传输接口。（对象适配器设计模式）
-class TransDevSerialPort:public TransDevInterface{
+class SerialPortDev:public CommDevInterface{
     public:
-        TransDevSerialPort(){};
-        ~TransDevSerialPort(){};
+        SerialPortDev(){};
+        ~SerialPortDev(){};
     public:
-        int init(std::string dev_path="/dev/ttyUSB0");
+        bool init(std::string dev_path="/dev/ttyUSB0");
         bool isOpen();
         int dataRecv(unsigned char *recv_buf,int data_len);
         int dataSend(unsigned char *send_buf,int data_len);
@@ -34,4 +34,4 @@ class TransDevSerialPort:public TransDevInterface{
 
 }
 
-#endif //RM_BASE_TRANS_DEV_SERIALPORT_H
+#endif //RM_BASE_SERIALPORT_DEV_H

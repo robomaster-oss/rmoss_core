@@ -8,8 +8,8 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_CAM_CAMERA_NODE_H
-#define RM_CAM_CAMERA_NODE_H
+#ifndef RM_CAM_CAMERA_TASK_H
+#define RM_CAM_CAMERA_TASK_H
 
 #include <rclcpp/rclcpp.hpp>
 #include <image_transport/image_transport.hpp>
@@ -21,13 +21,11 @@
 
 namespace rm_cam {
     //a general ros node class example for camera.
-    class CameraNode
+    class CameraTask
     {
     public:
-        CameraNode();
-        ~CameraNode();
-    public:
-        int init(rclcpp::Node::SharedPtr &nh,CamDevInterface *cam_intercace);
+        CameraTask(rclcpp::Node::SharedPtr &nh,CamDevInterface *cam_intercace);
+        ~CameraTask(){};
     private:
         void capThread(); 
     private:
@@ -43,7 +41,7 @@ namespace rm_cam {
     };
 }
 
-#endif //RM_CAM_CAMERA_NODE_H
+#endif //RM_CAM_CAMERA_TASK_H
 
 
 

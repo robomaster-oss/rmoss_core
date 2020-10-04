@@ -1,13 +1,10 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 ///Copyright(c)      UESTC ROBOMASTER2018      SerialPort Code for Robot
 ///ALL RIGHTS RESERVED
-///@file:serial_port.h
+///@file:serialport.h
 ///@brief: ubuntu 下通用串口模块头文件
 ///实现串口通信。参考RM2017@uestc代码
 ///@vesion 1.0
-///@author: Gezp
-///@email: 1350824033@qq.com
-///@date: 2017.12.8
 ///修订历史：
 /// 12.19: 参考2017RM及网上开源代码
 ///2018.3.9:更改数据帧协议，哨兵为16Byte数据帧。
@@ -17,8 +14,8 @@
 /// （udev固定设备路径，串口发送失败，重连即可）
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __ROBOT_BASE_SERIAL_PORT_H
-#define __ROBOT_BASE_SERIAL_PORT_H
+#ifndef RM_BASE_SERIALPORT_H
+#define RM_BASE_SERIALPORT_H
 
 #include <iostream>
 #include <mutex>
@@ -74,4 +71,4 @@ private:
     std::mutex mut;
 };
 
-#endif //__ROBOT_BASE_SERIAL_PORT_H
+#endif //RM_BASE_SERIALPORT_H

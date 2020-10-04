@@ -8,28 +8,24 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#include "rm_base/trans_dev_serialport.h"
+#include "rm_base/serialport_dev.h"
 
 using namespace rm_base;
 using namespace std;
 
-bool TransDevSerialPort::isOpen(){
+bool SerialPortDev::isOpen(){
     return mMcuSerialPort.isOpen();
 }
 
-int TransDevSerialPort::dataSend(unsigned char *send_buf,int data_len){
+int SerialPortDev::dataSend(unsigned char *send_buf,int data_len){
     return mMcuSerialPort.Send(send_buf,data_len);
 
 }
 
-int TransDevSerialPort::dataRecv(unsigned char *recv_buf,int data_len){
+int SerialPortDev::dataRecv(unsigned char *recv_buf,int data_len){
     return mMcuSerialPort.Recv(recv_buf,data_len);
 }
 
-int TransDevSerialPort::init(std::string devPath){
-    if(mMcuSerialPort.init(devPath)){
-        return 0;
-    }else{
-        return -1;
-    }
+bool SerialPortDev::init(std::string devPath){
+    return mMcuSerialPort.init(devPath);
 }

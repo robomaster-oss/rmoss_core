@@ -8,13 +8,13 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_BASE_TRANS_DEV_INTERFACE_H
-#define RM_BASE_TRANS_DEV_INTERFACE_H
+#ifndef RM_BASE_COMM_DEV_INTERFACE_H
+#define RM_BASE_COMM_DEV_INTERFACE_H
 
 namespace rm_base{
 
-//消息传输设备接口
-class TransDevInterface{
+//communication device interface for data transmission between embedded systems (stm32,c51) and PC
+class CommDevInterface{
 public :
     virtual bool isOpen()=0;
     //return recv len>0,return <0 if error 
@@ -24,4 +24,4 @@ public :
 };
 
 }
-#endif //RM_BASE_TRANS_DEV_INTERFACE_H
+#endif //RM_BASE_COMM_DEV_INTERFACE_H

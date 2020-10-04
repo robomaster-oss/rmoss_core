@@ -15,4 +15,4 @@ float32 current_pitch
 float32 current_yaw
 ######## attacked info
 uint8 is_attcked
-uint8 attacked_armor_id
+uint8 attacked_armor_id 

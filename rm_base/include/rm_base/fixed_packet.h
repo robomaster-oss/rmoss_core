@@ -25,7 +25,7 @@ public:
     ~FixedPacket();
 
 public:
-    int pack();
+    void pack();
     int unPack(unsigned char* recv_buffer,int recv_len);
 
     template <typename T>
@@ -56,8 +56,7 @@ int FixedPacket::loadData(T const& data,int index){
         return 0;
     }
     return 1;
-
-};
+}
 
 /**************自定义解析数据***********************/
 template <typename T>
@@ -68,7 +67,7 @@ int FixedPacket::unloadData(T &data,int index){
         return 0;
     } 
     return 1;
-}; 
+}
    
 
 }

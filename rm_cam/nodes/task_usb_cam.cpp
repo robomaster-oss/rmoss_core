@@ -14,7 +14,7 @@
  *  date  : 2020-7-20
  ***************************************************************************/
 #include <rclcpp/rclcpp.hpp>
-#include "rm_cam/camera_node.h"
+#include "rm_cam/camera_task.h"
 #include "rm_cam/usb_cam_dev.h"
 
 using namespace rm_cam;
@@ -36,8 +36,7 @@ int main(int argc, char * argv[])
   cam_dev->setParameter(Fps, fps);
   cam_dev->open();
   // create a camera node
-  auto cam_node = std::make_shared<CameraNode>();
-  cam_node->init(node,cam_dev.get());
+  auto cam_task = std::make_shared<CameraTask>(node,cam_dev.get());
   // run node until it's exited
   rclcpp::spin(node);
   //clean up 

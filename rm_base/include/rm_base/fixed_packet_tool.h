@@ -13,14 +13,14 @@
 #define RM_BASE_FIXED_PACKET_TOOL_H
 
 #include <string>
-#include "rm_base/trans_dev_interface.h"
+#include "rm_base/comm_dev_interface.h"
 #include "rm_base/fixed_packet.h"
 
 
 namespace rm_base{
 class FixedPacketTool{
     public:
-        FixedPacketTool(TransDevInterface* trans_dev);
+        FixedPacketTool(CommDevInterface* comm_dev);
         ~FixedPacketTool();
     public:
         bool isOpen();
@@ -28,7 +28,7 @@ class FixedPacketTool{
         int recvPacket(FixedPacket &packet);
 
     protected:
-        TransDevInterface* trans_dev_;
+        CommDevInterface* comm_dev_;
         unsigned char recv_buffer_[128];
         FixedPacket packet_recv_;
 

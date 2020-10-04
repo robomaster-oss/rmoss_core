@@ -14,8 +14,8 @@
  *  date  : 2020-7-20
  ***************************************************************************/
 #include <rclcpp/rclcpp.hpp>
-#include "rm_cam/camera_node.h"
-#include "rm_cam/usb_cam_dev.h"
+#include "rm_cam/camera_task.h"
+#include "rm_cam/sim_cam_video_dev.h"
 
 using namespace rm_cam;
 
@@ -25,19 +25,13 @@ int main(int argc, char * argv[])
   rclcpp::init(argc, argv);
   auto node = std::make_shared<rclcpp::Node>("task_usb_cam");
   //declare parameter
-  std::string dev_name = node->declare_parameter("usb_cam_path", "/dev/video0");
-  int wigth = node->declare_parameter("cam_wigth", 640);
-  int height = node->declare_parameter("cam_height", 480);
-  int fps = node->declare_parameter("cam_fps", 10);
+  node->declare_parameter("video_path");
+  std::string video_path = node->get_parameter("video_path").as_string();
   //create device
-  auto cam_dev = std::make_shared<UsbCamDev>(dev_name);
-  cam_dev->setParameter(ResolutionWidth, wigth);
-  cam_dev->setParameter(ResolutionHeight, height);
-  cam_dev->setParameter(Fps, fps);
+  auto cam_dev = std::make_shared<SimCamVideoDev>(video_path);
   cam_dev->open();
   // create a camera node
-  auto cam_node = std::make_shared<CameraNode>();
-  cam_node->init(node,cam_dev.get());
+  auto cam_task = std::make_shared<CameraTask>(node,cam_dev.get());
   // run node until it's exited
   rclcpp::spin(node);
   //clean up 

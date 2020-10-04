@@ -8,35 +8,35 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#define RM_BASE_ROBOT_BASE_EXAMPLE_H
+#ifndef RM_BASE_ROBOT_BASE_EXAMPLE_H
 #define RM_BASE_ROBOT_BASE_EXAMPLE_H
 
 #include <rclcpp/rclcpp.hpp>
+#include <thread>
+#include "rm_base/comm_dev_interface.h"
 #include "rm_base/fixed_packet_tool.h"
-#include "rm_interfaces/msg/GimbalControl.h"
+#include "rm_msgs/msg/gimbal_control.hpp"
 
 namespace rm_base{
 
-class RobotBaseExample : public rclcpp::Node {
+class RobotBaseExample{
     public:
-        RobotBaseExample();
-        ~RobotBaseExample();
+        RobotBaseExample(rclcpp::Node::SharedPtr &nh,CommDevInterface* trans_dev);
+        ~RobotBaseExample(){};
     public:
-        int init(TransDevInterface* trans_dev);
-        void listenThread();
+        void mcuListenThread();
     private:
-        //ros msg topic recieve
-        void gimbalCallback(const robot_msgs::GimbalInfo & info);
+        void publishTask();
+        void gimbalCallback(const rm_msgs::msg::GimbalControl::SharedPtr msg);
     private:
-        ros::NodeHandle nh_;
-        std::thread listen_thread_;
+        rclcpp::Node::SharedPtr nh_;
+        std::thread mcu_listen_thread_;
         //tool
-        FixedPacketTool packet_tool_;
+        std::shared_ptr<FixedPacketTool> packet_tool_;
         //sub
-        ros::Subscriber gimbal_sub_;
-        //
+        rclcpp::Subscription<rm_msgs::msg::GimbalControl>::SharedPtr gimbal_ctrl_sub_;
 };
 
 }
 
-#endif //ROBOT_BASE_ROBOT_BASE_EXAMPLE_H
+#endif //RM_BASE_ROBOT_BASE_EXAMPLE_H

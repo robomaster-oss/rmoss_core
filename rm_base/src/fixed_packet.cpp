@@ -25,7 +25,7 @@ FixedPacket::~FixedPacket(){
 
 }
 
-int FixedPacket::pack(){
+void FixedPacket::pack(){
     buffer_[0]=0xff;//帧头
     buffer_[len_-1]=0x0d;//帧尾
     flag_= true;

@@ -14,22 +14,22 @@
 
 using namespace rm_base;
 
-FixedPacketTool::FixedPacketTool(TransDevInterface* trans_dev) {
-    trans_dev_ = trans_dev;
+FixedPacketTool::FixedPacketTool(CommDevInterface* trans_dev) {
+    comm_dev_ = trans_dev;
 }
 
 FixedPacketTool::~FixedPacketTool() {}
 
 bool FixedPacketTool::isOpen() {
-    if (trans_dev_ == NULL) {
+    if (comm_dev_ == NULL) {
         return false;
     }
-    return trans_dev_->isOpen();
+    return comm_dev_->isOpen();
 }
 
 int FixedPacketTool::sendPacket(FixedPacket packet) {
     if (isOpen()) {
-        if(trans_dev_->dataSend(packet.buffer_, packet.len_)==packet.len_){
+        if(comm_dev_->dataSend(packet.buffer_, packet.len_)==packet.len_){
             return 0;
         }
     }
@@ -42,7 +42,7 @@ int FixedPacketTool::recvPacket(FixedPacket& packet) {
     }
     int ret_len;
     unsigned char tmp_buffer[128];
-    ret_len = trans_dev_->dataRecv(tmp_buffer, packet_recv_.len_);
+    ret_len = comm_dev_->dataRecv(tmp_buffer, packet_recv_.len_);
     if (ret_len > 0) {
         if (packet_recv_.unPack(tmp_buffer, ret_len) == 0) {  // check packet
             packet = packet_recv_;

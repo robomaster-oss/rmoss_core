@@ -11,20 +11,15 @@
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/msg/image.hpp>
 #include <std_msgs/msg/header.hpp>
-#include "rm_cam/camera_node.h"
+#include "rm_cam/camera_task.h"
 
 using namespace cv;
 using namespace std;
 using namespace rm_cam;
 
-CameraNode::CameraNode()
-{
+CameraTask::CameraTask(rclcpp::Node::SharedPtr &nh,CamDevInterface *cam_intercace) {
+    //init
     run_flag_ = false;  
-}
-
-CameraNode::~CameraNode() {}
-
-int CameraNode::init(rclcpp::Node::SharedPtr &nh,CamDevInterface *cam_intercace) {
     nh_ = nh;
     cam_intercace_ = cam_intercace;
     //set fps
@@ -38,14 +33,13 @@ int CameraNode::init(rclcpp::Node::SharedPtr &nh,CamDevInterface *cam_intercace)
     std::string topic_name = nh_->declare_parameter("cam_topic_name", "camera/image_raw");
     img_pub_ = image_transport::create_publisher(nh_.get(), topic_name);
     // start cam thread
-    cam_thread_ = std::thread(&CameraNode::capThread, this);
+    cam_thread_ = std::thread(&CameraTask::capThread, this);
     // start the camera
     run_flag_ = true;
     RCLCPP_INFO(nh_->get_logger(), "init():cam thread start.");
-    return 0;
 }
 
-void CameraNode::capThread() {
+void CameraTask::capThread() {
     cv::Mat img;
     rclcpp::Time cap_start;
     int64_t fps_cap_us;

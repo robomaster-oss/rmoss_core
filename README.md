@@ -2,7 +2,11 @@
 
 ![](rmoss_bg.png)
 
-RoboMasterOSS是一个开源的robomaster机器人开发软件栈，提供了一个快速的，灵活的开发工具，支持算法原型研究和robomaster比赛应用开发。RoboMasterOSS包含多个项目，目标场景包括RoboMaster对抗赛，人工智能挑战赛等RoboMaster相关场景。
+
+**正在开发中，部分功能不稳定。。。**
+
+
+RoboMasterOSS是一个开源的针对于robomaster竞赛机器人开发的软件栈，提供了一个快速的，灵活的开发工具，支持算法原型研究和robomaster比赛应用开发。RoboMasterOSS包含多个项目，目标场景包括RoboMaster对抗赛，人工智能挑战赛等RoboMaster相关场景。
 
 * 更多内容详见[github.io](github.io)
 

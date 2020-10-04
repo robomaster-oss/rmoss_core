@@ -100,4 +100,4 @@ __串口设备:__
 
 - gezp 1350824033@qq.com
 
-robot_base provided under GPL-v3.
+rm_base is provided under MIT.

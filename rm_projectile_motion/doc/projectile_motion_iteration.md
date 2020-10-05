@@ -1,6 +1,6 @@
 # 迭代弹道模型
 
-* 2019.1.3 by zhenpeng ge 1350824033@qq.com
+* 2019.1.3 by gezp zhenpeng.ge@qq.com
 
 ## 一、前言
 

@@ -1,8 +1,8 @@
-# robot_tool模块
+# rm_tool模块
 
 ## 1.简介
 
-robot_tool是RoboMasterOS 中的一个工具包，加快开发速度。主要实现了以下几个功能：
+rm_tool是rmoss_core 中的一个工具包，加快开发速度。主要实现了以下几个功能：
 
 * 提供基于Glog的日志封装
 * 提供时间相关工具封装
@@ -86,6 +86,6 @@ static void drawConvexHull(cv::Mat &img,std::vector<cv::Point2f> points,int type
 ## 4.维护者及开源许可证
 
 * wyx 1418555317@qq.com
-* gezp 1350824033@qq.com　
+* gezp zhenpeng.ge@qq.com　
 
-robot_tool is provided under __GPL-v3.0__
+* rm_tool is provided under MIT

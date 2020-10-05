@@ -8,29 +8,29 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#include "rm_task/task_show_image_node.h"
+#include "rm_task/task_show_image.h"
 
 using namespace cv;
 using namespace std;
 using namespace rm_task;
 
-TaskShowImageNode::TaskShowImageNode(rclcpp::Node::SharedPtr &nh)
-                        :TaskImageProcNode(nh){
+TaskShowImage::TaskShowImage(rclcpp::Node::SharedPtr &nh)
+                        :TaskImageProc(nh){
     nh_ = nh;
     setRunFlag(true);
     cout<<"task show image init"<<endl;
 }
 
 
-void TaskShowImageNode::taskImageProcess(cv::Mat& img,double img_stamp){
+void TaskShowImage::taskImageProcess(cv::Mat& img,double img_stamp){
     imshow("show_img",img);
     waitKey(1);
     cout<<"task show image,get image:"<<img_stamp<<endl;
 }
-void TaskShowImageNode::taskImageWait(){
+void TaskShowImage::taskImageWait(){
     cout<<"task show image,wait get image"<<endl;
 }
-void TaskShowImageNode::taskSleep(){
+void TaskShowImage::taskSleep(){
     cout<<"task show image,sleep......"<<endl;
 }
 

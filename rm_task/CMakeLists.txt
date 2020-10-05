@@ -33,7 +33,7 @@ ament_target_dependencies(${PROJECT_NAME}
 )
 
 #task_show_image example
-add_executable(task_show_image nodes/task_show_image.cpp)
+add_executable(task_show_image nodes/task_show_image_node.cpp)
 target_link_libraries(task_show_image ${PROJECT_NAME})
 
 # Install launch directories

@@ -9,13 +9,13 @@
  *
  ******************************************************************************/
 #include <cv_bridge/cv_bridge.h>
-#include "rm_task/task_image_proc_node.h"
+#include "rm_task/task_image_proc.h"
 
 using namespace cv;
 using namespace std;
 using namespace rm_task;
 
-TaskImageProcNode::TaskImageProcNode(rclcpp::Node::SharedPtr &nh){
+TaskImageProc::TaskImageProc(rclcpp::Node::SharedPtr &nh){
     //init flag
     run_flag_=false;
     initflag_=false;
@@ -25,13 +25,13 @@ TaskImageProcNode::TaskImageProcNode(rclcpp::Node::SharedPtr &nh){
     std::string topic_name = nh_->declare_parameter("cam_topic_name", "camera/image_raw");
     //create image subscriber
     img_sub_= image_transport::create_subscription(nh_.get(), topic_name, std::bind(
-      &TaskImageProcNode::imgSubCb, this, std::placeholders::_1), "raw");
+      &TaskImageProc::imgSubCb, this, std::placeholders::_1), "raw");
     //task thread
-    task_thread_= std::thread(&TaskImageProcNode::mainTask, this);
+    task_thread_= std::thread(&TaskImageProc::mainTask, this);
 }
 
 
-void TaskImageProcNode::imgSubCb(const sensor_msgs::msg::Image::ConstSharedPtr & msg){
+void TaskImageProc::imgSubCb(const sensor_msgs::msg::Image::ConstSharedPtr & msg){
     if(run_flag_){
        imgbuf_=cv_bridge::toCvShare(msg, "bgr8")->image.clone();
        if(!get_img_flag_){
@@ -42,7 +42,7 @@ void TaskImageProcNode::imgSubCb(const sensor_msgs::msg::Image::ConstSharedPtr &
     }
 }
 
-void TaskImageProcNode::mainTask() {
+void TaskImageProc::mainTask() {
     //run task 
     while(rclcpp::ok()) {
         if(run_flag_){
@@ -60,7 +60,7 @@ void TaskImageProcNode::mainTask() {
     }
 }
 
-void TaskImageProcNode::setRunFlag(bool flag){
+void TaskImageProc::setRunFlag(bool flag){
     run_flag_=flag;
 }
 

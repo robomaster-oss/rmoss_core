@@ -29,8 +29,8 @@ ament_target_dependencies(${PROJECT_NAME}
 )
 
 #task_show_image example
-add_executable(robot_base_example_node nodes/robot_base_example_node.cpp)
-target_link_libraries(robot_base_example_node ${PROJECT_NAME})
+add_executable(robot_base_example nodes/robot_base_example_node.cpp)
+target_link_libraries(robot_base_example ${PROJECT_NAME})
 
 # Install include directories
 install(DIRECTORY include/
@@ -43,7 +43,7 @@ install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION bin
 )
 # Install executables
-install(TARGETS robot_base_example_node
+install(TARGETS robot_base_example
   DESTINATION lib/${PROJECT_NAME}
 )
 

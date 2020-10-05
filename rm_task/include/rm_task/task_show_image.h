@@ -8,22 +8,29 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
+
+#ifndef RM_TASK_TASK_SHOW_IMAGE_H
+#define RM_TASK_TASK_SHOW_IMAGE_H
+
 #include <rclcpp/rclcpp.hpp>
-#include "rm_task/task_show_image_node.h"
+#include <opencv2/opencv.hpp>
+#include <string>
+#include "rm_task/task_image_proc.h"
 
-using namespace rm_task;
+namespace rm_task {
 
-int main(int argc, char * argv[])
-{
-  //creat ros2 node
-  rclcpp::init(argc, argv);
-  auto node = std::make_shared<rclcpp::Node>("task_show_image");
-  // create a node
-  auto task_node = std::make_shared<TaskShowImageNode>(node);
-  // run node until it's exited
-  rclcpp::spin(node);
-  //clean up 
-  rclcpp::shutdown();
-  return 0;
+    //
+    class TaskShowImage : public TaskImageProc{
+    public:
+        TaskShowImage(rclcpp::Node::SharedPtr &nh);
+        ~TaskShowImage(){};
+    private:
+        void taskImageProcess(cv::Mat& img,double img_stamp);
+        void taskImageWait();
+        void taskSleep();
+    private:
+        rclcpp::Node::SharedPtr nh_;
+    };
 }
+#endif //RM_TASK_TASK_SHOW_IMAGE_H
 

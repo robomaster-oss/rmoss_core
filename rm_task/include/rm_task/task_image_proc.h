@@ -8,8 +8,8 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_TASK_TASK_IMAGE_PROC_NODE_H
-#define RM_TASK_TASK_IMAGE_PROC_NODE_H
+#ifndef RM_TASK_TASK_IMAGE_PROC_H
+#define RM_TASK_TASK_IMAGE_PROC_H
 
 #include <rclcpp/rclcpp.hpp>
 #include <image_transport/image_transport.hpp>
@@ -20,11 +20,11 @@
 
 namespace rm_task {
     //图像处理相关任务基类.如自动瞄准任务，能量机关任务
-    class TaskImageProcNode
+    class TaskImageProc
     {
     public:
-        TaskImageProcNode(rclcpp::Node::SharedPtr &nh);
-        ~TaskImageProcNode(){}; 
+        TaskImageProc(rclcpp::Node::SharedPtr &nh);
+        ~TaskImageProc(){}; 
     private:
         void mainTask();
         void imgSubCb(const sensor_msgs::msg::Image::ConstSharedPtr & msg);
@@ -49,7 +49,7 @@ namespace rm_task {
     };
 }
 
-#endif //RM_TASK_TASK_IMAGE_PROC_NODE_H
+#endif //RM_TASK_TASK_IMAGE_PROC_H
 
 
 

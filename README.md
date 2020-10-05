@@ -3,7 +3,7 @@
 ![](rmoss_bg.png)
 RoboMasterOSS是一个面向RoboMaster的开源软件栈项目，目的是为RoboMaster机器人软件开发提供了一个快速的，灵活的开发工具，支持算法原型研究和robomaster比赛应用开发。
 
-* 更多内容详见[github.io](github.io)
+* 更多内容详见[https://robomaster-oss.github.io](https://robomaster-oss.github.io)
 
 **正在开发中，部分功能不稳定。。。**
 
@@ -24,6 +24,6 @@ rmoss_core是RoboMasterOSS中的一个基础项目，基于ROS2开发，采用�
 
 ## 2.维护者及开源许可证
 
-- zhenpeng.ge@qq.com
+* gezp zhenpeng.ge@qq.com
 
-rmoss_core is provided under MIT.
+* rmoss_core is provided under MIT.

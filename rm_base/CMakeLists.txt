@@ -13,7 +13,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(rm_msgs REQUIRED)
+find_package(rm_interfaces REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
 include_directories(include)
@@ -24,7 +24,7 @@ add_library(${PROJECT_NAME} ${DIR_SRCS})
 
 ament_target_dependencies(${PROJECT_NAME}
  rclcpp 
- rm_msgs
+ rm_interfaces
  sensor_msgs
 )
 
@@ -53,7 +53,7 @@ ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
 #export dependency
 ament_export_dependencies(rclcpp)
-ament_export_dependencies(rm_msgs)
+ament_export_dependencies(rm_interfaces)
 ament_export_dependencies(sensor_msgs)
 
 if(BUILD_TESTING)

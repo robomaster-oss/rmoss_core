@@ -21,12 +21,12 @@ RobotBaseExample::RobotBaseExample(rclcpp::Node::SharedPtr &nh, CommDevInterface
     nh_=nh;
     packet_tool_ = std::make_shared<FixedPacketTool>(trans_dev);
     //sub
-    gimbal_ctrl_sub_ = nh_->create_subscription<rm_msgs::msg::GimbalControl>("gimbal_control", 10, std::bind(&RobotBaseExample::gimbalCallback, this, std::placeholders::_1));
+    gimbal_ctrl_sub_ = nh_->create_subscription<rm_interfaces::msg::GimbalControl>("gimbal_control", 10, std::bind(&RobotBaseExample::gimbalCallback, this, std::placeholders::_1));
     //task thread
     mcu_listen_thread_= std::thread(&RobotBaseExample::mcuListenThread, this);
 }
 
-void RobotBaseExample::gimbalCallback(const rm_msgs::msg::GimbalControl::SharedPtr msg)
+void RobotBaseExample::gimbalCallback(const rm_interfaces::msg::GimbalControl::SharedPtr msg)
 {
     FixedPacket packet;
     packet.loadData<unsigned char>(protocol_example::Gimbal_Angle_Control, 1);

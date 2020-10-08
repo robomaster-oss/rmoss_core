@@ -15,7 +15,7 @@
 #include <thread>
 #include "rm_base/comm_dev_interface.h"
 #include "rm_base/fixed_packet_tool.h"
-#include "rm_msgs/msg/gimbal_control.hpp"
+#include "rm_interfaces/msg/gimbal_control.hpp"
 
 namespace rm_base{
 
@@ -27,14 +27,14 @@ class RobotBaseExample{
         void mcuListenThread();
     private:
         void publishTask();
-        void gimbalCallback(const rm_msgs::msg::GimbalControl::SharedPtr msg);
+        void gimbalCallback(const rm_interfaces::msg::GimbalControl::SharedPtr msg);
     private:
         rclcpp::Node::SharedPtr nh_;
         std::thread mcu_listen_thread_;
         //tool
         std::shared_ptr<FixedPacketTool> packet_tool_;
         //sub
-        rclcpp::Subscription<rm_msgs::msg::GimbalControl>::SharedPtr gimbal_ctrl_sub_;
+        rclcpp::Subscription<rm_interfaces::msg::GimbalControl>::SharedPtr gimbal_ctrl_sub_;
 };
 
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>rm_msgs</name>
+  <name>rm_interfaces</name>
   <version>1.0.0</version>
-  <description>Contains message and service definitions used by the rmoss.</description>
-  <maintainer email="1350824033@qq.com">zhenpeng ge</maintainer>
+  <description>ROS interfaces (msg,srv,action) definitions used by the rmoss.</description>
+  <maintainer email="zhenpeng.ge@qq.com">zhenpeng ge</maintainer>
   <license>MIT</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
 

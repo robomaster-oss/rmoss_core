@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(rm_msgs)
+project(rm_interfaces)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
@@ -15,7 +15,6 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/GimbalControl.msg"
-  "msg/ChassisControl.msg"
   "msg/ShootControl.msg"
   "msg/StdBotState.msg"
   "srv/SetMode.srv"

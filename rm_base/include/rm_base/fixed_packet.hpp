@@ -9,10 +9,10 @@
  *
  ******************************************************************************/
 
-#ifndef RM_BASE_FIXED_PACKED_H
-#define RM_BASE_FIXED_PACKED_H
+#ifndef RM_BASE_FIXED_PACKED_HPP
+#define RM_BASE_FIXED_PACKED_HPP
 
-#include "string.h"
+#include <string>
 
 #define FIXED_PACKET_MAX_LEN 64
 
@@ -73,4 +73,4 @@ int FixedPacket::unloadData(T &data,int index){
 }
 
 
-#endif //RM_BASE_FIXED_PACKED_H
+#endif //RM_BASE_FIXED_PACKED_HPP

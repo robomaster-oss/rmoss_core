@@ -8,7 +8,7 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#include "rm_tool/time_tool.h"
+#include "rm_tool/time_tool.hpp"
 
 using namespace std;
 using namespace rm_tool;

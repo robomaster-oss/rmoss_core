@@ -8,10 +8,10 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_PROJECTILE_MOTION_ITERATION_PROJECTILE_MODEL_H
-#define RM_PROJECTILE_MOTION_ITERATION_PROJECTILE_MODEL_H
+#ifndef RM_PROJECTILE_MOTION_ITERATION_PROJECTILE_MODEL_HPP
+#define RM_PROJECTILE_MOTION_ITERATION_PROJECTILE_MODEL_HPP
 
-#include "rm_projectile_motion/projectile_model_interface.h"
+#include "rm_projectile_motion/projectile_model_interface.hpp"
 
 namespace rm_projectile_motion {
 
@@ -35,4 +35,4 @@ class IterationProjectileModel : public ProjectileModelInterface {
 
 }  // namespace rm_projectile_motion
 
-#endif  // RM_PROJECTILE_MOTION_ITERATION_PROJECTILE_MODEL_H
+#endif  // RM_PROJECTILE_MOTION_ITERATION_PROJECTILE_MODEL_HPP

@@ -8,7 +8,7 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#include "rm_base/serialport_dev.h"
+#include "rm_base/serialport_dev.hpp"
 
 using namespace rm_base;
 using namespace std;

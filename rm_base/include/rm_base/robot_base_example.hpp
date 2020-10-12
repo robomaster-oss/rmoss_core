@@ -8,13 +8,13 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_BASE_ROBOT_BASE_EXAMPLE_H
-#define RM_BASE_ROBOT_BASE_EXAMPLE_H
+#ifndef RM_BASE_ROBOT_BASE_EXAMPLE_HPP
+#define RM_BASE_ROBOT_BASE_EXAMPLE_HPP
 
-#include <rclcpp/rclcpp.hpp>
 #include <thread>
-#include "rm_base/comm_dev_interface.h"
-#include "rm_base/fixed_packet_tool.h"
+#include <rclcpp/rclcpp.hpp>
+#include "rm_base/comm_dev_interface.hpp"
+#include "rm_base/fixed_packet_tool.hpp"
 #include "rm_interfaces/msg/gimbal_control.hpp"
 
 namespace rm_base{
@@ -39,4 +39,4 @@ class RobotBaseExample{
 
 }
 
-#endif //RM_BASE_ROBOT_BASE_EXAMPLE_H
+#endif //RM_BASE_ROBOT_BASE_EXAMPLE_HPP

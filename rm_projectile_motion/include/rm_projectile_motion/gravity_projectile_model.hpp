@@ -8,10 +8,10 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_PROJECTILE_MOTION_GRAVITY_PROJECTILE_MODEL_H
-#define RM_PROJECTILE_MOTION_GRAVITY_PROJECTILE_MODEL_H
+#ifndef RM_PROJECTILE_MOTION_GRAVITY_PROJECTILE_MODEL_HPP
+#define RM_PROJECTILE_MOTION_GRAVITY_PROJECTILE_MODEL_HPP
 
-#include "rm_projectile_motion/iteration_projectile_model.h"
+#include "rm_projectile_motion/iteration_projectile_model.hpp"
 
 namespace rm_projectile_motion {
 
@@ -31,4 +31,4 @@ class GravityProjectileModel : public IterationProjectileModel {
 
 }  // namespace rm_projectile_motion
 
-#endif  // RM_PROJECTILE_MOTION_GRAVITY_PROJECTILE_MODEL_H
+#endif  // RM_PROJECTILE_MOTION_GRAVITY_PROJECTILE_MODEL_HPP

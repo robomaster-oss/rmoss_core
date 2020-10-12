@@ -9,12 +9,11 @@
  *
  ******************************************************************************/
 
-#ifndef RM_BASE_FIXED_PACKET_TOOL_H
-#define RM_BASE_FIXED_PACKET_TOOL_H
+#ifndef RM_BASE_FIXED_PACKET_TOOL_HPP
+#define RM_BASE_FIXED_PACKET_TOOL_HPP
 
-#include <string>
-#include "rm_base/comm_dev_interface.h"
-#include "rm_base/fixed_packet.h"
+#include "rm_base/comm_dev_interface.hpp"
+#include "rm_base/fixed_packet.hpp"
 
 
 namespace rm_base{
@@ -38,4 +37,4 @@ class FixedPacketTool{
 
 }
 
-#endif //RM_BASE_FIXED_PACKET_TOOL_H
+#endif //RM_BASE_FIXED_PACKET_TOOL_HPP

@@ -8,8 +8,9 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
+
 #include <opencv2/opencv.hpp>
-#include "rm_projectile_motion/projectile_transform_tool.h"
+#include "rm_projectile_motion/projectile_transform_tool.hpp"
 
 using namespace rm_projectile_motion;
 using namespace std;

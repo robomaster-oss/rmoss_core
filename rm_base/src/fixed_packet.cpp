@@ -10,7 +10,7 @@
  ******************************************************************************/
 
 #include <cstring>
-#include "rm_base/fixed_packet.h"
+#include "rm_base/fixed_packet.hpp"
 
 using namespace rm_base;
 

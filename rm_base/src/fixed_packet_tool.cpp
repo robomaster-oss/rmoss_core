@@ -8,7 +8,7 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#include "rm_base/fixed_packet_tool.h"
+#include "rm_base/fixed_packet_tool.hpp"
 #include <iostream>
 #include <thread>
 

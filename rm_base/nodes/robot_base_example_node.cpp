@@ -9,8 +9,8 @@
  *
  ******************************************************************************/
 #include <rclcpp/rclcpp.hpp>
-#include "rm_base/robot_base_example.h"
-#include "rm_base/serialport_dev.h"
+#include "rm_base/robot_base_example.hpp"
+#include "rm_base/serialport_dev.hpp"
 
 using namespace rm_base;
 

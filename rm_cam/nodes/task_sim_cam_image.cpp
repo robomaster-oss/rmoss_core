@@ -6,16 +6,12 @@
  *
  *  You should have received a copy of the MIT License along with this program.
  *  If not, see <https://opensource.org/licenses/MIT/>.
- * 
- *  file  : task_usb_cam.h
- *  brief : usb cam task
- *  author: gezp
- *  email : 1350824033@qq.com
- *  date  : 2020-7-20
- ***************************************************************************/
+ *
+ ******************************************************************************/
+
 #include <rclcpp/rclcpp.hpp>
-#include "rm_cam/camera_task.h"
-#include "rm_cam/sim_cam_image_dev.h"
+#include "rm_cam/camera_task.hpp"
+#include "rm_cam/sim_cam_image_dev.hpp"
 
 using namespace rm_cam;
 

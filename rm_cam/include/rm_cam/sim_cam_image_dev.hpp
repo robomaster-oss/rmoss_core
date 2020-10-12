@@ -8,11 +8,11 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_CAM_SIM_CAM_IMAGE_DEV_H
-#define RM_CAM_SIM_CAM_IMAGE_DEV_H
+#ifndef RM_CAM_SIM_CAM_IMAGE_DEV_HPP
+#define RM_CAM_SIM_CAM_IMAGE_DEV_HPP
 
-#include "rm_cam/cam_dev_interface.h"
 #include <opencv2/opencv.hpp>
+#include "rm_cam/cam_dev_interface.hpp"
 
 
 namespace rm_cam {
@@ -43,7 +43,7 @@ namespace rm_cam {
     };
 }
 
-#endif //RM_CAM_SIM_CAM_IMAGE_DEV_H
+#endif //RM_CAM_SIM_CAM_IMAGE_DEV_HPP
 
 
 

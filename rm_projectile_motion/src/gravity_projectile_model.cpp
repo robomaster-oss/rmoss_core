@@ -9,7 +9,7 @@
  *
  ******************************************************************************/
 #include <cmath>
-#include "rm_projectile_motion/gravity_projectile_model.h"
+#include "rm_projectile_motion/gravity_projectile_model.hpp"
 
 using namespace std;
 using namespace rm_projectile_motion;

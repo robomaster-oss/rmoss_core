@@ -9,8 +9,8 @@
  *
  ******************************************************************************/
 
-#include "rm_base/robot_base_example.h"
-#include "rm_base/protocol_example.h"
+#include "rm_base/robot_base_example.hpp"
+#include "rm_base/protocol_example.hpp"
 #include <thread>
 
 using namespace rm_base;

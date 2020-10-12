@@ -8,8 +8,9 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#include "rm_tool/mono_measure_tool.h"
+
 #include <iostream>
+#include "rm_tool/mono_measure_tool.hpp"
 
 using namespace std;
 using namespace cv;

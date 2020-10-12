@@ -10,8 +10,7 @@
  ******************************************************************************/
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/msg/image.hpp>
-#include <std_msgs/msg/header.hpp>
-#include "rm_cam/camera_task.h"
+#include "rm_cam/camera_task.hpp"
 
 using namespace cv;
 using namespace std;

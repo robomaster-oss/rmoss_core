@@ -9,10 +9,10 @@
  *
  ******************************************************************************/
 
-#ifndef RM_BASE_SERIALPORT_DEV_H
-#define RM_BASE_SERIALPORT_DEV_H
+#ifndef RM_BASE_SERIALPORT_DEV_HPP
+#define RM_BASE_SERIALPORT_DEV_HPP
 
-#include "rm_base/comm_dev_interface.h"
+#include "rm_base/comm_dev_interface.hpp"
 #include "rm_base/serialport.h"
 
 namespace rm_base{
@@ -34,4 +34,4 @@ class SerialPortDev:public CommDevInterface{
 
 }
 
-#endif //RM_BASE_SERIALPORT_DEV_H
+#endif //RM_BASE_SERIALPORT_DEV_HPP

@@ -8,8 +8,8 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_TOOL_MONO_MEASURE_TOOL_H
-#define RM_TOOL_MONO_MEASURE_TOOL_H
+#ifndef RM_TOOL_MONO_MEASURE_TOOL_HPP
+#define RM_TOOL_MONO_MEASURE_TOOL_HPP
 
 #include "opencv2/opencv.hpp"
 
@@ -48,6 +48,6 @@ class MonoMeasureTool {
 
 }  // namespace rm_tool
 
-#endif  // RM_TOOL_MONO_MEASURE_TOOL_H
+#endif  // RM_TOOL_MONO_MEASURE_TOOL_HPP
 
 

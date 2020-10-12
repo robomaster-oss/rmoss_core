@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 import rclpy
 from rclpy.node import Node
 from rm_msgs.msg import GimbalControl

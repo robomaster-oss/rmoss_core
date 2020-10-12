@@ -8,8 +8,9 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#include "rm_cam/sim_cam_image_dev.h"
+
 #include <thread>
+#include "rm_cam/sim_cam_image_dev.hpp"
 
 using namespace rm_cam;
 using namespace cv;

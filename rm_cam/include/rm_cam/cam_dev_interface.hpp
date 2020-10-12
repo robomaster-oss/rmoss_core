@@ -8,8 +8,8 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_CAM_CAM_DEV_INTERFACE_H
-#define RM_CAM_CAM_DEV_INTERFACE_H
+#ifndef RM_CAM_CAM_DEV_INTERFACE_HPP
+#define RM_CAM_CAM_DEV_INTERFACE_HPP
 
 #include <opencv2/opencv.hpp>
 #define UNUSED(expr) do { (void)(expr); } while (0)
@@ -37,7 +37,7 @@ namespace rm_cam {
     };
 }
 
-#endif //RM_CAM_CAM_DEV_INTERFACE_H
+#endif //RM_CAM_CAM_DEV_INTERFACE_HPP
 
 
 

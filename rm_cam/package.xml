@@ -4,7 +4,7 @@
   <name>rm_cam</name>
   <version>1.0.0</version>
   <description>
-    robomaster camera package,it offers a simple usb camera and simulated camera ros node,
+    RoboMaster Camera Package,it offers a simple usb camera and simulated camera ros node,
     and defines a stardard camera interface to help developer create own camera ros node 
   </description>
   <maintainer email="zhenpeng.ge@qq.com">zhenpeng ge</maintainer>

@@ -8,20 +8,15 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_BASE_COMM_DEV_INTERFACE_H
-#define RM_BASE_COMM_DEV_INTERFACE_H
+#ifndef RM_TOOL_COMMON_DEF_HPP
+#define RM_TOOL_COMMON_DEF_HPP
 
-namespace rm_base{
 
-//communication device interface for data transmission between embedded systems (stm32,c51) and PC
-class CommDevInterface{
-public :
-    virtual bool isOpen()=0;
-    //return recv len>0,return <0 if error 
-    virtual int dataRecv(unsigned char *recv_buf,int data_len)=0;
-    //return send len>0,return <0 if error 
-    virtual int dataSend(unsigned char *send_buf,int data_len)=0;
-};
+#define UNUSED(expr) do { (void)(expr); } while (0)
+
+namespace rm_tool {
 
 }
-#endif //RM_BASE_COMM_DEV_INTERFACE_H
+
+#endif //RM_TOOL_COMMON_DEF_HPP
+

@@ -9,8 +9,8 @@
  *
  ******************************************************************************/
 
-#ifndef RM_TOOL_TIME_TOOL_H
-#define RM_TOOL_TIME_TOOL_H
+#ifndef RM_TOOL_TIME_TOOL_HPP
+#define RM_TOOL_TIME_TOOL_HPP
 
 #include <chrono>
 
@@ -49,5 +49,5 @@ public:
 };
 }
 
-#endif //RM_TOOL_TIME_TOOL_H
+#endif //RM_TOOL_TIME_TOOL_HPP
 

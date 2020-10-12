@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.5)
-
 project(rm_projectile_motion)
 
 # Default to C++14
@@ -10,22 +9,20 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+#find package
 find_package(ament_cmake REQUIRED)
-find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
 
+#include
 include_directories(include)
 
-# rm_projectile_motion lib
+#create rm_projectile_motion lib
 AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
 add_library(${PROJECT_NAME} ${DIR_SRCS})
-
 ament_target_dependencies(${PROJECT_NAME}
- rclcpp 
- sensor_msgs
- OpenCV
+    rclcpp 
+    OpenCV
 )
 
 # Install include directories
@@ -34,20 +31,19 @@ install(DIRECTORY include/
 )
 # Install libraries
 install(TARGETS ${PROJECT_NAME}
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-  RUNTIME DESTINATION bin
+    EXPORT ${PROJECT_NAME}
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
 )
 
-#export include
-ament_export_include_directories(include)
-#export libraries
-ament_export_libraries(${PROJECT_NAME})
-#export dependency
+#export rm_projectile_motion lib
+ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp)
-ament_export_dependencies(sensor_msgs)
 ament_export_dependencies(OpenCV)
 
+#test
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()

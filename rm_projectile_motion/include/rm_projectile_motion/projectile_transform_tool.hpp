@@ -8,10 +8,10 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_PROJECTILE_MOTION_PROJECTILE_TRANSFORM_TOOL_H
-#define RM_PROJECTILE_MOTION_PROJECTILE_TRANSFORM_TOOL_H
+#ifndef RM_PROJECTILE_MOTION_PROJECTILE_TRANSFORM_TOOL_HPP
+#define RM_PROJECTILE_MOTION_PROJECTILE_TRANSFORM_TOOL_HPP
 
-#include "rm_projectile_motion/projectile_model_interface.h"
+#include "rm_projectile_motion/projectile_model_interface.hpp"
 #include <opencv2/opencv.hpp>
 
 namespace rm_projectile_motion {
@@ -33,4 +33,4 @@ class ProjectileTransformTool {
 
 }  // namespace rm_projectile_motion
 
-#endif  // RM_PROJECTILE_MOTION_PROJECTILE_TRANSFORM_TOOL_H
+#endif  // RM_PROJECTILE_MOTION_PROJECTILE_TRANSFORM_TOOL_HPP

@@ -8,7 +8,9 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#include "rm_tool/debug_tool.h"
+
+#include "rm_tool/debug_tool.hpp"
+
 using namespace std;
 using namespace cv;
 using namespace rm_tool;

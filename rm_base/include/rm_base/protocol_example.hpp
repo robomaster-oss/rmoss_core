@@ -9,8 +9,8 @@
  *
  ******************************************************************************/
 
-#ifndef RM_BASE_PROCOTOL_EXAMPLE_H
-#define RM_BASE_PROCOTOL_EXAMPLE_H
+#ifndef RM_BASE_PROCOTOL_EXAMPLE_HPP
+#define RM_BASE_PROCOTOL_EXAMPLE_HPP
 
 namespace rm_base{
 namespace protocol_example{
@@ -22,4 +22,4 @@ namespace protocol_example{
 
 }
 
-#endif //RM_BASE_PROCOTOL_EXAMPLE_H
+#endif //RM_BASE_PROCOTOL_EXAMPLE_HPP

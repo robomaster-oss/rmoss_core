@@ -8,38 +8,42 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_CAM_USB_CAM_DEV_H
-#define RM_CAM_USB_CAM_DEV_H
-#include "rm_cam/cam_dev_interface.h"
+#ifndef RM_CAM_SIM_CAM_VIDEO_DEV_HPP
+#define RM_CAM_SIM_CAM_VIDEO_DEV_HPP
+
 #include <opencv2/opencv.hpp>
+#include "rm_cam/cam_dev_interface.hpp"
 
 namespace rm_cam {
-    //the usb camera (UVC) device, based on opencv
-    class UsbCamDev : public CamDevInterface{
+    // simulated camera device by using viedo, based on opencv
+    class SimCamVideoDev : public CamDevInterface{
     public:
-        UsbCamDev(const std::string dev_path);
-        ~UsbCamDev();
+        SimCamVideoDev(const std::string viedo_path);
+        ~SimCamVideoDev();
     public:
         bool open();
         bool isOpened();
         int capImg(cv::Mat &img);
+        
         bool setParameter(CamParameter parameter,int value);
         bool getParameter(CamParameter parameter,int& value);
+
     private:
-        bool setExposure(int value);
-    private:
-        std::string dev_path_;
+        std::string video_path_;
         cv::VideoCapture cap_;
-        //parameters
-        int cam_height_;
+        int total_frames_;
+        int current_frame;
+        //para
+        float cam_fps_;
+        //resolution
         int cam_width_;
-        int cam_fps_;
+        int cam_height_;
         //flag
         bool is_open_;
     };
 }
 
-#endif //RM_CAM_USB_CAM_DEV_H
+#endif //RM_CAM_SIM_CAM_VIDEO_DEV_HPP
 
 
 

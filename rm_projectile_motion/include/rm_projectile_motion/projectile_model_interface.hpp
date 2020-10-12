@@ -8,8 +8,8 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_PROJECTILE_MOTION_PROJECTILE_MODEL_INTERFACE_H
-#define RM_PROJECTILE_MOTION_PROJECTILE_MODEL_INTERFACE_H
+#ifndef RM_PROJECTILE_MOTION_PROJECTILE_MODEL_INTERFACE_HPP
+#define RM_PROJECTILE_MOTION_PROJECTILE_MODEL_INTERFACE_HPP
 
 namespace rm_projectile_motion {
 
@@ -22,4 +22,4 @@ class ProjectileModelInterface {
 
 }  // namespace rm_projectile_motion
 
-#endif  // RM_PROJECTILE_MOTION_PROJECTILE_MODEL_INTERFACE_H
+#endif  // RM_PROJECTILE_MOTION_PROJECTILE_MODEL_INTERFACE_HPP

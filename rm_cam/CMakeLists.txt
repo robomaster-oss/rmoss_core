@@ -17,9 +17,9 @@ find_package(image_transport REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(OpenCV REQUIRED)
 
-#include
+# Include
 include_directories(include)
-#create rm_cam lib
+# Create rm_cam lib
 AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
 add_library(${PROJECT_NAME} ${DIR_SRCS})
 ament_target_dependencies(${PROJECT_NAME}
@@ -30,7 +30,7 @@ ament_target_dependencies(${PROJECT_NAME}
     OpenCV
 )
 
-#create nodes
+# Create executable nodes
 add_executable(task_usb_cam nodes/task_usb_cam.cpp)
 target_link_libraries(task_usb_cam ${PROJECT_NAME})
 

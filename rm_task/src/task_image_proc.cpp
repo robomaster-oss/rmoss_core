@@ -9,7 +9,7 @@
  *
  ******************************************************************************/
 #include <cv_bridge/cv_bridge.h>
-#include "rm_task/task_image_proc.h"
+#include "rm_task/task_image_proc.hpp"
 
 using namespace cv;
 using namespace std;

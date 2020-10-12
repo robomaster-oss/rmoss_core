@@ -9,7 +9,7 @@
  *
  ******************************************************************************/
 #include <rclcpp/rclcpp.hpp>
-#include "rm_task/task_show_image.h"
+#include "rm_task/task_show_image.hpp"
 
 using namespace rm_task;
 

@@ -8,7 +8,7 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#include "rm_task/task_show_image.h"
+#include "rm_task/task_show_image.hpp"
 
 using namespace cv;
 using namespace std;

@@ -8,8 +8,8 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_TASK_TASK_IMAGE_PROC_H
-#define RM_TASK_TASK_IMAGE_PROC_H
+#ifndef RM_TASK_TASK_IMAGE_PROC_HPP
+#define RM_TASK_TASK_IMAGE_PROC_HPP
 
 #include <rclcpp/rclcpp.hpp>
 #include <image_transport/image_transport.hpp>
@@ -49,7 +49,7 @@ namespace rm_task {
     };
 }
 
-#endif //RM_TASK_TASK_IMAGE_PROC_H
+#endif //RM_TASK_TASK_IMAGE_PROC_HPP
 
 
 

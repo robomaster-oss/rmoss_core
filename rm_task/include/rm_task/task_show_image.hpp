@@ -9,13 +9,13 @@
  *
  ******************************************************************************/
 
-#ifndef RM_TASK_TASK_SHOW_IMAGE_H
-#define RM_TASK_TASK_SHOW_IMAGE_H
+#ifndef RM_TASK_TASK_SHOW_IMAGE_HPP
+#define RM_TASK_TASK_SHOW_IMAGE_HPP
 
+#include <string>
 #include <rclcpp/rclcpp.hpp>
 #include <opencv2/opencv.hpp>
-#include <string>
-#include "rm_task/task_image_proc.h"
+#include "rm_task/task_image_proc.hpp"
 
 namespace rm_task {
 
@@ -32,5 +32,5 @@ namespace rm_task {
         rclcpp::Node::SharedPtr nh_;
     };
 }
-#endif //RM_TASK_TASK_SHOW_IMAGE_H
+#endif //RM_TASK_TASK_SHOW_IMAGE_HPP
 

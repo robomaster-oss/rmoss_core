@@ -18,13 +18,13 @@ namespace rm_tool {
 //基于单目视觉位置测量。
 class MonoMeasureTool {
    private:
-    cv::Mat intrinsic_matrix_;   //相机内参
-    cv::Mat distortion_coeffs_;  //相机外参
+    cv::Mat camera_intrinsic_;   //相机内参3*3
+    cv::Mat camera_distortion_;  //相机畸变参数1*5
     //测量结果
     cv::Point3f position_;
 
    public:
-       int init(cv::Mat intrinsic_matrix, cv::Mat distortion_coeffs);
+       int init(std::vector<double> camera_intrinsic,std::vector<double> camera_distortion);
        //////////3d点坐标求解（use solve pnp）
        // points2d: input,一组图像上的2d点（4个点）
        // points3d: input,一组3d点（世界坐标系），对应图像上的点（4个点）

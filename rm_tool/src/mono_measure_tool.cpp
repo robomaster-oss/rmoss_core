@@ -16,10 +16,16 @@ using namespace std;
 using namespace cv;
 using namespace rm_tool; 
 
-int MonoMeasureTool::init(cv::Mat intrinsic_matrix,cv::Mat distortion_coeffs)
+int MonoMeasureTool::init(std::vector<double> camera_intrinsic,std::vector<double> camera_distortion)
 {
-    intrinsic_matrix_ = intrinsic_matrix.clone();
-	distortion_coeffs_ = distortion_coeffs.clone();
+    //init camera_intrinsic and camera_distortion
+    cv::Mat camera_intrinsic_mat(camera_intrinsic,true);
+    camera_intrinsic_mat=camera_intrinsic_mat.reshape(0,3);
+    camera_intrinsic_ = camera_intrinsic_mat.clone();
+    //    
+	cv::Mat camera_distortion_mat(camera_distortion,true);
+    camera_distortion_mat=camera_distortion_mat.reshape(0,1);
+    camera_distortion_ = camera_distortion_mat.clone();
     return 0;
 }
 
@@ -31,7 +37,7 @@ int MonoMeasureTool::solvePnP4Points(vector<Point2f>& points2d,vector<Point3f>& 
 	Mat rot = Mat::eye(3, 3, CV_64FC1);
 	Mat trans = Mat::zeros(3, 1, CV_64FC1);
 	Mat r; //旋转向量
-	solvePnP(points3d,points2d,intrinsic_matrix_,distortion_coeffs_,r,trans);
+	solvePnP(points3d,points2d,camera_intrinsic_,camera_distortion_,r,trans);
 	position = Point3f(trans);
         return 0;
         
@@ -49,10 +55,10 @@ cv::Point3f MonoMeasureTool::imagePoint2CameraFrame(cv::Point2f p, double distan
     double u0;
     double v0;
  
-    fx = intrinsic_matrix_.ptr<double>(0)[0];
-    u0 = intrinsic_matrix_.ptr<double>(0)[2];
-    fy = intrinsic_matrix_.ptr<double>(1)[1];
-    v0 = intrinsic_matrix_.ptr<double>(1)[2];
+    fx = camera_intrinsic_.ptr<double>(0)[0];
+    u0 = camera_intrinsic_.ptr<double>(0)[2];
+    fy = camera_intrinsic_.ptr<double>(1)[1];
+    v0 = camera_intrinsic_.ptr<double>(1)[2];
     double zc = distance;
     double xc = (p.x - u0)*distance / fx;
     double yc = (p.y - v0)*distance / fy;
@@ -67,10 +73,10 @@ int MonoMeasureTool::imagePoint2ViewAngle(cv::Point2f p,float& pitch,float& yaw)
     double u0;
     double v0;
  
-    fx = intrinsic_matrix_.ptr<double>(0)[0];
-    u0 = intrinsic_matrix_.ptr<double>(0)[2];
-    fy = intrinsic_matrix_.ptr<double>(1)[1];
-    v0 = intrinsic_matrix_.ptr<double>(1)[2];
+    fx = camera_intrinsic_.ptr<double>(0)[0];
+    u0 = camera_intrinsic_.ptr<double>(0)[2];
+    fy = camera_intrinsic_.ptr<double>(1)[1];
+    v0 = camera_intrinsic_.ptr<double>(1)[2];
 
     pitch=atan2((p.y - v0),fy);
     yaw=atan2((p.x - u0),fx);

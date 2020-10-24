@@ -17,7 +17,7 @@ using namespace rm_task;
 TaskShowImage::TaskShowImage(rclcpp::Node::SharedPtr &nh)
                         :TaskImageProc(nh){
     nh_ = nh;
-    setRunFlag(true);
+    startTask();
     cout<<"task show image init"<<endl;
 }
 

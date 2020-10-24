@@ -60,8 +60,13 @@ void TaskImageProc::mainTask() {
     }
 }
 
-void TaskImageProc::setRunFlag(bool flag){
-    run_flag_=flag;
+
+void TaskImageProc::startTask(){
+    run_flag_=true;
+}
+
+void TaskImageProc::stopTask(){
+    run_flag_=false;
 }
 
 

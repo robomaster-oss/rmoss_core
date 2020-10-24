@@ -25,16 +25,16 @@ namespace rm_task {
     public:
         TaskImageProc(rclcpp::Node::SharedPtr &nh);
         ~TaskImageProc(){}; 
-    private:
-        void mainTask();
-        void imgSubCb(const sensor_msgs::msg::Image::ConstSharedPtr & msg);
-    protected:
-        void setRunFlag(bool flag);
-        rclcpp::Node::SharedPtr this_node() { return nh_;}
+
     public:
         virtual void taskImageProcess(cv::Mat& img,double img_stamp)=0;
         virtual void taskImageWait(){};
         virtual void taskSleep(){};
+        void startTask();
+        void stopTask();
+    private:
+        void mainTask();
+        void imgSubCb(const sensor_msgs::msg::Image::ConstSharedPtr & msg);
     private:
         rclcpp::Node::SharedPtr nh_;
         //tool

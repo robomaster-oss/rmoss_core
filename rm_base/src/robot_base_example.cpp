@@ -31,8 +31,8 @@ void RobotBaseExample::gimbalCallback(const rm_interfaces::msg::GimbalControl::S
     FixedPacket packet;
     packet.loadData<unsigned char>(protocol_example::Gimbal_Angle_Control, 1);
     packet.loadData<unsigned char>(0x00, 2);
-    packet.loadData<float>(msg->pitch, 3);
-    packet.loadData<float>(msg->yaw, 7);
+    packet.loadData<float>(msg->position.pitch, 3);
+    packet.loadData<float>(msg->position.yaw, 7);
     packet.pack();
     packet_tool_->sendPacket(packet);
     //delay for data send.

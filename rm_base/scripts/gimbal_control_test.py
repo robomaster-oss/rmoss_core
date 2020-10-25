@@ -1,25 +1,29 @@
 #!/usr/bin/python3
-import rclpy
-from rclpy.node import Node
-from rm_msgs.msg import GimbalControl
+import sys
 
-                        
-def main(args=None):
-    rclpy.init(args=args)
-    node = Node("gimbal_control_test_node")
+import rclpy
+from rm_interfaces.msg import GimbalControl
+
+def getGimbalContolMsg(pitch,yaw):
+    control_info = GimbalControl()
+    control_info.position.yaw=yaw
+    control_info.position.pitch=pitch
+    return control_info
+
+def main():
+    rclpy.init()
+    node = rclpy.create_node('gimbal_control_test')
     pub = node.create_publisher(GimbalControl, 'gimbal_control', 10)
-    info=GimbalControl()
     while True:
         print("\n[absolute mode],please intput tagret angle (float) ")
         try:
-            info.pitch = float(input("pitch_angle: "))
-            info.yaw = float(input("yaw_angle: "))
+            pitch = float(input("pitch_angle: "))
+            yaw = float(input("yaw_angle: "))
         except:
             break
+        info=getGimbalContolMsg(pitch,yaw)
         pub.publish(info)
         print("send--------------------------------\n")
-    node.destroy_node()
-    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

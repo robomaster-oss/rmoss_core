@@ -31,7 +31,7 @@ node文件:
 
 ## 3.快速使用
 
-#### 3.1 usb相机：
+### 3.1 usb相机：
 
 launch方式运行：
 
@@ -51,7 +51,7 @@ ros2 launch rm_cam usb_cam.launch.py  #使用默认/dev/video0
             ],
 ```
 
-#### 3.2 基于图片的虚拟相机：
+### 3.2 基于图片的虚拟相机：
 
 launch方式运行：
 
@@ -69,7 +69,7 @@ ros2 launch rm_cam virtual_image_cam.launch.py  #使用默认图片res/test.png
             ]
 ```
 
-#### 3.3 基于视频的虚拟相机
+### 3.3 基于视频的虚拟相机
 
 ```bash
 ros2 run rm_cam virtual_video_cam --ros-args -p "cam_topic_name:=virtual_cam/image_raw" -p "image_path:=/home/ubuntu/test.avi"
@@ -79,7 +79,7 @@ ros2 run rm_cam virtual_video_cam --ros-args -p "cam_topic_name:=virtual_cam/ima
 
 ## 4.二次开发
 
-#### 4.1 cam_dev_interface接口
+### 4.1 cam_dev_interface接口
 
 * 整个相机模块通过cam_dev_interface接口，该接口定义了设备规范，实现了模块的可扩展性
 
@@ -114,7 +114,7 @@ AutoWhiteBalance;//自动白平衡，1代表自动白平衡设置，0代表手�
 
 - 不同相机值参数的取值范围不同，需要根据具体相机型号进行参数设置，仅支持整型设置。
 
-#### 4.2  整体结构模型
+### 4.2  整体结构模型
 
 以task_usb_cam为例，模块包含两个组件，usb_cam_dev和camera_task，采用接口设计，定义了相机设备接口（cam_dev_interface），通过接口连接两个组件：
 

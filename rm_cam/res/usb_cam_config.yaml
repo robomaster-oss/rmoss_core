@@ -1,10 +1,8 @@
-%YAML:1.0
-#cam topic name
-cam_topic_name: "front_camera"
-#cam_resolution
-cam_width: 640
-cam_height: 480
-#cam_parameter
-cam_fps: 20
-#video_path
-usb_cam_path : "/dev/video0"
+usb_cam:
+    ros__parameters:
+        cam_topic_name: "front_camera" 
+        usb_cam_path : "/dev/video0"
+        cam_width: 640
+        cam_height: 480
+        cam_fps: 20
+

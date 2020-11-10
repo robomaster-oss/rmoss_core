@@ -31,20 +31,14 @@ ament_target_dependencies(${PROJECT_NAME}
 )
 
 # Create executable nodes
-add_executable(task_usb_cam nodes/task_usb_cam.cpp)
-target_link_libraries(task_usb_cam ${PROJECT_NAME})
+add_executable(usb_cam nodes/usb_cam_node.cpp)
+target_link_libraries(usb_cam ${PROJECT_NAME})
 
-add_executable(task_sim_cam_image nodes/task_sim_cam_image.cpp)
-target_link_libraries(task_sim_cam_image ${PROJECT_NAME})
+add_executable(virtual_image_cam nodes/virtual_image_cam_node.cpp)
+target_link_libraries(virtual_image_cam ${PROJECT_NAME})
 
-add_executable(task_sim_cam_video nodes/task_sim_cam_video.cpp)
-target_link_libraries(task_sim_cam_video ${PROJECT_NAME})
-
-
-# Install launch res directories
-install(DIRECTORY launch res
-  DESTINATION share/${PROJECT_NAME}
-)
+add_executable(virtual_video_cam nodes/virtual_video_cam_node.cpp)
+target_link_libraries(virtual_video_cam ${PROJECT_NAME})
 
 # Install include directories
 install(DIRECTORY include/
@@ -56,25 +50,31 @@ install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
-    INCLUDES DESTINATION include
 )
+
 # Install executable nodes
-install(TARGETS task_usb_cam task_sim_cam_image task_sim_cam_video
+install(TARGETS usb_cam virtual_image_cam virtual_video_cam
   DESTINATION lib/${PROJECT_NAME}
 )
 
-#export rm_cam dependency
-ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_export_dependencies(rclcpp)
-ament_export_dependencies(sensor_msgs)
-ament_export_dependencies(image_transport)
-ament_export_dependencies(cv_bridge)
-ament_export_dependencies(OpenCV)
+# Install launch res directories
+install(DIRECTORY launch res
+  DESTINATION share/${PROJECT_NAME}
+)
 
 #test
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+# specific order: dependents before dependencies
+ament_export_include_directories(include)
+ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(rclcpp)
+ament_export_dependencies(sensor_msgs) 
+ament_export_dependencies(image_transport) 
+ament_export_dependencies(cv_bridge) 
+ament_export_dependencies(OpenCV)   
 
 ament_package()

@@ -91,7 +91,6 @@ bool UsbCamDev::setParameter(CamParameter parameter, int value) {
             return true; 
         default:
             return false;
-
     }
 }
 
@@ -115,8 +114,7 @@ bool UsbCamDev::getParameter(CamParameter parameter, int& value) {
 
 
 
-bool UsbCamDev::setExposure(int value){
+bool UsbCamDev::setExposure(int /*value*/){
     //TODO:setting of exposure isn't supported in OpenCV
-    UNUSED(value);
     return false;
 }

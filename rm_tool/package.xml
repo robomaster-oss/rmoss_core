@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>rm_tool</name>
-  <version>0.1.0</version>
+  <version>0.9.0</version>
   <description>
     RoboMaster general tool package,include time tool,debug tool, image tool,etc.
   </description>
@@ -12,10 +12,10 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <build_depend>rclcpp</build_depend>
-  <build_depend>OpenCV</build_depend>
+  <build_depend>libopencv-dev</build_depend>
 
   <exec_depend>rclcpp</exec_depend>
-  <exec_depend>OpenCV</exec_depend>
+  <exec_depend>libopencv-dev</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

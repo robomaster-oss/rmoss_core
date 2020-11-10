@@ -4,17 +4,19 @@
   <!-- TODO: Make this a metapackage, see
        https://github.com/ros2/ros2/issues/408 -->
   <name>rmoss_core</name>
-  <version>1.0.0</version>
-  <description>Meta-package for rmoss core.</description>
+  <version>0.9.0</version>
+  <description>Meta-package for rmoss_core.</description>
   <maintainer email="zhenpeng.ge@qq.com">zhenpeng ge</maintainer>
   <license>MIT License</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <exec_depend>rm_base</exec_depend>
+  <exec_depend>rm_cam</exec_depend>
+  <exec_depend>rm_interfaces</exec_depend>
+  <exec_depend>rm_projectile_motion</exec_depend>
   <exec_depend>rm_task</exec_depend>
-
-  <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
+  <exec_depend>rm_tool</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

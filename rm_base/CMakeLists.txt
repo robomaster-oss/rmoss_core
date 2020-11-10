@@ -9,16 +9,16 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-#find package
+# Find package
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rm_interfaces REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
-#include
+# Include
 include_directories(include)
 
-#create rm_base lib
+# Create rm_base lib
 AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
 add_library(${PROJECT_NAME} ${DIR_SRCS})
 ament_target_dependencies(${PROJECT_NAME}
@@ -26,7 +26,7 @@ ament_target_dependencies(${PROJECT_NAME}
     rm_interfaces
     geometry_msgs
 )
-#create robot_base_example node
+# Create robot_base_example node
 add_executable(robot_base_example nodes/robot_base_example_node.cpp)
 target_link_libraries(robot_base_example ${PROJECT_NAME})
 
@@ -52,13 +52,13 @@ install(PROGRAMS
         scripts/gimbal_control_test.py 
     DESTINATION lib/${PROJECT_NAME})
 
-#export rm_base lib
+# Export rm_base lib
 ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp)
 ament_export_dependencies(rm_interfaces)
 ament_export_dependencies(geometry_msgs)
 
-#test
+# Test
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()

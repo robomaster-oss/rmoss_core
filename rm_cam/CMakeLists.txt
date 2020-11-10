@@ -50,6 +50,7 @@ install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
 )
 
 # Install executable nodes
@@ -69,7 +70,6 @@ if(BUILD_TESTING)
 endif()
 
 # specific order: dependents before dependencies
-ament_export_include_directories(include)
 ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp)
 ament_export_dependencies(sensor_msgs) 

@@ -35,11 +35,6 @@ ament_target_dependencies(${PROJECT_NAME}
 add_executable(task_show_image nodes/task_show_image_node.cpp)
 target_link_libraries(task_show_image ${PROJECT_NAME})
 
-# Install launch directories
-install(DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME}
-)
-
 # Install include directories
 install(DIRECTORY include/
   DESTINATION include
@@ -57,7 +52,12 @@ install(TARGETS task_show_image
   DESTINATION lib/${PROJECT_NAME}
 )
 
-#export rm_task dependency
+# Install launch directories
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
+# Export rm_task dependency
 ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp)
 ament_export_dependencies(sensor_msgs)
@@ -65,7 +65,7 @@ ament_export_dependencies(image_transport)
 ament_export_dependencies(cv_bridge)
 ament_export_dependencies(OpenCV)
 
-#test
+# Test
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()

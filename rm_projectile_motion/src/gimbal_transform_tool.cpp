@@ -10,18 +10,19 @@
  ******************************************************************************/
 
 #include <opencv2/opencv.hpp>
-#include "rm_projectile_motion/projectile_transform_tool.hpp"
+#include "rm_projectile_motion/gimbal_transform_tool.hpp"
 
 using namespace rm_projectile_motion;
 using namespace std;
 
 
-void ProjectileTransformTool::setModel(ProjectileModelInterface *model){
+void GimbalTransformTool::setProjectileModel(std::shared_ptr<ProjectileModelInterface> model){
     model_ = model;
 }
 
-int ProjectileTransformTool::transform(cv::Point3f position, float &pitch, float &yaw){
-    if(model_==NULL){
+int GimbalTransformTool::transform(cv::Point3f position, float &pitch, float &yaw){
+    if(!model_){
+        //if model is NULL,use line model.
         pitch = -(float)(atan2(position.z, position.x));
     }else{
         float angle;

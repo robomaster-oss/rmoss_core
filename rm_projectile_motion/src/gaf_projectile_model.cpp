@@ -18,10 +18,9 @@ using namespace rm_projectile_motion;
 const double PI = 3.1415926535;
 const float GRAVITY = 9.7913;
 
-int GafProjectileModel::init(float projectile_v,float projectile_k) {
+GafProjectileModel::GafProjectileModel(float projectile_v,float projectile_k) {
     bullet_v_=projectile_v;
     bullet_model_kx_=projectile_k;
-    return 0;
 }
 
 // air friction of x-axis is considered（仅下降阶段考虑）

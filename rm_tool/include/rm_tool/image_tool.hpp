@@ -22,7 +22,7 @@ public:
     static float calc2PointDistance(cv::Point3f point1,cv::Point3f point2);
     static float calc2PointAngle(cv::Point2f point1,cv::Point2f point2);
     static float calcTriangleInnerAngle(cv::Point2f vertexPoint,cv::Point2f point1,cv::Point2f point2);    
-
+    static bool calcCircle3Point(cv::Point2f p1,cv::Point2f p2,cv::Point2f p3,cv::Point2f &point,float &r);
 };
 
 } // namespace rm_tool

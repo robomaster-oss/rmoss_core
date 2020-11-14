@@ -16,8 +16,12 @@ using namespace std;
 using namespace cv;
 using namespace rm_tool; 
 
-int MonoMeasureTool::init(std::vector<double> camera_intrinsic,std::vector<double> camera_distortion)
+bool MonoMeasureTool::setCameraInfo(std::vector<double> camera_intrinsic,std::vector<double> camera_distortion)
 {
+    if(camera_intrinsic.size()!=9){
+        //the size of camera intrinsic must be 9 (equal 3*3)
+        return false;
+    }
     //init camera_intrinsic and camera_distortion
     cv::Mat camera_intrinsic_mat(camera_intrinsic,true);
     camera_intrinsic_mat=camera_intrinsic_mat.reshape(0,3);
@@ -26,7 +30,7 @@ int MonoMeasureTool::init(std::vector<double> camera_intrinsic,std::vector<doubl
 	cv::Mat camera_distortion_mat(camera_distortion,true);
     camera_distortion_mat=camera_distortion_mat.reshape(0,1);
     camera_distortion_ = camera_distortion_mat.clone();
-    return 0;
+    return true;
 }
 
 int MonoMeasureTool::solvePnP4Points(vector<Point2f>& points2d,vector<Point3f>& points3d,cv::Point3f &position)

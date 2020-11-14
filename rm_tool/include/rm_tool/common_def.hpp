@@ -11,11 +11,8 @@
 #ifndef RM_TOOL_COMMON_DEF_HPP
 #define RM_TOOL_COMMON_DEF_HPP
 
-
-#define UNUSED(expr) do { (void)(expr); } while (0)
-
 namespace rm_tool {
-
+    enum class ArmorColor {red, blue};
 }
 
 #endif //RM_TOOL_COMMON_DEF_HPP

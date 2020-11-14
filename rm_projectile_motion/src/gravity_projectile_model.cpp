@@ -18,9 +18,8 @@ const double PI = 3.1415926535;
 const float GRAVITY = 9.7913;
 
 
-int GravityProjectileModel::init(float projectile_v){
+GravityProjectileModel::GravityProjectileModel(float projectile_v){
     bullet_v_=projectile_v;
-    return 0;
 }
 
 //抛物线模型

@@ -18,11 +18,9 @@ namespace rm_projectile_motion {
 //考虑重力和空气阻力（gaf:Gravity and Air Frication）的弹道重力修正工具.
 class GafProjectileModel : public IterationProjectileModel {
    public:
-    GafProjectileModel(){};
+    GafProjectileModel(float projectile_v, float projectile_k);
     ~GafProjectileModel(){};
-
    public:
-       int init(float projectile_v, float projectile_k);
        int forward(float given_angle, float given_x, float &h, float &t);
    private:
        // bullet model

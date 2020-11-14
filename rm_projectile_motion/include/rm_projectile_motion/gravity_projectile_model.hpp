@@ -18,11 +18,10 @@ namespace rm_projectile_motion {
 //考虑重力的弹道重力修正工具.
 class GravityProjectileModel : public IterationProjectileModel {
    public:
-    GravityProjectileModel(){};
+    GravityProjectileModel(float projectile_v);
     ~GravityProjectileModel(){};
 
    public:
-    int init(float projectile_v);
     int forward(float given_angle, float given_x, float &h, float &t);
 
    private:

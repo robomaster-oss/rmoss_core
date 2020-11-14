@@ -52,3 +52,17 @@ float ImageTool::calcTriangleInnerAngle(cv::Point2f vertexPoint, cv::Point2f poi
 }
 
 
+
+bool ImageTool::calcCircle3Point(cv::Point2f p1,cv::Point2f p2,cv::Point2f p3,cv::Point2f &point,float &r){
+    double a, b, c, d, e, f;
+    a = 2*(p2.x-p1.x);
+    b = 2*(p2.y-p1.y);
+    c = p2.x*p2.x+p2.y*p2.y-p1.x*p1.x-p1.y*p1.y;
+    d = 2*(p3.x-p2.x);
+    e = 2*(p3.y-p2.y);
+    f = p3.x*p3.x+p3.y*p3.y-p2.x*p2.x-p2.y*p2.y;
+    point.x = (b*f-e*c)/(b*d-e*a);
+    point.y = (d*c-a*f)/(b*d-e*a);
+    r = sqrt((point.x-p1.x)*(point.x-p1.x)+(point.y-p1.y)*(point.y-p1.y));//半径
+    return true;
+}

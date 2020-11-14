@@ -24,7 +24,7 @@ class MonoMeasureTool {
     cv::Point3f position_;
 
    public:
-       int init(std::vector<double> camera_intrinsic,std::vector<double> camera_distortion);
+       bool setCameraInfo(std::vector<double> camera_intrinsic,std::vector<double> camera_distortion);
        //////////3d点坐标求解（use solve pnp）
        // points2d: input,一组图像上的2d点（4个点）
        // points3d: input,一组3d点（世界坐标系），对应图像上的点（4个点）

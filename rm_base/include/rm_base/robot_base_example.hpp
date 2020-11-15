@@ -21,7 +21,7 @@ namespace rm_base{
 
 class RobotBaseExample{
     public:
-        RobotBaseExample(rclcpp::Node::SharedPtr &nh,CommDevInterface* trans_dev);
+        RobotBaseExample(rclcpp::Node::SharedPtr &nh,std::shared_ptr<CommDevInterface> comm_dev);
         ~RobotBaseExample(){};
     public:
         void mcuListenThread();

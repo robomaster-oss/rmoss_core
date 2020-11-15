@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
     cam_dev->setParameter(Fps, fps);
     cam_dev->open();
     // create a camera Task
-    auto cam_task = std::make_shared<CameraTask>(node, cam_dev.get());
+    auto cam_task = std::make_shared<CameraTask>(node, cam_dev);
     // run node until it's exited
     rclcpp::spin(node);
     // clean up

@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     cam_dev->setVideoSource(video_path);
     cam_dev->open();
     // create a camera node
-    auto cam_task = std::make_shared<CameraTask>(node, cam_dev.get());
+    auto cam_task = std::make_shared<CameraTask>(node, cam_dev);
     // run node until it's exited
     rclcpp::spin(node);
     // clean up

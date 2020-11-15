@@ -15,11 +15,11 @@
 
 using namespace rm_base;
 
-RobotBaseExample::RobotBaseExample(rclcpp::Node::SharedPtr &nh, CommDevInterface *trans_dev)
+RobotBaseExample::RobotBaseExample(rclcpp::Node::SharedPtr &nh, std::shared_ptr<CommDevInterface> comm_dev)
 {
     //init
     nh_=nh;
-    packet_tool_ = std::make_shared<FixedPacketTool>(trans_dev);
+    packet_tool_ = std::make_shared<FixedPacketTool>(comm_dev);
     //sub
     gimbal_ctrl_sub_ = nh_->create_subscription<rm_interfaces::msg::GimbalControl>("gimbal_control", 10, std::bind(&RobotBaseExample::gimbalCallback, this, std::placeholders::_1));
     //task thread

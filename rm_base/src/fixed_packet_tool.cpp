@@ -14,37 +14,41 @@
 
 using namespace rm_base;
 
-FixedPacketTool::FixedPacketTool(CommDevInterface* trans_dev) {
-    comm_dev_ = trans_dev;
+FixedPacketTool::FixedPacketTool(std::shared_ptr<CommDevInterface> comm_dev)
+{
+    comm_dev_ = comm_dev;
 }
 
-FixedPacketTool::~FixedPacketTool() {}
+FixedPacketTool::~FixedPacketTool() { }
 
-bool FixedPacketTool::isOpen() {
-    if (comm_dev_ == NULL) {
-        return false;
+bool FixedPacketTool::isOpen()
+{
+    if (comm_dev_) {
+        return comm_dev_->isOpen();
     }
-    return comm_dev_->isOpen();
+    return false;
 }
 
-int FixedPacketTool::sendPacket(FixedPacket packet) {
+int FixedPacketTool::sendPacket(FixedPacket packet)
+{
     if (isOpen()) {
-        if(comm_dev_->dataSend(packet.buffer_, packet.len_)==packet.len_){
+        if (comm_dev_->dataSend(packet.buffer_, packet.len_) == packet.len_) {
             return 0;
         }
     }
     return -1;
 }
 
-int FixedPacketTool::recvPacket(FixedPacket& packet) {
-    if(!isOpen()){
+int FixedPacketTool::recvPacket(FixedPacket& packet)
+{
+    if (!isOpen()) {
         return -3;
     }
     int ret_len;
     unsigned char tmp_buffer[128];
     ret_len = comm_dev_->dataRecv(tmp_buffer, packet_recv_.len_);
     if (ret_len > 0) {
-        if (packet_recv_.unPack(tmp_buffer, ret_len) == 0) {  // check packet
+        if (packet_recv_.unPack(tmp_buffer, ret_len) == 0) { // check packet
             packet = packet_recv_;
             return 0;
         } else {

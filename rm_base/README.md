@@ -49,12 +49,10 @@ __运行节点：__
 
 ## 4.二次开发
 
-### a.fixed packet模块
-
 * fixed_packet.h/cpp：数据包封装，详细使用参考文档[fixed_packet.md](doc/fixed_packet.md)
 * fixed_packet_tool.h/cpp : 固定数据包收发工具，详细使用参考文档[fixed_packet.md](doc/fixed_packet.md)
 
-### 5.维护者及开源许可证
+## 5.维护者及开源许可证
 
 - gezp zhenpeng.ge@qq.com
 

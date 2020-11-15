@@ -11,12 +11,11 @@
 #ifndef RM_CAM_CAMERA_TASK_HPP
 #define RM_CAM_CAMERA_TASK_HPP
 
-#include <rclcpp/rclcpp.hpp>
-#include <image_transport/image_transport.hpp>
-#include <opencv2/opencv.hpp>
 #include <thread>
 #include <string>
-
+#include <opencv2/opencv.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <image_transport/image_transport.hpp>
 #include "rm_cam/cam_dev_interface.hpp"
 
 namespace rm_cam {
@@ -24,7 +23,7 @@ namespace rm_cam {
     class CameraTask
     {
     public:
-        CameraTask(rclcpp::Node::SharedPtr &nh,CamDevInterface *cam_intercace);
+        CameraTask(rclcpp::Node::SharedPtr &nh,std::shared_ptr<CamDevInterface> cam_intercace);
         ~CameraTask(){};
     private:
         void capThread(); 
@@ -32,8 +31,8 @@ namespace rm_cam {
         rclcpp::Node::SharedPtr nh_;
         //tool
         image_transport::Publisher img_pub_;
-        //ros::ServiceServer srv_start_, srv_stop_;
-        CamDevInterface *cam_intercace_;   // camera_device interface
+        // camera_device interface
+        std::shared_ptr<CamDevInterface> cam_intercace_;
         //data
         bool run_flag_;
         std::thread cam_thread_;

@@ -23,7 +23,7 @@ int main(int argc, char * argv[])
   auto comm_dev=std::make_shared<rm_base::SerialPortDev>();
   comm_dev->init("/dev/ttyUSB0");
   // create RobotBase Task
-  auto robot_base_example = std::make_shared<RobotBaseExample>(node,comm_dev.get());
+  auto robot_base_example = std::make_shared<RobotBaseExample>(node,comm_dev);
   // run node until it's exited
   rclcpp::spin(node);
   //clean up 

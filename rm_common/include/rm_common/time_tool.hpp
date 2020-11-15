@@ -9,15 +9,15 @@
  *
  ******************************************************************************/
 
-#ifndef RM_TOOL_TIME_TOOL_HPP
-#define RM_TOOL_TIME_TOOL_HPP
+#ifndef RM_COMMON_TIME_TOOL_HPP
+#define RM_COMMON_TIME_TOOL_HPP
 
 #include <chrono>
 
 //author: wyx
 //email : 1418555317@qq.com
 
-namespace rm_tool {
+namespace rm_common {
 
 //时间工具类
 class TimeTool{
@@ -49,5 +49,5 @@ public:
 };
 }
 
-#endif //RM_TOOL_TIME_TOOL_HPP
+#endif //RM_COMMON_TIME_TOOL_HPP
 

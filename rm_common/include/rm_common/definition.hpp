@@ -8,12 +8,12 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_TOOL_COMMON_DEF_HPP
-#define RM_TOOL_COMMON_DEF_HPP
+#ifndef RM_COMMON_DEFINITION_HPP
+#define RM_COMMON_DEFINITION_HPP
 
-namespace rm_tool {
+namespace rm_common {
     enum class ArmorColor {red, blue};
 }
 
-#endif //RM_TOOL_COMMON_DEF_HPP
+#endif //RM_COMMON_DEFINITION_HPP
 

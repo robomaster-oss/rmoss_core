@@ -8,10 +8,10 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#include "rm_tool/time_tool.hpp"
+#include "rm_common/time_tool.hpp"
 
 using namespace std;
-using namespace rm_tool;
+using namespace rm_common;
 
 const int TimeTool::MICROSECONDS = 0;
 const int TimeTool::MILLISECONDS = 1;

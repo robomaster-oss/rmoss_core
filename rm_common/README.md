@@ -2,9 +2,8 @@
 
 ## 1.简介
 
-rm_tool是rmoss_core 中的一个工具包，加快开发速度。主要实现了以下几个功能：
+rm_common是rmoss_core 中的一个工具包，加快开发速度。主要实现了以下几个功能：
 
-* 提供基于Glog的日志封装
 * 提供时间相关工具封装
 * 提供调试工具封装
 * 提供一些图像调试工具（如在图像上绘制四边形，显示图片，调试开关等）
@@ -16,38 +15,30 @@ rm_tool是rmoss_core 中的一个工具包，加快开发速度。主要实现�
 
 |          文件           |                         功能描述                          |
 | :---------------------: | :-------------------------------------------------------: |
-|       log_tool.h        |             日志工具类，提供一些图像调试工具              |
-|     time_tool.h/cpp     |                        时间工具类                         |
-|    image_tool.h/cpp     |          工具类，提供一些图像处理或计算相关工具           |
-|    debug_tool.h/cpp     |                   工具类，相关调试工具                    |
-| mono_measure_tool.h/cpp | 工具类，一些单目算法封装（包含PNP解算，相似三角形投影等） |
+|     time_tool.hpp/cpp   |                        时间工具类                         |
+|     math.hpp/cpp        |          工具类，提供一些图像处理或计算相关工具           |
+|      debug.hpp/cpp      |                   工具类，相关调试工具                    |
+| mono_measure_tool.hpp/cpp | 工具类，一些单目算法封装（包含PNP解算，相似三角形投影等） |
 
 ## 3.快速使用
 
-#### log_tool模块
-
-* [log_tool_api文档](doc/log_tool_api.md)
 
 #### time_tool模块
 
 * [time_tool_api文档](doc/time_tool_api.md)
 
-#### image_tool模块
+#### math模块
 
 提供相关图像计算工具
 
 ```c++
-//两点间的距离
-static float calc2PointDistance(cv::Point2f point1,cv::Point2f point2);
-//两点间的距离（重载，3d点）
-static float calc2PointDistance(cv::Point3f point1,cv::Point3f point2);
 //两点构成直线的倾角，结果为度，相对常规坐标系，（不同于图像坐标系）常规坐标系y轴方向为向上。
 static float calc2PointAngle(cv::Point2f point1,cv::Point2f point2);
 //三角形的角度，第一个参数为顶点坐标,结果为度
 static float calcTriangleInnerAngle(cv::Point2f vertexPoint,cv::Point2f point1,cv::Point2f point2);
 ```
 
-#### debug_tool模块
+#### debug模块
 
 静态调试开关：控制是否显示调试信息
 

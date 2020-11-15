@@ -4,7 +4,7 @@
   <name>rm_common</name>
   <version>0.9.0</version>
   <description>
-    RoboMaster common tool package,include time tool,debug tool, math tool and so on.
+    RoboMaster common tool package,include debug tool, math tool and so on.
   </description>
   <maintainer email="zhenpeng.ge@qq.com">zhenpeng ge</maintainer>
   <license>MIT</license>

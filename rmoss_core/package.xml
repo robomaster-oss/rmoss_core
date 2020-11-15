@@ -12,11 +12,12 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>rm_base</exec_depend>
+  <exec_depend>rm_common</exec_depend>
   <exec_depend>rm_cam</exec_depend>
   <exec_depend>rm_interfaces</exec_depend>
   <exec_depend>rm_projectile_motion</exec_depend>
   <exec_depend>rm_task</exec_depend>
-  <exec_depend>rm_tool</exec_depend>
+
 
   <export>
     <build_type>ament_cmake</build_type>

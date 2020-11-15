@@ -18,7 +18,7 @@ rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础�
 | :---------------------: | :---------------------------------------------------------: |
 | rm_interfaces（不稳定） | RM相关的ROS interface包，包含相关msg，srv，action定义文件。 |
 |         rm_base         |  基本通信工具包，包含PC与嵌入式系统（stm32）通信相关工具。  |
-|    rm_tool（不稳定）    |            基本工具包，包括调试，图像处理等工具             |
+|        rm_common        |        公共工具包，包括调试，图像处理等公共基础工具         |
 |         rm_cam          |                         相机工具包                          |
 |         rm_task         |         通用图像处理任务包（被当作一个依赖库使用）          |
 |  rm_projectile_motion   |                     通用弹道模型工具包                      |

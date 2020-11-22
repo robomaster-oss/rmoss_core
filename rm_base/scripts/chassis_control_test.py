@@ -59,23 +59,29 @@ def main():
     settings = saveTerminalSettings()
     rclpy.init()
     node = rclpy.create_node('teleop_twist_keyboard')
+    #get params
+    node.declare_parameter('v',1.0)
+    node.declare_parameter('w',1.0)
+    v=node.get_parameter('v').value
+    w=node.get_parameter('w').value
     pub = node.create_publisher(ChassisControl, 'chassis_control', 10)
+    print("node params v:%f,w:%f"%(v,w))
     print(msg)
     vel_x=vel_y=vel_w=0.0
     while True:
         key=getKey(settings)
         if key == 'w':
-            vel_x=1.0
+            vel_x=1.0 * v
         elif key == 's':
-            vel_x=-1.0
+            vel_x=-1.0 * v
         elif key == 'a':
-            vel_y=1.0
+            vel_y=1.0 * v
         elif key == 'd':
-            vel_y=-1.0
+            vel_y=-1.0 * v
         elif key == '[':
-            vel_w=1.0
+            vel_w=1.0 * w
         elif key == ']':
-            vel_w=-1.0
+            vel_w=-1.0 * w
         elif key == ' ':
             vel_x=vel_y=vel_w=0.0
         elif key == '\x03':

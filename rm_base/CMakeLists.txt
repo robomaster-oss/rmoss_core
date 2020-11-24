@@ -48,8 +48,8 @@ install(TARGETS robot_base_example
 )
 # Install executable scripts
 install(PROGRAMS 
-        scripts/chassis_control_test.py 
-        scripts/gimbal_control_test.py 
+        scripts/test_control_chassis.py 
+        scripts/test_control_gimbal.py 
     DESTINATION lib/${PROJECT_NAME})
 
 # Export rm_base lib

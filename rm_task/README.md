@@ -52,6 +52,6 @@ ros2 launch rm_task task_show_image.launch.py
 
 ## 4.维护者及开源许可证
 
-- gezp zhenpeng.ge@qq.com
+- Zhenpeng Ge,  zhenpeng.ge@qq.com
 
 * rm_task is provided under MIT

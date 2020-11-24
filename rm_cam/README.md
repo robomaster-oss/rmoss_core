@@ -128,7 +128,7 @@ AutoWhiteBalance;//自动白平衡，1代表自动白平衡设置，0代表手�
 
 ## 5.维护者及开源许可证
 
-* gezp zhenpeng.ge@qq.com
+* Zhenpeng Ge,  zhenpeng.ge@qq.com
 
 * rm_cam is provided under MIT.
 

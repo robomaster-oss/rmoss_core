@@ -25,6 +25,6 @@ rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础�
 
 ## 2.维护者及开源许可证
 
-* gezp zhenpeng.ge@qq.com
+* Zhenpeng Ge,  zhenpeng.ge@qq.com
 
 * rmoss_core is provided under MIT.

@@ -1,6 +1,6 @@
 #shooter module data.
 # id of task
-uint8 id
+uint8 tid
 uint8 type
 
 #data

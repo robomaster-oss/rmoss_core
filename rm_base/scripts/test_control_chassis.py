@@ -7,7 +7,7 @@ else:
     import tty
 
 import rclpy
-from rm_interfaces.msg import ChassisControl
+from rm_interfaces.msg import ChassisCmd
 
 msg = """
 This node takes keypresses from the keyboard and publishes them
@@ -46,7 +46,7 @@ def restoreTerminalSettings(old_settings):
 
 
 def getChassisContolMsg(x,y,w):
-    control_info = ChassisControl()
+    control_info = ChassisCmd()
     control_info.twist.linear.x = x
     control_info.twist.linear.y = y
     control_info.twist.linear.z = 0.0
@@ -58,13 +58,13 @@ def getChassisContolMsg(x,y,w):
 def main():
     settings = saveTerminalSettings()
     rclpy.init()
-    node = rclpy.create_node('teleop_twist_keyboard')
+    node = rclpy.create_node('control_chassis_test')
     #get params
     node.declare_parameter('v',1.0)
     node.declare_parameter('w',1.0)
     v=node.get_parameter('v').value
     w=node.get_parameter('w').value
-    pub = node.create_publisher(ChassisControl, 'chassis_control', 10)
+    pub = node.create_publisher(ChassisCmd, 'cmd_chassis', 10)
     print("node params v:%f,w:%f"%(v,w))
     print(msg)
     vel_x=vel_y=vel_w=0.0

@@ -2,18 +2,18 @@
 import sys
 
 import rclpy
-from rm_interfaces.msg import GimbalControl
+from rm_interfaces.msg import GimbalCmd
 
 def getGimbalContolMsg(pitch,yaw):
-    control_info = GimbalControl()
+    control_info = GimbalCmd()
     control_info.position.yaw=yaw
     control_info.position.pitch=pitch
     return control_info
 
 def main():
     rclpy.init()
-    node = rclpy.create_node('gimbal_control_test')
-    pub = node.create_publisher(GimbalControl, 'gimbal_control', 10)
+    node = rclpy.create_node('control_gimbal_test')
+    pub = node.create_publisher(GimbalCmd, 'cmd_gimbal', 10)
     while True:
         print("\n[absolute mode],please intput tagret angle (float) ")
         try:

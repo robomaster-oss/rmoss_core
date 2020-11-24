@@ -68,6 +68,6 @@ float calcInnerAngle(cv::Point2f vertexPoint, cv::Point2f point1, cv::Point2f po
 ## 4.维护者及开源许可证
 
 * wyx 1418555317@qq.com
-* gezp zhenpeng.ge@qq.com　
+* Zhenpeng Ge,  zhenpeng.ge@qq.com
 
 * rm_common is provided under MIT

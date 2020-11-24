@@ -54,6 +54,6 @@ __运行节点：__
 
 ## 5.维护者及开源许可证
 
-- gezp zhenpeng.ge@qq.com
+- Zhenpeng Ge,  zhenpeng.ge@qq.com
 
 * rm_base is provided under MIT.

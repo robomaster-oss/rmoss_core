@@ -16,11 +16,11 @@ find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/Gimbal2D.msg"
-  "msg/GimbalControl.msg"
-  "msg/ShootControl.msg"
-  "msg/ChassisControl.msg"
-  "msg/StdBotState.msg"
+  "msg/Gimbal.msg"
+  "msg/GimbalCmd.msg"
+  "msg/ShootCmd.msg"
+  "msg/ChassisCmd.msg"
+  "msg/StdRobotState.msg"
   "srv/SetMode.srv"
   "srv/GetMode.srv"
 DEPENDENCIES

@@ -23,7 +23,7 @@ class GimbalTransformTool {
     public:
         void setProjectileModel(std::shared_ptr<ProjectileModelInterface> model);
     public:
-        // position :input, position of target object in gimbal frame (向前为x方向)
+        // position :input, position of target object in gimbal frame
         // pitch,yaw : output, angle of gimbal
         // return: state, 0 if transform successfully.
         int transform(cv::Point3f position, float &pitch, float &yaw);

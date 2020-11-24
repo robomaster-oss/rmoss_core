@@ -26,7 +26,7 @@ int GimbalTransformTool::transform(cv::Point3f position, float &pitch, float &ya
         pitch = -(float)(atan2(position.z, position.x));
     }else{
         float angle;
-        if(model_->inverse_solve( position.z,position.x,angle)!=0){
+        if(model_->solve( position.z,position.x,angle)!=0){
             return -1;   
         }
         pitch = -angle;

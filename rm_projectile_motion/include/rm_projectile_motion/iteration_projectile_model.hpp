@@ -21,7 +21,7 @@ class IterationProjectileModel : public ProjectileModelInterface {
         IterationProjectileModel(){};
         ~IterationProjectileModel(){};
     public:
-        int inverse_solve(float target_x, float target_h, float &angle);
+        int solve(float target_x, float target_h, float &angle);
     public:
         /////////在水平坐标系下
         //x: input,射击距离/m

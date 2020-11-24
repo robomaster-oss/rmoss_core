@@ -20,7 +20,7 @@ using namespace rm_projectile_motion;
 const double PI = 3.1415926535;
 
 
-int IterationProjectileModel::inverse_solve(float target_x, float target_h, float &angle){
+int IterationProjectileModel::solve(float target_x, float target_h, float &angle){
     float aimed_h, h, dh;
     float tmp_angle= 0;
     float t=0;

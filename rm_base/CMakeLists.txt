@@ -12,7 +12,7 @@ endif()
 # Find package
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(rm_interfaces REQUIRED)
+find_package(rmoss_interfaces REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
 # Include
@@ -23,7 +23,7 @@ AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
 add_library(${PROJECT_NAME} ${DIR_SRCS})
 ament_target_dependencies(${PROJECT_NAME}
     rclcpp 
-    rm_interfaces
+    rmoss_interfaces
     geometry_msgs
 )
 # Create robot_base_example node
@@ -55,7 +55,7 @@ install(PROGRAMS
 # Export rm_base lib
 ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp)
-ament_export_dependencies(rm_interfaces)
+ament_export_dependencies(rmoss_interfaces)
 ament_export_dependencies(geometry_msgs)
 
 # Test

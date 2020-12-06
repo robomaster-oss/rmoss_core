@@ -1,5 +1,0 @@
-#request constants
-int32 mode
----
-#response constants
-bool success

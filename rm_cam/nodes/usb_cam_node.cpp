@@ -28,9 +28,9 @@ int main(int argc, char* argv[]) {
     int fps = node->declare_parameter("cam_fps", 10);
     // create device
     auto cam_dev = std::make_shared<UsbCamDev>(dev_name);
-    cam_dev->setParameter(ResolutionWidth, wigth);
-    cam_dev->setParameter(ResolutionHeight, height);
-    cam_dev->setParameter(Fps, fps);
+    cam_dev->setParameter(CamParameter::resolution_width, wigth);
+    cam_dev->setParameter(CamParameter::resolution_height, height);
+    cam_dev->setParameter(CamParameter::fps, fps);
     cam_dev->open();
     // create a camera node
     auto cam_task = std::make_shared<CameraTask>(node, cam_dev);

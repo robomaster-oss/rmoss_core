@@ -78,15 +78,15 @@ int UsbCamDev::capImg(cv::Mat &img) {
 
 bool UsbCamDev::setParameter(CamParameter parameter, int value) {
     switch (parameter) {
-        case ResolutionWidth:
+        case CamParameter::resolution_width:
             cam_width_=value;
             return true;
-        case ResolutionHeight:
+        case CamParameter::resolution_height:
             cam_height_=value;
             return true;   
-        case Exposure:
+        case CamParameter::exposure:
             return setExposure(value);
-        case Fps:
+        case CamParameter::fps:
             cam_fps_=value;
             return true; 
         default:
@@ -96,15 +96,15 @@ bool UsbCamDev::setParameter(CamParameter parameter, int value) {
 
 bool UsbCamDev::getParameter(CamParameter parameter, int& value) {
     switch (parameter) {
-        case ResolutionWidth:
+        case CamParameter::resolution_width:
             value=cam_width_;
             return true;
-        case ResolutionHeight:
+        case CamParameter::resolution_height:
             value=cam_height_;
             return true;    
-        case Exposure:
+        case CamParameter::exposure:
             return false;
-        case Fps:
+        case CamParameter::fps:
             value = cam_fps_;
             return true;
         default:

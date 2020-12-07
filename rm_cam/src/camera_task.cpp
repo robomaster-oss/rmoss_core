@@ -24,7 +24,7 @@ CameraTask::CameraTask(rclcpp::Node::SharedPtr& nh, std::shared_ptr<CamDevInterf
     cam_intercace_ = cam_intercace;
     //set fps
     int fps;
-    if (cam_intercace_->getParameter(Fps, fps)) {
+    if (cam_intercace_->getParameter(CamParameter::fps, fps)) {
         fps_period_us_ = 1000000.0 / fps;
     } else {
         fps_period_us_ = 1;

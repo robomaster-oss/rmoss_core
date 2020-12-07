@@ -77,7 +77,7 @@ int VirtualCamDev::capImg(cv::Mat &img) {
 
 bool VirtualCamDev::setParameter(CamParameter parameter, int value) {
     switch (parameter) {
-        case Fps:
+        case CamParameter::fps:
             cam_fps_ = value;
             return true;
         default:
@@ -87,13 +87,13 @@ bool VirtualCamDev::setParameter(CamParameter parameter, int value) {
 
 bool VirtualCamDev::getParameter(CamParameter parameter, int &value) {
     switch (parameter) {
-        case ResolutionWidth:
+        case CamParameter::resolution_width:
             value = cam_width_;
             return true;
-        case ResolutionHeight:
+        case CamParameter::resolution_height:
             value = cam_height_;
             return true;
-        case Fps:
+        case CamParameter::fps:
             value = cam_fps_;
             return true;
         default:

@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     // create device
     auto cam_dev = std::make_shared<VirtualCamDev>();
     cam_dev->setImageSource(image_path);
-    cam_dev->setParameter(Fps, fps);
+    cam_dev->setParameter(CamParameter::fps, fps);
     cam_dev->open();
     // create a camera Task
     auto cam_task = std::make_shared<CameraTask>(node, cam_dev);

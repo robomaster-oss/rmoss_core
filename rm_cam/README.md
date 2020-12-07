@@ -97,19 +97,19 @@ bool getParameter(CamParameter parameter,int& value);
 __相机参数（CamParameter）说明：__
 
 ```c++
-ResolutionWidth;//分辨率宽
-ResolutionHeight;//分辨率高
-Exposure;//曝光，值为0代表
-Brighthness;//亮度
-WhiteBalance;//白平衡，值为0代表
-Gain;//增益
-Gamma;//伽马值
-Contrast;//对比度
-Saturation;//饱和度
-Hue;//色调
-Fps;//帧率
-AutoExposure;//自动曝光,1代表自动曝光设置，0代表手动曝光设置
-AutoWhiteBalance;//自动白平衡，1代表自动白平衡设置，0代表手动白平衡设置
+CamParameter::resolution_width;//分辨率宽
+CamParameter::resolution_height;//分辨率高
+CamParameter::auto_exposure;//自动曝光,1代表自动曝光设置，0代表手动曝光设置
+CamParameter::exposure;//曝光值
+CamParameter::brighthness;//亮度
+CamParameter::auto_white_balance;//自动白平衡，1代表自动白平衡设置，0代表手动白平衡设置
+CamParameter::white_balance;//白平衡
+CamParameter::gain;//增益
+CamParameter::gamma;//伽马值
+CamParameter::contrast;//对比度
+CamParameter::saturation;//饱和度
+CamParameter::hue;//色调
+CamParameter::fps;//帧率
 ```
 
 - 不同相机值参数的取值范围不同，需要根据具体相机型号进行参数设置，仅支持整型设置。

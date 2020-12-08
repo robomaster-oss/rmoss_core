@@ -13,9 +13,14 @@
 
 #include <opencv2/opencv.hpp>
 
-#define DEBUG_TOOL(text)             \
+#define DEBUG_TOOL(text)            \
+    std::cout<<"DEBUG_TOOL() is deprecated,please use RM_DEBUG()"<<std::endl;\
     if (rm_common::isDebug()) \
-    text
+        text
+
+#define RM_DEBUG(text)             \
+    if (rm_common::isDebug()) \
+        text
 
 namespace rm_common {
     //const definition of color

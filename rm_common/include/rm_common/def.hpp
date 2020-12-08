@@ -8,8 +8,8 @@
  *  If not, see <https://opensource.org/licenses/MIT/>.
  *
  ******************************************************************************/
-#ifndef RM_COMMON_DEFINITION_HPP
-#define RM_COMMON_DEFINITION_HPP
+#ifndef RM_COMMON_DEF_HPP
+#define RM_COMMON_DEF_HPP
 
 namespace rm_common {
     enum class ArmorColor {red, blue};

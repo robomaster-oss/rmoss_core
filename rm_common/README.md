@@ -36,7 +36,7 @@ rm_common::setDebug(true);
 通用调试宏定义
 
 ```c++
-//DEBUG_TOOL(text);text为一条语句 ，如果静态调试开关为false，括号里面的语句不会被执行。
+//RM_DEBUG(text); text为一条语句 ，如果静态调试开关为false，括号里面的语句不会被执行。
 RM_DEBUG(imshow("dst", dst));
 RM_DEBUG(std::cout<<"data"<<std::endl);
 ```

@@ -88,7 +88,7 @@ ros2 run rm_cam virtual_video_cam --ros-args -p "cam_topic_name:=virtual_cam/ima
 ```c++
 //required.
 bool isOpened();//设备是否打开
-int capImg(cv::Mat &img);//获取图像，成功获取则返回0
+bool capImg(cv::Mat &img);//获取图像
 //option.参数设置和获取接口，默认实现返回false
 bool setParameter(CamParameter parameter,int value);
 bool getParameter(CamParameter parameter,int& value);
@@ -128,7 +128,7 @@ CamParameter::fps;//帧率
 
 ## 5.维护者及开源许可证
 
-* Zhenpeng Ge,  zhenpeng.ge@qq.com
+maintainer：Zhenpeng Ge,  zhenpeng.ge@qq.com
 
-* rm_cam is provided under MIT.
+rm_cam is provided under MIT.
 

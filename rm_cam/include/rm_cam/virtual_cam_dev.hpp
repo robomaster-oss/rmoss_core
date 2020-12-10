@@ -17,7 +17,7 @@
 
 namespace rm_cam {
     //the virtual camera device by using image or video, based on opencv
-    enum CameraMode {NONE_MODE, IMAGE_MODE, VIDEO_MODE};
+    enum class CameraMode {null, image, video};
     class VirtualCamDev : public CamDevInterface{
     public:
         VirtualCamDev(){};
@@ -27,7 +27,7 @@ namespace rm_cam {
         void setVideoSource(const std::string video_path);
         bool open();
         bool isOpened() override;
-        int capImg(cv::Mat &img) override;
+        bool capImg(cv::Mat &img) override;
 
         bool setParameter(CamParameter parameter,int value) override;
         bool getParameter(CamParameter parameter,int& value) override;
@@ -47,7 +47,7 @@ namespace rm_cam {
         int cam_fps_;
         //flag
         bool is_open_=false;
-        CameraMode current_mode_ = NONE_MODE;
+        CameraMode current_mode_{CameraMode::null};
     };
 }
 

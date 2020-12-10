@@ -10,7 +10,7 @@
  ******************************************************************************/
 
 #include "rm_cam/virtual_cam_dev.hpp"
-
+#include "rm_common/log.hpp"
 #include <thread>
 
 using namespace cv;
@@ -20,24 +20,27 @@ using namespace rm_cam;
 
 void VirtualCamDev::setImageSource(const std::string image_path) {
     image_path_ = image_path;
-    current_mode_ = IMAGE_MODE;
+    current_mode_ = CameraMode::image;
 }
 
 void VirtualCamDev::setVideoSource(const std::string video_path) {
     video_path_ = video_path;
-    current_mode_ = VIDEO_MODE;
+    current_mode_ = CameraMode::video;
 }
 
 bool VirtualCamDev::open() {
-    if (current_mode_ == IMAGE_MODE) {
+    if (current_mode_ == CameraMode::image) {
         img_ = imread(image_path_);
         if (!img_.empty()) {
             cam_width_ = img_.cols;
             cam_height_ = img_.rows;
             is_open_ = true;
             return true;
+        }else{
+            RM_LOG_ERROR<<"[VirtualCamDev]:can't open image <"<<image_path_<<">."<<std::endl;
+            return false;
         }
-    } else if (current_mode_ == VIDEO_MODE) {
+    } else if (current_mode_ == CameraMode::video) {
         if (cap_.open(video_path_)) {
             cam_height_ = cap_.get(CAP_PROP_FRAME_HEIGHT);
             cam_width_ = cap_.get(CAP_PROP_FRAME_WIDTH);
@@ -45,6 +48,9 @@ bool VirtualCamDev::open() {
             cam_fps_ = cap_.get(CAP_PROP_FPS);
             is_open_ = true;
             return true;
+        }else{
+            RM_LOG_ERROR<<"[VirtualCamDev]:can't open video <"<<video_path_<<">."<<std::endl;
+            return false; 
         }
     }
     return false;
@@ -52,26 +58,32 @@ bool VirtualCamDev::open() {
 
 bool VirtualCamDev::isOpened() { return is_open_; }
 
-int VirtualCamDev::capImg(cv::Mat &img) {
+bool VirtualCamDev::capImg(cv::Mat &img) {
     if (is_open_) {
-        if (current_mode_ == IMAGE_MODE) {
+        if (current_mode_ == CameraMode::image) {
             img = img_.clone();
-            return 0;
-        } else if (current_mode_ == VIDEO_MODE) {
+            return true;
+        } else if (current_mode_ == CameraMode::video) {
             if (cap_.read(img)) {
                 current_frame++;
                 if (current_frame > total_frames_ - 2) {
                     current_frame = 0;
                     cap_.set(CAP_PROP_POS_FRAMES, 0);
                 }
-                return 0;
+                return true;
+            }else{
+                return false;
             }
+        }else{
+            //if CameraMode::null
+            RM_LOG_ERROR<<"[VirtualCamDev]:CameraMode is null."<<std::endl;
+            return false;
         }
-        return -2;
+        return false;
     } else {
-        cout << "virtual camera error!" << endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        return -1;
+        RM_LOG_ERROR<<"[VirtualCamDev]:virtual camera is not opened."<<std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+        return false;
     }
 }
 

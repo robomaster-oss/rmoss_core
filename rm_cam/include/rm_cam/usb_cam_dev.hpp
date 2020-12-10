@@ -23,7 +23,7 @@ namespace rm_cam {
     public:
         bool open();
         bool isOpened();
-        int capImg(cv::Mat &img);
+        bool capImg(cv::Mat &img);
         bool setParameter(CamParameter parameter,int value);
         bool getParameter(CamParameter parameter,int& value);
     private:

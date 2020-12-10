@@ -48,7 +48,7 @@ void CameraTask::capThread()
     while (rclcpp::ok()) {
         if (run_flag_) {
             cap_start = rclcpp::Clock().now();
-            if (cam_intercace_->capImg(img) == 0) {
+            if (cam_intercace_->capImg(img)) {
                 //publish msg
                 sensor_msgs::msg::Image::SharedPtr img_msg = cv_bridge::CvImage(std_msgs::msg::Header(), "bgr8", img).toImageMsg();
                 img_msg->header.frame_id = "camera";

@@ -11,6 +11,7 @@
 
 #include <thread>
 #include "rm_cam/usb_cam_dev.hpp"
+#include "rm_common/log.hpp"
 
 using namespace cv;
 using namespace std;
@@ -50,7 +51,7 @@ bool UsbCamDev::open() {
 
 bool UsbCamDev::isOpened() { return is_open_; }
 
-int UsbCamDev::capImg(cv::Mat &img) {
+bool UsbCamDev::capImg(cv::Mat &img) {
     int ret = -1;
     if (cap_.isOpened()) {
         if (cap_.read(img)) {
@@ -61,8 +62,10 @@ int UsbCamDev::capImg(cv::Mat &img) {
     } else {
         ret = -1;
     }
+    //check
     if (ret != 0) {
-        cout << "cap error:" << dev_path_ << ",reconnecting!" << endl;
+        //reconnect if camera is not opened or image is not captured.
+        RM_LOG_ERROR << "[UsbCamDev]:camera " << dev_path_ << " failed to capture image,reconnecting!" << std::endl;
         //重连摄像头
         is_open_ = false;
         if (cap_.isOpened()) {
@@ -72,8 +75,11 @@ int UsbCamDev::capImg(cv::Mat &img) {
             std::this_thread::sleep_for(
                 std::chrono::milliseconds(500));  // 500ms
         }
+        return false;
+    }else{
+        //return true if image is captured.
+        return true;
     }
-    return ret;
 }
 
 bool UsbCamDev::setParameter(CamParameter parameter, int value) {

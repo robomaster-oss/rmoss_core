@@ -35,7 +35,7 @@ class CamDevInterface {
    public:
     // major interface (required)
     virtual bool isOpened() = 0;
-    virtual int capImg(cv::Mat& img) = 0;
+    virtual bool capImg(cv::Mat& img) = 0;
     // set and get parameter interface (optional)
     virtual bool setParameter(CamParameter /*parameter*/, int /*value*/) {
         return false;

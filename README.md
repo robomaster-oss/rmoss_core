@@ -22,6 +22,8 @@ rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础�
 |       `rm_task`        |         任务相关工具，提供了一个图像相关任务基类。          |
 | `rm_projectile_motion` | 通用弹道模型工具包，可以修正子弹飞行过程中重力因素的影响。  |
 
+* rmoss项目使用ROS的坐标系标准以及基本单位标准 [REP 103](https://ros.org/reps/rep-0103.html). 
+
 ## 2.使用说明
 
 * 目前仅支持`ROS2 foxy`版本

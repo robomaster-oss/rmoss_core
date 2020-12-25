@@ -24,8 +24,7 @@ GravityProjectileModel::GravityProjectileModel(float projectile_v){
 
 //抛物线模型
 // x:m,  launch_angle:rad, y:m  t:s
-int GravityProjectileModel::forward(float given_angle, float given_x, float &h, float &t){
+void GravityProjectileModel::forward(float given_angle, float given_x, float &h, float &t){
     t = given_x / (bullet_v_ * cos(given_angle));
     h = bullet_v_ * sin(given_angle) * t - GRAVITY * t * t / 2;
-    return 0;
 }

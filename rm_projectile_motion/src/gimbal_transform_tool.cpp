@@ -20,17 +20,18 @@ void GimbalTransformTool::setProjectileModel(std::shared_ptr<ProjectileModelInte
     model_ = model;
 }
 
-int GimbalTransformTool::transform(cv::Point3f position, float &pitch, float &yaw){
+bool GimbalTransformTool::transform(cv::Point3f position, float &pitch, float &yaw){
     if(!model_){
         //if model is NULL,use line model.
         pitch = -(float)(atan2(position.z, position.x));
     }else{
         float angle;
-        if(model_->solve( position.z,position.x,angle)!=0){
-            return -1;   
+        if(model_->solve( position.z,position.x,angle)){
+            pitch = -angle; 
+        }else{
+            return false;
         }
-        pitch = -angle;
     }
     yaw = (float)(atan2(position.y, position.x));
-    return 0;
+    return true;
 }

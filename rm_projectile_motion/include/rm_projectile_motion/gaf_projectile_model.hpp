@@ -21,7 +21,7 @@ class GafProjectileModel : public IterationProjectileModel {
     GafProjectileModel(float projectile_v, float projectile_k);
     ~GafProjectileModel(){};
    public:
-       int forward(float given_angle, float given_x, float &h, float &t);
+       void forward(float given_angle, float given_x, float &h, float &t);
    private:
        // bullet model
        float bullet_v_;

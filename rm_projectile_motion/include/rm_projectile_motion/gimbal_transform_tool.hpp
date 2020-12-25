@@ -25,8 +25,8 @@ class GimbalTransformTool {
     public:
         // position :input, position of target object in gimbal frame
         // pitch,yaw : output, angle of gimbal
-        // return: state, 0 if transform successfully.
-        int transform(cv::Point3f position, float &pitch, float &yaw);
+        bool transform(cv::Point3f position, float &pitch, float &yaw);
+        //bool transform(cv::Point3f position,float current_pitch,float &delta_pitch, float &delta_yaw);
     private:
         std::shared_ptr<ProjectileModelInterface> model_;
 };

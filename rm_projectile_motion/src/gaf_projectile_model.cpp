@@ -24,7 +24,7 @@ GafProjectileModel::GafProjectileModel(float projectile_v,float projectile_k) {
 }
 
 // air friction of x-axis is considered（仅下降阶段考虑）
-int GafProjectileModel::forward(float given_angle, float given_x, float &h, float &t){
+void GafProjectileModel::forward(float given_angle, float given_x, float &h, float &t){
     float v=bullet_v_;
     if (given_angle > 0.01) {    //存在上升阶段
         float t0, x0, y0;  //上升阶段（最高点）
@@ -34,7 +34,6 @@ int GafProjectileModel::forward(float given_angle, float given_x, float &h, floa
         if (given_x < x0) {  //只有上升阶段,退化成抛物线模型
             t = given_x / (v * cos(given_angle));
             h = v * sin(given_angle) * t - GRAVITY * t * t / 2;
-            return 1;
         } else {           //先上升,后下降
             float t1, x1;  //下降阶段
             x1 = given_x - x0;
@@ -42,13 +41,11 @@ int GafProjectileModel::forward(float given_angle, float given_x, float &h, floa
                  (bullet_model_kx_ * v * cos(given_angle));
             t = t0 + t1;
             h = y0 - GRAVITY * t1 * t1 / 2;
-            return 2;
         }
     } else {
         //只有下降
         t = (exp(bullet_model_kx_ * given_x) - 1) /
             (bullet_model_kx_ * v * cos(given_angle));  //下降阶段时间
         h = v * sin(given_angle) * t - GRAVITY * t * t / 2;
-        return 3;
     }
 }

@@ -21,14 +21,14 @@ class IterationProjectileModel : public ProjectileModelInterface {
         IterationProjectileModel(){};
         ~IterationProjectileModel(){};
     public:
-        int solve(float target_x, float target_h, float &angle);
+        bool solve(float target_x, float target_h, float &angle);
     public:
         /////////在水平坐标系下
         //x: input,射击距离/m
         //launch_angle: input,出射角度/rad
         //y: output,射击的y落点/m
         //t: output,射击飞行时间/s
-        virtual int forward(float given_angle,float given_x ,float& h, float& t) = 0;
+        virtual void forward(float given_angle,float given_x ,float& h, float& t) = 0;
     private:
         int iter_time_=100;
 };

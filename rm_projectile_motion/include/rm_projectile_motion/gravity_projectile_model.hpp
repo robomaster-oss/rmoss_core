@@ -22,7 +22,7 @@ class GravityProjectileModel : public IterationProjectileModel {
     ~GravityProjectileModel(){};
 
    public:
-    int forward(float given_angle, float given_x, float &h, float &t);
+    void forward(float given_angle, float given_x, float &h, float &t);
 
    private:
     float bullet_v_;

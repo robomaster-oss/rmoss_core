@@ -16,7 +16,7 @@ namespace rm_projectile_motion {
 class ProjectileModelInterface {
    public:
     // return: state, 0 if transform successfully.
-    virtual int solve(float target_x,float target_h, float &angle) = 0;
+    virtual bool solve(float target_x,float target_h, float &angle) = 0;
 };
 
 }  // namespace rm_projectile_motion

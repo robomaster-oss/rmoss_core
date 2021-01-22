@@ -42,19 +42,20 @@ colcon build
 
 * 相关功能包使用详见相应package的README.md
 
-## 3.RMOSS 软件架构
+## 3.RMOSS 软件框架
 
 ![](rmoss_arch.png)
 
-该架构适用于RoboMaster机器人软件结构，将算法任务层与机器人硬件层进行解耦，通过Interface layer进行耦合。主要优势如下：
+该结构适用于RoboMaster机器人软件结构，将算法任务层与机器人硬件层进行解耦，通过Interface layer进行耦合。
 
-* 该架构下，各个模块解耦，方便模块化测试，特别是算法层不受硬件的影响，可以被方便的复用。
-* 该架构下真实机器人与仿真机器人处于对等的地位，方便算法在真实机器人与仿真器上进行快速测试与迁移。
+* Interface Layer和Task Layer将模块化，基于ROS2进行开发，以ROS package的形式进行组织。
+* 该软件框架作为RMOSS项目开发的基本软件结构，rmoss_core/rmoss_contrib/rmoss_ign等项目将遵循该模式。
 
-该架构作为RMOSS项目开发的基本软件结构
+主要优势如下：
 
-* rmoss_core/rmoss_contrib/rmoss_ign等项目将遵循该模式。
-* 所有模块将处于其中的某一个层次。
+* 各个模块解耦，方便模块化测试，特别是算法层不受硬件的影响，可以被方便的复用。
+* 真实机器人与仿真机器人处于对等的地位，方便算法在真实机器人与仿真器上进行快速测试与迁移。
+
 
 ## 4.维护者及开源许可证
 

@@ -28,7 +28,7 @@ RobotBaseExample::RobotBaseExample(rclcpp::Node::SharedPtr &nh, std::shared_ptr<
 
 void RobotBaseExample::cmdGimbalCb(const rmoss_interfaces::msg::GimbalCmd::SharedPtr msg)
 {
-    FixedPacket packet;
+    FixedPacket32 packet;
     packet.loadData<unsigned char>(protocol_example::Gimbal_Angle_Control, 1);
     packet.loadData<unsigned char>(0x00, 2);
     packet.loadData<float>(msg->position.pitch, 3);
@@ -41,7 +41,7 @@ void RobotBaseExample::cmdGimbalCb(const rmoss_interfaces::msg::GimbalCmd::Share
 
 void RobotBaseExample::mcuListenThread()
 {
-    FixedPacket packet;
+    FixedPacket32 packet;
     while (rclcpp::ok()){
         if (packet_tool_->recvPacket(packet)){
             //the packet have already unpacked.

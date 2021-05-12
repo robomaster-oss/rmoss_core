@@ -17,7 +17,7 @@ __数据包创建流程：__
 * 打包
 
 ```c++
-FixedPacket packet;//新建对象
+FixedPacket32 packet;//新建对象
 float angle=10;
 //显式装载数据（建议显式）
 packet.loadData<float>(angle,3);//一个参数为数据，第二个数据为数据位置
@@ -35,7 +35,7 @@ __数据包解析流程：__
 
 ```c++
 /*******自定义解析数据************/
-FixedPacket packet;//新建对象
+FixedPacket32 packet;//新建对象
 //check and copy recv_buffer
 packet.check(recv_buffer, recv_len);
 memcpy(packet.buffer_,recv_buffer,packet.len_);
@@ -63,8 +63,8 @@ Fixed Packet Tool API
 //发送设备是否打开
 bool isOpen();
 //数据包收发，收发成功返回0，否则返回其他
-int sendPacket(FixedPacket packet);
-int recvPacket(FixedPacket &packet);
+bool sendPacket(const FixedPacket<capacity>& packet);
+bool recvPacket(FixedPacket<capacity> &packet);
 ```
 
 * 利用FixedPacketTool简化了数据传输流程，不需要考虑底层字节数据传输细节。
@@ -75,7 +75,7 @@ int recvPacket(FixedPacket &packet);
 
 ```c++
 #数据包
-FixedPacket packet;
+FixedPacket32 packet;
 packet.loadData<unsigned char(protocol_example::Gimbal_Angle_Control,1);
 packet.loadData<unsigned char>(0x00,2);
 packet.loadData<float>(info->pitch_angle,3);
@@ -88,7 +88,7 @@ packet_tool_->sendPacket(packet);
 接收数据：
 
 ```c++
-FixedPacket packet;
+FixedPacket32 packet;
 //recvPacket()为堵塞函数，并已经包含校验等操作。
 while(packet_tool_->recvPacket(packet)){
 	unsigned char cmd;

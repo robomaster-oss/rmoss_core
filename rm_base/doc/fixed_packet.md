@@ -90,7 +90,7 @@ packet_tool_->sendPacket(packet);
 ```c++
 FixedPacket packet;
 //recvPacket()为堵塞函数，并已经包含校验等操作。
-while(packet_tool_->recvPacket(packet)==0){
+while(packet_tool_->recvPacket(packet)){
 	unsigned char cmd;
 	packet.unloadData(cmd,1);
 ｝

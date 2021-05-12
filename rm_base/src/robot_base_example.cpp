@@ -43,7 +43,7 @@ void RobotBaseExample::mcuListenThread()
 {
     FixedPacket packet;
     while (rclcpp::ok()){
-        if (packet_tool_->recvPacket(packet) == 0){
+        if (packet_tool_->recvPacket(packet)){
             //the packet have already unpacked.
             unsigned char cmd;
             packet.unloadData(cmd, 1);

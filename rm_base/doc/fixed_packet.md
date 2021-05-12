@@ -36,7 +36,9 @@ __数据包解析流程：__
 ```c++
 /*******自定义解析数据************/
 FixedPacket packet;//新建对象
-packet.unPack(buffer,unpack_len)//这一步通常封装起来，第一个参数为要处理的buffer，第二个参数代表buffer的长度（要解析的数据长度）
+//check and copy recv_buffer
+packet.check(recv_buffer, recv_len);
+memcpy(packet.buffer_,recv_buffer,packet.len_);
 float angle=0;
 packet.unloadData(angle,3);//取出数据（隐式，建议隐式）
 ```
@@ -87,7 +89,7 @@ packet_tool_->sendPacket(packet);
 
 ```c++
 FixedPacket packet;
-//recvPacket()为堵塞函数，并已经包含unpack操作，无需再次unpack,即已经完成校验。
+//recvPacket()为堵塞函数，并已经包含校验等操作。
 while(packet_tool_->recvPacket(packet)==0){
 	unsigned char cmd;
 	packet.unloadData(cmd,1);

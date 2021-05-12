@@ -11,6 +11,9 @@
 #include "rm_base/fixed_packet_tool.hpp"
 #include <iostream>
 #include <thread>
+#include <cstring>
+
+
 
 using namespace rm_base;
 
@@ -29,34 +32,55 @@ bool FixedPacketTool::isOpen()
     return false;
 }
 
-int FixedPacketTool::sendPacket(FixedPacket packet)
+bool FixedPacketTool::sendPacket(FixedPacket packet)
 {
     if (isOpen()) {
         if (comm_dev_->dataSend(packet.buffer_, packet.len_) == packet.len_) {
-            return 0;
+            return true;
         }
     }
-    return -1;
+    return false;
 }
 
-int FixedPacketTool::recvPacket(FixedPacket& packet)
+bool FixedPacketTool::recvPacket(FixedPacket& packet)
 {
     if (!isOpen()) {
-        return -3;
+        return false;
     }
-    int ret_len;
-    unsigned char tmp_buffer[128];
-    ret_len = comm_dev_->dataRecv(tmp_buffer, packet_recv_.len_);
-    if (ret_len > 0) {
-        if (packet_recv_.unPack(tmp_buffer, ret_len) == 0) { // check packet
-            packet = packet_recv_;
-            return 0;
+    int recv_len;
+    unsigned char tmp_buffer[FIXED_PACKET_MAX_LEN];
+    recv_len = comm_dev_->dataRecv(tmp_buffer, packet.len_);
+    if (recv_len > 0) {
+        if (packet.check(tmp_buffer, recv_len) == 0) { // check packet
+            memcpy(packet.buffer_,tmp_buffer,packet.len_);
+            return true;
         } else {
+            //如果是断帧，拼接缓存，并遍历校验，获得合法数据
+            if(recv_buf_len_+recv_len>RECV_BUFFER_MAX_LEN){
+	            recv_buf_len_=0;
+            }
+            //拼接缓存
+            memcpy(recv_buffer_+recv_buf_len_,tmp_buffer, recv_len);
+            recv_buf_len_=recv_buf_len_+recv_len;
+            //遍历校验
+	        for(int i=0;(i+packet.len_)<=recv_buf_len_;i++){
+		        if(packet.check(recv_buffer_+i, packet.len_) == 0){
+                    memcpy(packet.buffer_,recv_buffer_+i,packet.len_);
+                    //读取一帧后，更新接收缓存
+		            int k=0;
+		            for(int j=i+packet.len_;j<recv_buf_len_;j++,k++){
+			            recv_buffer_[k]=recv_buffer_[j];
+		            }
+		            recv_buf_len_=k; 
+                    return true;                   
+  		        }
+            }
+            //表明断帧，或错误帧。
             std::cout << "packet check error!" << std::endl;
-            return -1;
+            return false;
         }
     } else {
         std::cout << "serial dev error" << std::endl;
-        return -2;
+        return false;
     }
 }

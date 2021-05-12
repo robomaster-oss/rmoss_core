@@ -16,6 +16,7 @@
 #include "rm_base/comm_dev_interface.hpp"
 #include "rm_base/fixed_packet.hpp"
 
+#define RECV_BUFFER_MAX_LEN 128
 
 namespace rm_base{
 class FixedPacketTool{
@@ -24,14 +25,13 @@ class FixedPacketTool{
         ~FixedPacketTool();
     public:
         bool isOpen();
-        int sendPacket(FixedPacket packet);
-        int recvPacket(FixedPacket &packet);
+        bool sendPacket(FixedPacket packet);
+        bool recvPacket(FixedPacket &packet);
 
     protected:
         std::shared_ptr<CommDevInterface> comm_dev_;
-        unsigned char recv_buffer_[128];
-        FixedPacket packet_recv_;
-
+        unsigned char recv_buffer_[RECV_BUFFER_MAX_LEN];
+        int recv_buf_len_;
 
 };
 

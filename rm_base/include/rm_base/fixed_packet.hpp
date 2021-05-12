@@ -14,6 +14,7 @@
 
 #include <string>
 
+
 #define FIXED_PACKET_MAX_LEN 64
 
 namespace rm_base{
@@ -21,12 +22,13 @@ namespace rm_base{
 //定长数据包封装
 class FixedPacket {
 public:
-    FixedPacket();
+    FixedPacket(int len=32);
     ~FixedPacket();
 
 public:
     void pack();
-    int unPack(unsigned char* recv_buffer,int recv_len);
+    int check(unsigned char* recv_buffer,int recv_len);
+    void clear();
 
     template <typename T>
     int loadData(T const& data,int index);
@@ -34,14 +36,10 @@ public:
     template <typename T>
     int unloadData(T &data,int index);
 
-    void clear();
-
 public:
     //数据包缓存buffer
     unsigned char buffer_[FIXED_PACKET_MAX_LEN];
-    unsigned char recv_buffer_[FIXED_PACKET_MAX_LEN*2];
     int len_;
-    int recv_buf_len_;
     bool flag_;//标志位。
 
 };

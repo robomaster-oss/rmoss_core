@@ -231,7 +231,7 @@ int SerialPort::Recv(unsigned char *rcv_buf,int data_len)
 }
 
 
-int SerialPort::Send(unsigned char *send_buf,int data_len)
+int SerialPort::Send(const unsigned char *send_buf,int data_len)
 {
     int len = 0;
     len = write(fd,send_buf,data_len);

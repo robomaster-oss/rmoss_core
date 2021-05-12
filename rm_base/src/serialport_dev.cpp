@@ -17,7 +17,7 @@ bool SerialPortDev::isOpen(){
     return mMcuSerialPort.isOpen();
 }
 
-int SerialPortDev::dataSend(unsigned char *send_buf,int data_len){
+int SerialPortDev::dataSend(const unsigned char *send_buf,int data_len){
     return mMcuSerialPort.Send(send_buf,data_len);
 
 }

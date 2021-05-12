@@ -50,7 +50,7 @@ private:
 public:
     bool init(std::string port,int speed=115200,int flowCtrl=0,int databits=8,int stopbits=1,int m_parity='N');
     int Recv(unsigned char *rcv_buf,int data_len);
-    int Send(unsigned char *send_buf,int data_len);
+    int Send(const unsigned char *send_buf,int data_len);
     void ShowParam(void);
     bool isOpen();
     void reConnect();

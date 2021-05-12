@@ -20,7 +20,7 @@ public :
     //return recv len>0,return <0 if error 
     virtual int dataRecv(unsigned char *recv_buf,int data_len)=0;
     //return send len>0,return <0 if error 
-    virtual int dataSend(unsigned char *send_buf,int data_len)=0;
+    virtual int dataSend(const unsigned char *send_buf,int data_len)=0;
 };
 
 }

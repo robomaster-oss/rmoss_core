@@ -32,7 +32,7 @@ bool FixedPacketTool::isOpen()
     return false;
 }
 
-bool FixedPacketTool::sendPacket(FixedPacket packet)
+bool FixedPacketTool::sendPacket(const FixedPacket& packet)
 {
     if (isOpen()) {
         if (comm_dev_->dataSend(packet.buffer_, packet.len_) == packet.len_) {

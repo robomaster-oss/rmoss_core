@@ -25,7 +25,7 @@ class FixedPacketTool{
         ~FixedPacketTool();
     public:
         bool isOpen();
-        bool sendPacket(FixedPacket packet);
+        bool sendPacket(const FixedPacket& packet);
         bool recvPacket(FixedPacket &packet);
 
     protected:

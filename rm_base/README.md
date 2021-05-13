@@ -15,18 +15,18 @@ rm_base是rmoss_core 中的一个基础功能包，提供了与机器人底层ST
 
 |          文件           |                      功能描述                      |
 | :---------------------: | :------------------------------------------------: |
-|  comm_dev_interface.h   |              定义通用数据传输设备接口              |
-|    serialport.h/cpp     |                  串口设备通用驱动                  |
-|  serialport__dev.h/cpp  |    串口传输设备（实现了comm_dev_interface接口）    |
-|   fixed_packet.h/cpp    | 固定长度数据包，封装了数据拆包，解包，校验等功能。 |
-| fixed_packet_tool.h/cpp |                 固定数据包收发工具                 |
+|  comm_dev_interface.hpp |              定义通用数据传输设备接口              |
+|    serialport.hpp/cpp   |                  串口设备通用驱动                  |
+|  serialport_dev.hpp/cpp |    串口传输设备（实现了comm_dev_interface接口）    |
+|   fixed_packet.hpp      | 固定长度数据包，封装了数据拆包，解包，校验等功能。 |
+| fixed_packet_tool.hpp   |                 固定数据包收发工具                 |
 
 exampe文件：(提供了一个开发样例)
 
 |               文件                |       功能描述        |
 | :-------------------------------: | :-------------------: |
-|        protocol_example.h         |  通信协议命令宏定义   |
-|       rm_base_example.h/cpp       | 机器人通信ROS顶层封装 |
+|        protocol_example.hpp       |  通信协议命令宏定义   |
+|       rm_base_example.hpp/cpp     | 机器人通信ROS顶层封装 |
 | nodes/robot_base_example_node.cpp | 创建机器人通信ROS节点 |
 
 ## 3.快速使用

@@ -17,12 +17,12 @@ bool SerialPortDev::isOpen(){
     return mMcuSerialPort.isOpen();
 }
 
-int SerialPortDev::dataSend(const unsigned char *send_buf,int data_len){
+int SerialPortDev::sendData(const unsigned char *send_buf,int data_len){
     return mMcuSerialPort.Send(send_buf,data_len);
 
 }
 
-int SerialPortDev::dataRecv(unsigned char *recv_buf,int data_len){
+int SerialPortDev::recvData(unsigned char *recv_buf,int data_len){
     return mMcuSerialPort.Recv(recv_buf,data_len);
 }
 

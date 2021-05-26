@@ -45,7 +45,7 @@ template<int capacity>
 bool FixedPacketTool::sendPacket(const FixedPacket<capacity>& packet)
 {
     if(isOpen()) {
-        if (comm_dev_->dataSend(packet.buffer(), packet.len()) == packet.len()) {
+        if (comm_dev_->sendData(packet.buffer(), packet.len()) == packet.len()) {
             return true;
         }
     }
@@ -61,7 +61,7 @@ bool FixedPacketTool::recvPacket(FixedPacket<capacity>& packet)
     int recv_len;
     unsigned char tmp_buffer[RECV_BUFFER_MAX_LEN];
     int packet_len = packet.len();
-    recv_len = comm_dev_->dataRecv(tmp_buffer, packet_len);
+    recv_len = comm_dev_->recvData(tmp_buffer, packet_len);
     if (recv_len > 0) {
         // check packet
         if (packet.check(tmp_buffer, recv_len) == 0) { 

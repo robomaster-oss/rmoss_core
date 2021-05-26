@@ -18,9 +18,9 @@ class CommDevInterface{
 public :
     virtual bool isOpen()=0;
     //return recv len>0,return <0 if error 
-    virtual int dataRecv(unsigned char *recv_buf,int data_len)=0;
+    virtual int recvData(unsigned char *recv_buf,int data_len)=0;
     //return send len>0,return <0 if error 
-    virtual int dataSend(const unsigned char *send_buf,int data_len)=0;
+    virtual int sendData(const unsigned char *send_buf,int data_len)=0;
 };
 
 }

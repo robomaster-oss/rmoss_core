@@ -24,9 +24,9 @@ class SerialPortDev:public CommDevInterface{
         ~SerialPortDev(){};
     public:
         bool init(std::string dev_path="/dev/ttyUSB0");
-        bool isOpen();
-        int dataRecv(unsigned char *recv_buf,int data_len);
-        int dataSend(const unsigned char *send_buf,int data_len);
+        virtual bool isOpen();
+        virtual int recvData(unsigned char *recv_buf,int data_len);
+        virtual int sendData(const unsigned char *send_buf,int data_len);
     private:
         SerialPort mMcuSerialPort;
 };

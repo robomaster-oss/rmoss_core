@@ -35,7 +35,7 @@ projectile_tansform_tool_->transform(position,pitch,yaw)
 
 * position坐标系为右手坐标系，枪口为x方向
 
-**迭代弹道模型数学原理** : [doc/projectile_motion_iteration.md](doc/projectile_motion_iteration.md)
+**迭代弹道模型数学原理** : [rmoss_tutorials/projectile_motion_iteration](https://robomaster-oss.github.io/rmoss_tutorials/#/rmoss_core/rm_projectile_motion/projectile_motion_iteration)
 
 ## 4.维护者及开源许可证
 

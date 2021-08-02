@@ -13,7 +13,6 @@
 
 #include "rm_cam/camera_task.hpp"
 #include "rm_cam/usb_cam_dev.hpp"
-#include "rm_common/log.hpp"
 
 using namespace rm_cam;
 
@@ -21,7 +20,6 @@ int main(int argc, char* argv[]) {
     // creat ros2 node
     rclcpp::init(argc, argv);
     auto node = std::make_shared<rclcpp::Node>("usb_cam");
-    rm_common::rclcpp_log::setLogName(node->get_name());
     // declare parameter
     std::string dev_name =
         node->declare_parameter("usb_cam_path", "/dev/video0");

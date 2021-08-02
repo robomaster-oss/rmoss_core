@@ -11,7 +11,6 @@
 
 #include <thread>
 #include "rm_cam/usb_cam_dev.hpp"
-#include "rm_common/log.hpp"
 
 using namespace cv;
 using namespace std;
@@ -65,7 +64,8 @@ bool UsbCamDev::capImg(cv::Mat &img) {
     //check
     if (ret != 0) {
         //reconnect if camera is not opened or image is not captured.
-        RM_LOG_ERROR << "[UsbCamDev]:camera " << dev_path_ << " failed to capture image,reconnecting!" << std::endl;
+        
+        std::cout << "[UsbCamDev]:camera " << dev_path_ << " failed to capture image,reconnecting!" << std::endl;
         //重连摄像头
         is_open_ = false;
         if (cap_.isOpened()) {

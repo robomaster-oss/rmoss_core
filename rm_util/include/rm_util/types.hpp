@@ -13,6 +13,12 @@
 
 namespace rm_util {
     enum class RMColor {red, blue, unknown};
+
+    enum ServerState{
+        RUNNING,
+        PAUSE,
+        FAILURE
+    };
 }
 
 #endif //RM_UTIL_TYPES_HPP

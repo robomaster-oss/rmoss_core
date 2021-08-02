@@ -10,7 +10,6 @@
  ******************************************************************************/
 
 #include "rm_cam/virtual_cam_dev.hpp"
-#include "rm_common/log.hpp"
 #include <thread>
 
 using namespace cv;
@@ -37,7 +36,7 @@ bool VirtualCamDev::open() {
             is_open_ = true;
             return true;
         }else{
-            RM_LOG_ERROR<<"[VirtualCamDev]:can't open image <"<<image_path_<<">."<<std::endl;
+            std::cout << "[VirtualCamDev]:can't open image <"<<image_path_<<">."<<std::endl;
             return false;
         }
     } else if (current_mode_ == CameraMode::video) {
@@ -49,7 +48,7 @@ bool VirtualCamDev::open() {
             is_open_ = true;
             return true;
         }else{
-            RM_LOG_ERROR<<"[VirtualCamDev]:can't open video <"<<video_path_<<">."<<std::endl;
+            std::cout << "[VirtualCamDev]:can't open video <"<<video_path_<<">."<<std::endl;
             return false; 
         }
     }
@@ -76,12 +75,12 @@ bool VirtualCamDev::capImg(cv::Mat &img) {
             }
         }else{
             //if CameraMode::null
-            RM_LOG_ERROR<<"[VirtualCamDev]:CameraMode is null."<<std::endl;
+            std::cout <<"[VirtualCamDev]:CameraMode is null."<<std::endl;
             return false;
         }
         return false;
     } else {
-        RM_LOG_ERROR<<"[VirtualCamDev]:virtual camera is not opened."<<std::endl;
+        std::cout <<"[VirtualCamDev]:virtual camera is not opened."<<std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(10000));
         return false;
     }

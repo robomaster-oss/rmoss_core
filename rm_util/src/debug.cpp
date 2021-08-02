@@ -30,29 +30,24 @@ void setDebug(bool is_debug)
 //绘制旋转矩形
 void drawRotatedRect(cv::Mat& img, cv::RotatedRect r, Scalar color)
 {
-    if (g_is_debug) {
-        Point2f rect_points[4];
-        r.points(rect_points);
-        for (int j = 0; j < 4; j++)
-            line(img, rect_points[j], rect_points[(j + 1) % 4], color, 1, 8);
-    }
+
+    Point2f rect_points[4];
+    r.points(rect_points);
+    for (int j = 0; j < 4; j++)
+        line(img, rect_points[j], rect_points[(j + 1) % 4], color, 1, 8);
 }
 //绘制四边形
 void draw4Point4f(cv::Mat& img, cv::Point2f* point2fs, Scalar color)
 {
-    if (g_is_debug) {
-        for (int j = 0; j < 4; j++)
-            line(img, point2fs[j], point2fs[(j + 1) % 4], color, 1, 8);
-    }
+    for (int j = 0; j < 4; j++)
+        line(img, point2fs[j], point2fs[(j + 1) % 4], color, 1, 8);
 }
 //绘制多边形
 void drawConvexHull(cv::Mat& img, std::vector<cv::Point2f> points, Scalar color)
 {
-    if (g_is_debug) {
-        for (size_t j = 0; j < points.size() - 1; j++)
-            line(img, points[j], points[j + 1], color, 1, 8);
-        line(img, points[0], points[points.size() - 1], color, 1, 8);
-    }
+    for (size_t j = 0; j < points.size() - 1; j++)
+        line(img, points[j], points[j + 1], color, 1, 8);
+    line(img, points[0], points[points.size() - 1], color, 1, 8);
 }
 
 }

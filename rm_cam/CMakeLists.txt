@@ -12,7 +12,6 @@ endif()
 # Find package
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(rm_common REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(image_transport REQUIRED)
 find_package(cv_bridge REQUIRED)
@@ -25,7 +24,6 @@ AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
 add_library(${PROJECT_NAME} ${DIR_SRCS})
 ament_target_dependencies(${PROJECT_NAME}
     rclcpp 
-    rm_common
     sensor_msgs
     image_transport 
     cv_bridge

@@ -12,14 +12,15 @@ RoboMasterOSS是一个面向RoboMaster的开源软件栈项目，目的是为Rob
 
 rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础功能模块包，如相机模块，弹道运动模块等。
 
+* 目前项目处于重构中，API会进行修改，以符合[ROS2代码规范](https://docs.ros.org/en/galactic/Contributing/Code-Style-Language-Versions.html) , 更多开发计划详见[Roadmap](https://robomaster-oss.github.io/rmoss_tutorials/#/roadmap)
+
 ## 1.主要模块
 
 |          模块          |                           功能说明                           |
 | :--------------------: | :----------------------------------------------------------: |
-|      `rm_common`       |        公共工具包，包含调试，图像处理等公共基础工具。        |
+|      `rm_util`       |        公共工具包，包含调试，图像处理等公共基础工具。        |
 |       `rm_base`        | 基本通信工具包，包含单板计算机(SBC)与嵌入式系统(MCU)通信相关工具。 |
 |        `rm_cam`        |     相机工具包，实现usb相机驱动，以及图片视频虚拟相机。      |
-|       `rm_task`        |          任务相关工具，提供了一个图像相关任务基类。          |
 | `rm_projectile_motion` |  通用弹道模型工具包，可以修正子弹飞行过程中重力因素的影响。  |
 
 * rmoss项目使用ROS的坐标系标准以及基本单位标准 [REP 103](https://ros.org/reps/rep-0103.html). 

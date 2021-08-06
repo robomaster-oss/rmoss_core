@@ -17,19 +17,14 @@ namespace rm_util {
 
 //基于单目视觉位置测量。
 class MonoMeasureTool {
-private:
-    //相机参数
-    cv::Mat camera_intrinsic_; //相机内参3*3
-    cv::Mat camera_distortion_; //相机畸变参数1*5
-
 public:
-    bool setCameraInfo(std::vector<double> camera_intrinsic, std::vector<double> camera_distortion);
+    bool set_camera_info(std::vector<double> camera_intrinsic, std::vector<double> camera_distortion);
     //////////3d点坐标求解（use solve pnp）
     // points2d: input,一组图像上的2d点（4个点）
     // points3d: input,一组3d点（世界坐标系），对应图像上的点（4个点）
     // position: output,世界坐标系原点在相机坐标系下的位置。
     // return :state
-    bool solvePnP4Points(std::vector<cv::Point2f>& points2d, std::vector<cv::Point3f>& points3d,
+    bool solve_pnp(std::vector<cv::Point2f>& points2d, std::vector<cv::Point3f>& points3d,
         cv::Point3f& position);
     ////// 逆投影，已知深度，2d->3d点求解
     //p: intput,图像上点坐标
@@ -41,7 +36,11 @@ public:
     //pitch: output,视角pitch
     //yaw: output,视角yaw
     //return :state
-    void calcViewAngle(cv::Point2f p, float& pitch, float& yaw);
+    void calc_view_angle(cv::Point2f p, float& pitch, float& yaw);
+private:
+    //相机参数
+    cv::Mat camera_intrinsic_; //相机内参3*3
+    cv::Mat camera_distortion_; //相机畸变参数1*5
 };
 
 } // namespace rm_util

@@ -19,22 +19,21 @@ ImageTaskServer::ImageTaskServer(rclcpp::Node::SharedPtr &node,std::string topic
             Callback process_fn,bool spin_thread){
     node_ = node;
     process_fn_ = process_fn;
+    //TODO: use a dedicated thread to spin image subscription callback (wait for ROS Galactic?)
     spin_thread_ = spin_thread;
     run_flag_=false;
     //create image subscriber
     img_sub_= image_transport::create_subscription(node_.get(), topic_name, std::bind(
-      &ImageTaskServer::img_sub_cb, this, std::placeholders::_1), "raw");
+      &ImageTaskServer::img_cb, this, std::placeholders::_1), "raw");
 }
 
-
-void ImageTaskServer::img_sub_cb(const sensor_msgs::msg::Image::ConstSharedPtr & msg){
+void ImageTaskServer::img_cb(const sensor_msgs::msg::Image::ConstSharedPtr & msg){
     if(run_flag_){
       auto img=cv_bridge::toCvShare(msg, "bgr8")->image.clone();
       auto img_stamp=msg->header.stamp.sec + 0.000000001 * msg->header.stamp.nanosec;
       process_fn_(img,img_stamp);
     }
 }
-
 
 
 void ImageTaskServer::start(){

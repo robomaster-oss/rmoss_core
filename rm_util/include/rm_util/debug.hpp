@@ -14,21 +14,22 @@
 #include <opencv2/opencv.hpp>
 
 #define RM_DEBUG(text)             \
-    if (rm_util::isDebug()) \
+    if (rm_util::get_debug()) \
         text
 
 namespace rm_util {
     //const definition of color
-    const cv::Scalar blue = cv::Scalar(255, 0, 0);
-    const cv::Scalar green = cv::Scalar(0, 255, 0);
-    const cv::Scalar red = cv::Scalar(0, 0, 255);
+    const auto blue = cv::Scalar(255, 0, 0);
+    const auto green = cv::Scalar(0, 255, 0);
+    const auto red = cv::Scalar(0, 0, 255);
+
     // debug config
-    bool isDebug();
-    void setDebug(bool is_debug);
+    bool get_debug();
+    void set_debug(bool get_debug);
     // draw function
-    void drawRotatedRect(cv::Mat& img, cv::RotatedRect r, cv::Scalar color=green);
-    void draw4Point4f(cv::Mat& img, cv::Point2f* point2fs, cv::Scalar color=green);
-    void drawConvexHull(cv::Mat& img, std::vector<cv::Point2f> points, cv::Scalar color=green);
+    void draw_rotated_rect(cv::Mat& img, cv::RotatedRect r, cv::Scalar color=green);
+    void draw_4points(cv::Mat& img, cv::Point2f* point2fs, cv::Scalar color=green);
+    void draw_convex_hull(cv::Mat& img, std::vector<cv::Point2f> points, cv::Scalar color=green);
 } // namespace rm_util
 
 #endif // RM_UTIL_DEBUG_HPP

@@ -17,7 +17,7 @@ using namespace std;
 using namespace cv;
 using namespace rm_util;
 
-bool MonoMeasureTool::setCameraInfo(std::vector<double> camera_intrinsic, std::vector<double> camera_distortion)
+bool MonoMeasureTool::set_camera_info(std::vector<double> camera_intrinsic, std::vector<double> camera_distortion)
 {
     if (camera_intrinsic.size() != 9) {
         //the size of camera intrinsic must be 9 (equal 3*3)
@@ -34,7 +34,7 @@ bool MonoMeasureTool::setCameraInfo(std::vector<double> camera_intrinsic, std::v
     return true;
 }
 
-bool MonoMeasureTool::solvePnP4Points(vector<Point2f>& points2d, vector<Point3f>& points3d, cv::Point3f& position)
+bool MonoMeasureTool::solve_pnp(vector<Point2f>& points2d, vector<Point3f>& points3d, cv::Point3f& position)
 {
     if (points2d.size() != points3d.size()) {
         return false; //投影点数量不匹配
@@ -54,15 +54,11 @@ bool MonoMeasureTool::solvePnP4Points(vector<Point2f>& points2d, vector<Point3f>
 //输出3d点坐标的单位与distance（物距）的单位保持一致
 cv::Point3f MonoMeasureTool::unproject(cv::Point2f p, double distance)
 {
-    double fx;
-    double fy;
-    double u0;
-    double v0;
-
-    fx = camera_intrinsic_.ptr<double>(0)[0];
-    u0 = camera_intrinsic_.ptr<double>(0)[2];
-    fy = camera_intrinsic_.ptr<double>(1)[1];
-    v0 = camera_intrinsic_.ptr<double>(1)[2];
+    auto fx = camera_intrinsic_.ptr<double>(0)[0];
+    auto u0 = camera_intrinsic_.ptr<double>(0)[2];
+    auto fy = camera_intrinsic_.ptr<double>(1)[1];
+    auto v0 = camera_intrinsic_.ptr<double>(1)[2];
+    
     double zc = distance;
     double xc = (p.x - u0) * distance / fx;
     double yc = (p.y - v0) * distance / fy;
@@ -71,17 +67,12 @@ cv::Point3f MonoMeasureTool::unproject(cv::Point2f p, double distance)
 
 //获取image任意点的视角，pitch，yaw（相对相机坐标系）。
 //与相机坐标系保持一致。
-void MonoMeasureTool::calcViewAngle(cv::Point2f p, float& pitch, float& yaw)
+void MonoMeasureTool::calc_view_angle(cv::Point2f p, float& pitch, float& yaw)
 {
-    double fx;
-    double fy;
-    double u0;
-    double v0;
-
-    fx = camera_intrinsic_.ptr<double>(0)[0];
-    u0 = camera_intrinsic_.ptr<double>(0)[2];
-    fy = camera_intrinsic_.ptr<double>(1)[1];
-    v0 = camera_intrinsic_.ptr<double>(1)[2];
+    auto fx = camera_intrinsic_.ptr<double>(0)[0];
+    auto u0 = camera_intrinsic_.ptr<double>(0)[2];
+    auto fy = camera_intrinsic_.ptr<double>(1)[1];
+    auto v0 = camera_intrinsic_.ptr<double>(1)[2];
 
     pitch = atan2((p.y - v0), fy);
     yaw = atan2((p.x - u0), fx);

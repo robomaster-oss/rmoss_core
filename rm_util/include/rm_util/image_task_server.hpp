@@ -36,7 +36,7 @@ namespace rm_util {
         void start();
         void stop();
     private:
-        void img_sub_cb(const sensor_msgs::msg::Image::ConstSharedPtr & msg);
+        void img_cb(const sensor_msgs::msg::Image::ConstSharedPtr & msg);
     private:
         rclcpp::Node::SharedPtr node_;
         image_transport::Subscriber img_sub_;//订阅图片数据

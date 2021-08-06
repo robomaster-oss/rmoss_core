@@ -15,34 +15,34 @@ using namespace cv;
 namespace rm_util {
 
 //0-180,90为垂直
-float calcInclineAngle(cv::Point2f point1, cv::Point2f point2)
+float calc_inclination_angle(cv::Point2f point1, cv::Point2f point2)
 {
     float angle;
     if (point1.x == point2.x) {
-        return 90;
+        return CV_PI/2;
     } else {
         double k;
         k = -(point1.y - point2.y) / (point1.x - point2.x); //符号取反，图像坐标系和实际坐标系不统一
-        angle = (float)(atan(k) * 180 / CV_PI);
+        angle = (float)atan(k);
     }
     if (angle < 0) {
-        angle = angle + 180;
+        angle = angle + CV_PI;
     }
     return angle;
 }
 
-float calcInnerAngle(cv::Point2f vertexPoint, cv::Point2f point1, cv::Point2f point2)
+float calc_inner_angle(cv::Point2f vertex_point, cv::Point2f point1, cv::Point2f point2)
 {
     float a, b, c; //求角C
-    float angleC;
-    a = cv::norm(vertexPoint - point1);
-    b = cv::norm(vertexPoint - point2);
+    float angle_c;
+    a = cv::norm(vertex_point - point1);
+    b = cv::norm(vertex_point - point2);
     c = cv::norm(point1 - point2);
-    angleC = static_cast<float>(acos((a * a + b * b - c * c) / (2 * a * b)) / CV_PI * 180);
-    return angleC;
+    angle_c = static_cast<float>(acos((a * a + b * b - c * c) / (2 * a * b)));
+    return angle_c;
 }
 
-bool calcCircle(cv::Point2f p1, cv::Point2f p2, cv::Point2f p3, cv::Point2f& point, float& r)
+bool calc_circle_from_3points(cv::Point2f p1, cv::Point2f p2, cv::Point2f p3, cv::Point2f& point, float& r)
 {
     double a, b, c, d, e, f;
     a = 2 * (p2.x - p1.x);

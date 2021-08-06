@@ -26,13 +26,13 @@ enum class TimeUnit {
 /** 获取当前时间
 * @return: std::chrono::steady_clock::time_point，可用auto接收
 */
-std::chrono::steady_clock::time_point getCurrTime();
+std::chrono::steady_clock::time_point get_curr_time();
 
 /** 重载计时函数
 * @param: begin, 计时的开始时间
 * @param: end, 计时的结束时间
 */
-int64_t countTimeDuration(const std::chrono::steady_clock::time_point& begin,
+int64_t count_time_duration(const std::chrono::steady_clock::time_point& begin,
     const std::chrono::steady_clock::time_point& end, TimeUnit unit = TimeUnit::MILLISECONDS);
 
 }

@@ -12,13 +12,9 @@
 #define RM_UTIL_TYPES_HPP
 
 namespace rm_util {
-    enum class RMColor {red, blue, unknown};
+    enum class RMColor {red=1, blue=2, unknown=0};
 
-    enum ServerState{
-        RUNNING,
-        PAUSE,
-        FAILURE
-    };
+
 }
 
 #endif //RM_UTIL_TYPES_HPP

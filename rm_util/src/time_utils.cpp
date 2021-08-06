@@ -13,11 +13,11 @@
 using namespace std;
 using namespace rm_util;
 
-std::chrono::steady_clock::time_point getCurrTime(){
+std::chrono::steady_clock::time_point get_curr_time(){
     return std::chrono::steady_clock::now();
 }
 
-int64_t countTimeDuration(const std::chrono::steady_clock::time_point& begin, 
+int64_t count_time_duration(const std::chrono::steady_clock::time_point& begin, 
     const std::chrono::steady_clock::time_point& end, TimeUnit unit){
     if(unit == TimeUnit::MICROSECONDS){
         std::chrono::microseconds duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);

@@ -76,4 +76,4 @@ Maintainer:
 
 * Zhenpeng Ge,  zhenpeng.ge@qq.com
 
-rm_util is provided under MIT License.
+rm_util is provided under Apache License 2.0.

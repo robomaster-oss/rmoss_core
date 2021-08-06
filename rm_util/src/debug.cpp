@@ -1,53 +1,51 @@
-/*******************************************************************************
- *  Copyright (c) 2020 robomaster-oss, All rights reserved.
- *
- *  This program is free software: you can redistribute it and/or modify it 
- *  under the terms of the MIT License, See the MIT License for more details.
- *
- *  You should have received a copy of the MIT License along with this program.
- *  If not, see <https://opensource.org/licenses/MIT/>.
- *
- ******************************************************************************/
+// Copyright 2021 robomaster-oss.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 #include "rm_util/debug.hpp"
-using namespace std;
-using namespace cv;
 
-namespace rm_util {
+#include <vector>
 
+namespace rm_util
+{
 bool g_is_debug = false;
 
-bool get_debug()
-{
-    return g_is_debug;
-}
-void set_debug(bool get_debug)
-{
-    g_is_debug = get_debug;
-}
-//调试部分
+bool get_debug() {return g_is_debug;}
+void set_debug(bool get_debug) {g_is_debug = get_debug;}
 
-//绘制旋转矩形
-void draw_rotated_rect(cv::Mat& img, cv::RotatedRect r, Scalar color)
+// 绘制旋转矩形
+void draw_rotated_rect(cv::Mat & img, cv::RotatedRect r, cv::Scalar color)
 {
-
-    Point2f rect_points[4];
-    r.points(rect_points);
-    for (int j = 0; j < 4; j++)
-        line(img, rect_points[j], rect_points[(j + 1) % 4], color, 1, 8);
+  cv::Point2f rect_points[4];
+  r.points(rect_points);
+  for (int j = 0; j < 4; j++) {
+    cv::line(img, rect_points[j], rect_points[(j + 1) % 4], color, 1, 8);
+  }
 }
-//绘制四边形
-void draw_4points(cv::Mat& img, cv::Point2f* point2fs, Scalar color)
+// 绘制四边形
+void draw_4points(cv::Mat & img, cv::Point2f * point2fs, cv::Scalar color)
 {
-    for (int j = 0; j < 4; j++)
-        line(img, point2fs[j], point2fs[(j + 1) % 4], color, 1, 8);
+  for (int j = 0; j < 4; j++) {
+    cv::line(img, point2fs[j], point2fs[(j + 1) % 4], color, 1, 8);
+  }
 }
-//绘制多边形
-void draw_convex_hull(cv::Mat& img, std::vector<cv::Point2f> points, Scalar color)
+// 绘制多边形
+void draw_convex_hull(cv::Mat & img, std::vector<cv::Point2f> & points, cv::Scalar color)
 {
-    for (size_t j = 0; j < points.size() - 1; j++)
-        line(img, points[j], points[j + 1], color, 1, 8);
-    line(img, points[0], points[points.size() - 1], color, 1, 8);
+  for (size_t j = 0; j < points.size() - 1; j++) {
+    cv::line(img, points[j], points[j + 1], color, 1, 8);
+  }
+  cv::line(img, points[0], points[points.size() - 1], color, 1, 8);
 }
 
-}
+}  // namespace rm_util

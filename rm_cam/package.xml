@@ -8,7 +8,7 @@
     in addition, it also provides simulated camera based on iamge and video.
   </description>
   <maintainer email="zhenpeng.ge@qq.com">zhenpeng ge</maintainer>
-  <license>MIT</license>
+  <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

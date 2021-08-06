@@ -7,7 +7,7 @@
   <version>0.9.0</version>
   <description>Meta-package for rmoss_core.</description>
   <maintainer email="zhenpeng.ge@qq.com">zhenpeng ge</maintainer>
-  <license>MIT License</license>
+  <license>Apache License 2.0 License</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
@@ -17,7 +17,6 @@
   <exec_depend>rm_interfaces</exec_depend>
   <exec_depend>rm_projectile_motion</exec_depend>
   <exec_depend>rm_task</exec_depend>
-
 
   <export>
     <build_type>ament_cmake</build_type>

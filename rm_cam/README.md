@@ -130,5 +130,5 @@ CamParameter::fps;//帧率
 
 maintainer：Zhenpeng Ge,  zhenpeng.ge@qq.com
 
-rm_cam is provided under MIT.
+rm_cam is provided under Apache License 2.0.
 

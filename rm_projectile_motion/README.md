@@ -41,4 +41,4 @@ projectile_tansform_tool_->transform(position,pitch,yaw)
 
 - Zhenpeng Ge,  zhenpeng.ge@qq.com
 
-* rm_projectile_motion is provided under MIT
+* rm_projectile_motion is provided under Apache License 2.0

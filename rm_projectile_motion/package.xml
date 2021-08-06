@@ -7,7 +7,7 @@
     robomaster tool package for projectile motion,it's helpful to develop application like Auto-Aim,etc.
   </description>
   <maintainer email="zhenpeng.ge@qq.com">zhenpeng ge</maintainer>
-  <license>MIT</license>
+  <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

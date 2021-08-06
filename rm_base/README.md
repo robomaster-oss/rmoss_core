@@ -56,4 +56,4 @@ __运行节点：__
 
 - Zhenpeng Ge,  zhenpeng.ge@qq.com
 
-* rm_base is provided under MIT.
+* rm_base is provided under Apache License 2.0.

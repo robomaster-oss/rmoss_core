@@ -11,35 +11,43 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef RM_BASE_ROBOT_BASE_EXAMPLE_HPP
-#define RM_BASE_ROBOT_BASE_EXAMPLE_HPP
+
+#ifndef RM_BASE__ROBOT_BASE_EXAMPLE_HPP_
+#define RM_BASE__ROBOT_BASE_EXAMPLE_HPP_
 
 #include <thread>
-#include <rclcpp/rclcpp.hpp>
-#include "rm_base/comm_dev_interface.hpp"
+#include <memory>
+#include "rclcpp/rclcpp.hpp"
+#include "rm_base/transporter_interface.hpp"
 #include "rm_base/fixed_packet_tool.hpp"
 #include "rmoss_interfaces/msg/gimbal_cmd.hpp"
 
-namespace rm_base{
 
-class RobotBaseExample{
-    public:
-        RobotBaseExample(rclcpp::Node::SharedPtr &nh,std::shared_ptr<CommDevInterface> comm_dev);
-        ~RobotBaseExample(){};
-    public:
-        void mcuListenThread();
-    private:
-        void publishTask();
-        void cmdGimbalCb(const rmoss_interfaces::msg::GimbalCmd::SharedPtr msg);
-    private:
-        rclcpp::Node::SharedPtr nh_;
-        std::thread mcu_listen_thread_;
-        //tool
-        std::shared_ptr<FixedPacketTool> packet_tool_;
-        //sub
-        rclcpp::Subscription<rmoss_interfaces::msg::GimbalCmd>::SharedPtr cmd_gimbal_sub_;
+namespace rm_base
+{
+
+class RobotBaseExample
+{
+public:
+  RobotBaseExample(rclcpp::Node::SharedPtr node, TransporterInterface::SharedPtr transporter);
+  ~RobotBaseExample() {}
+
+public:
+  void listen_loop();
+
+private:
+  void gimbal_cmd_cb(const rmoss_interfaces::msg::GimbalCmd::SharedPtr msg);
+
+private:
+  rclcpp::Node::SharedPtr node_;
+  std::unique_ptr<std::thread> listen_thread_;
+  // tool
+  TransporterInterface::SharedPtr transporter_;
+  FixedPacket16Tool::SharedPtr packet_tool_;
+  // sub
+  rclcpp::Subscription<rmoss_interfaces::msg::GimbalCmd>::SharedPtr cmd_gimbal_sub_;
 };
 
-}
+}  // namespace rm_base
 
-#endif //RM_BASE_ROBOT_BASE_EXAMPLE_HPP
+#endif  // RM_BASE__ROBOT_BASE_EXAMPLE_HPP_

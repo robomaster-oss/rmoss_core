@@ -13,57 +13,74 @@
 // limitations under the License.
 
 #include "rm_base/robot_base_example.hpp"
-#include "rm_base/protocol_example.hpp"
+
 #include <thread>
+#include <memory>
 
-using namespace rm_base;
-
-RobotBaseExample::RobotBaseExample(rclcpp::Node::SharedPtr &nh, std::shared_ptr<CommDevInterface> comm_dev)
+namespace rm_base
 {
-    //init
-    nh_=nh;
-    packet_tool_ = std::make_shared<FixedPacketTool>(comm_dev);
-    //sub
-    cmd_gimbal_sub_ = nh_->create_subscription<rmoss_interfaces::msg::GimbalCmd>("cmd_gimbal", 10, std::bind(&RobotBaseExample::cmdGimbalCb, this, std::placeholders::_1));
-    //task thread
-    mcu_listen_thread_= std::thread(&RobotBaseExample::mcuListenThread, this);
+
+namespace protocol_example
+{
+typedef enum : unsigned char
+{
+  Gimbal_Angle_Control = 0x01,
+  Change_Mode = 0xa1
+} ProtocolExample;
 }
 
-void RobotBaseExample::cmdGimbalCb(const rmoss_interfaces::msg::GimbalCmd::SharedPtr msg)
+RobotBaseExample::RobotBaseExample(
+  rclcpp::Node::SharedPtr node,
+  TransporterInterface::SharedPtr transporter)
+: node_(node), transporter_(transporter)
 {
-    FixedPacket32 packet;
-    packet.loadData<unsigned char>(protocol_example::Gimbal_Angle_Control, 1);
-    packet.loadData<unsigned char>(0x00, 2);
-    packet.loadData<float>(msg->position.pitch, 3);
-    packet.loadData<float>(msg->position.yaw, 7);
-    packet.pack();
-    packet_tool_->sendPacket(packet);
-    //delay for data send.
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+  // init
+  packet_tool_ = std::make_shared<FixedPacket16Tool>(transporter);
+  // sub
+  cmd_gimbal_sub_ = node_->create_subscription<rmoss_interfaces::msg::GimbalCmd>(
+    "cmd_gimbal", 10,
+    std::bind(&RobotBaseExample::gimbal_cmd_cb, this, std::placeholders::_1));
+  // task thread
+  listen_thread_ = std::make_unique<std::thread>(&RobotBaseExample::listen_loop, this);
 }
 
-void RobotBaseExample::mcuListenThread()
+void RobotBaseExample::gimbal_cmd_cb(const rmoss_interfaces::msg::GimbalCmd::SharedPtr msg)
 {
-    FixedPacket32 packet;
-    while (rclcpp::ok()){
-        if (packet_tool_->recvPacket(packet)){
-            //the packet have already unpacked.
-            unsigned char cmd;
-            packet.unloadData(cmd, 1);
-            if (cmd == (unsigned char)protocol_example::Change_Mode){
-                unsigned char mode = 0;
-                packet.unloadData(mode, 2);
-                if (mode == 0x00){
-                    RCLCPP_INFO(nh_->get_logger(), "change mode: normal mode");
-                }else if (mode == 0x01){
-                    RCLCPP_INFO(nh_->get_logger(), "change mode: auto aim mode");
-                }else{
-                    RCLCPP_INFO(nh_->get_logger(), "change mode:  mode err!");
-                }
-            }
-            else{
-                //invalid cmd
-            }
+  FixedPacket16 packet;
+  packet.load_data<unsigned char>(protocol_example::Gimbal_Angle_Control, 1);
+  packet.load_data<unsigned char>(0x00, 2);
+  packet.load_data<float>(msg->position.pitch, 3);
+  packet.load_data<float>(msg->position.yaw, 7);
+  packet.pack();
+  packet_tool_->send_packet(packet);
+  // delay for data send.
+  std::this_thread::sleep_for(std::chrono::milliseconds(5));
+}
+
+void RobotBaseExample::listen_loop()
+{
+  FixedPacket16 packet;
+  while (rclcpp::ok()) {
+    if (packet_tool_->recv_packet(packet)) {
+      // the packet have already unpacked.
+      unsigned char cmd;
+      packet.unload_data(cmd, 1);
+      if (cmd == (unsigned char)protocol_example::Change_Mode) {
+        unsigned char mode = 0;
+        packet.unload_data(mode, 2);
+        if (mode == 0x00) {
+          RCLCPP_INFO(node_->get_logger(), "change mode: normal mode");
+        } else if (mode == 0x01) {
+          RCLCPP_INFO(node_->get_logger(), "change mode: auto aim mode");
+        } else {
+          RCLCPP_INFO(node_->get_logger(), "change mode:  mode err!");
         }
+      } else {
+        // invalid cmd
+      }
     }
+  }
 }
+
+
+}  // namespace rm_base

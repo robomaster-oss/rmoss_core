@@ -19,10 +19,10 @@ find_package(geometry_msgs REQUIRED)
 include_directories(include)
 
 # Create rm_base lib
-AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
 add_library(${PROJECT_NAME} ${DIR_SRCS})
 ament_target_dependencies(${PROJECT_NAME}
-    rclcpp 
+    rclcpp
     rmoss_interfaces
     geometry_msgs
 )
@@ -47,9 +47,9 @@ install(TARGETS robot_base_example
   DESTINATION lib/${PROJECT_NAME}
 )
 # Install executable scripts
-install(PROGRAMS 
-        scripts/test_control_chassis.py 
-        scripts/test_control_gimbal.py 
+install(PROGRAMS
+        scripts/test_control_chassis.py
+        scripts/test_control_gimbal.py
     DESTINATION lib/${PROJECT_NAME})
 
 # Export rm_base lib

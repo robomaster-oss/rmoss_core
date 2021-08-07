@@ -11,29 +11,34 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef RM_PROJECTILE_MOTION_GIMBAL_TRANSFORM_TOOL_HPP
-#define RM_PROJECTILE_MOTION_GIMBAL_TRANSFORM_TOOL_HPP
 
-#include "rm_projectile_motion/projectile_model_interface.hpp"
+#ifndef RM_PROJECTILE_MOTION__GIMBAL_TRANSFORM_TOOL_HPP_
+#define RM_PROJECTILE_MOTION__GIMBAL_TRANSFORM_TOOL_HPP_
+
 #include <opencv2/opencv.hpp>
+#include <memory>
 
-namespace rm_projectile_motion {
+#include "rm_projectile_motion/projectile_solver_interface.hpp"
 
-class GimbalTransformTool {
-    public:
-        GimbalTransformTool(){};
-        ~GimbalTransformTool(){};
-    public:
-        void setProjectileModel(std::shared_ptr<ProjectileModelInterface> model);
-    public:
-        // position :input, position of target object in gimbal frame
-        // pitch,yaw : output, angle of gimbal
-        bool transform(cv::Point3f position, float &pitch, float &yaw);
-        //bool transform(cv::Point3f position,float current_pitch,float &delta_pitch, float &delta_yaw);
-    private:
-        std::shared_ptr<ProjectileModelInterface> model_;
+namespace rm_projectile_motion
+{
+
+class GimbalTransformTool
+{
+public:
+  using SharedPtr = std::shared_ptr<GimbalTransformTool>;
+  explicit GimbalTransformTool(std::shared_ptr<ProjectileSolverInterface> solver = nullptr)
+  : solver_(solver) {}
+
+  void set_projectile_solver(std::shared_ptr<ProjectileSolverInterface> solver) {solver_ = solver;}
+  // position :input, position of target object in gimbal frame
+  // pitch,yaw : output, angle of gimbal
+  bool calculate(cv::Point3f position, float & pitch, float & yaw);
+
+private:
+  std::shared_ptr<ProjectileSolverInterface> solver_;
 };
 
 }  // namespace rm_projectile_motion
 
-#endif  // RM_PROJECTILE_MOTION_GIMBAL_TRANSFORM_TOOL_HPP
+#endif  // RM_PROJECTILE_MOTION__GIMBAL_TRANSFORM_TOOL_HPP_

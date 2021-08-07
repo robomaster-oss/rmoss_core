@@ -12,26 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "rm_projectile_motion/gimbal_transform_tool.hpp"
+#ifndef RM_PROJECTILE_MOTION__GAF_PROJECTILE_SOLVER_HPP_
+#define RM_PROJECTILE_MOTION__GAF_PROJECTILE_SOLVER_HPP_
+
+#include "rm_projectile_motion/iterative_projectile_solver.hpp"
 
 namespace rm_projectile_motion
 {
 
-bool GimbalTransformTool::calculate(cv::Point3f position, float & pitch, float & yaw)
+// 考虑重力和空气阻力（gaf:Gravity and Air Frication）的弹道重力修正工具.
+class GafProjectileSolver : public IterativeProjectileSolver
 {
-  if (!solver_) {
-    // if model is nullptr, use line model.
-    pitch = -static_cast<float>(atan2(position.z, position.x));
-  } else {
-    float angle;
-    if (solver_->solve(position.z, position.x, angle)) {
-      pitch = -angle;
-    } else {
-      return false;
-    }
-  }
-  yaw = static_cast<float>(atan2(position.y, position.x));
-  return true;
-}
+public:
+  GafProjectileSolver(float initial_vel, float friction_coeff);
+  ~GafProjectileSolver() = default;
+
+public:
+  void forward_motion(float given_angle, float given_x, float & h, float & t);
+
+private:
+  // parameter
+  float initial_vel_;
+  float friction_coeff_;
+};
 
 }  // namespace rm_projectile_motion
+
+#endif  // RM_PROJECTILE_MOTION__GAF_PROJECTILE_SOLVER_HPP_

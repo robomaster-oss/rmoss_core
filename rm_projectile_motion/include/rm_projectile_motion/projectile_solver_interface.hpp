@@ -11,17 +11,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef RM_PROJECTILE_MOTION_PROJECTILE_MODEL_INTERFACE_HPP
-#define RM_PROJECTILE_MOTION_PROJECTILE_MODEL_INTERFACE_HPP
+#ifndef RM_PROJECTILE_MOTION__PROJECTILE_SOLVER_INTERFACE_HPP_
+#define RM_PROJECTILE_MOTION__PROJECTILE_SOLVER_INTERFACE_HPP_
 
-namespace rm_projectile_motion {
+namespace rm_projectile_motion
+{
 
-class ProjectileModelInterface {
-   public:
-    // return: state, 0 if transform successfully.
-    virtual bool solve(float target_x,float target_h, float &angle) = 0;
+class ProjectileSolverInterface
+{
+public:
+  // return true if transform successfully.
+  virtual bool solve(float target_x, float target_h, float & angle) = 0;
 };
 
 }  // namespace rm_projectile_motion
 
-#endif  // RM_PROJECTILE_MOTION_PROJECTILE_MODEL_INTERFACE_HPP
+#endif  // RM_PROJECTILE_MOTION__PROJECTILE_SOLVER_INTERFACE_HPP_

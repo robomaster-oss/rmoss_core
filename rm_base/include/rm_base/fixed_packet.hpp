@@ -34,7 +34,7 @@ public:
   // 设置校验位
   void pack();
   // 检查校验位，是否为合法数据帧
-  int check(unsigned char * recv_buffer, int recv_len);
+  bool check(unsigned char * recv_buffer, int recv_len);
   // 清除缓存
   void clear();
   // copy数据到缓存buffer
@@ -88,17 +88,17 @@ void FixedPacket<capacity>::pack()
 
 // 数据帧检查
 template<int capacity>
-int FixedPacket<capacity>::check(unsigned char * tmp_buffer, int recv_len)
+bool FixedPacket<capacity>::check(unsigned char * tmp_buffer, int recv_len)
 {
   // 检查长度
   if (recv_len != capacity) {
-    return -1;
+    return false;
   }
   // 检查帧头，帧尾,
   if ((tmp_buffer[0] != 0xff) || (tmp_buffer[capacity - 1] != 0x0d)) {
-    return -2;
+    return false;
   }
-  return 0;
+  return true;
 }
 
 // 数据帧清空

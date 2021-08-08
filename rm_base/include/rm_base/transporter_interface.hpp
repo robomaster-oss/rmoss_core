@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 #ifndef RM_BASE__TRANSPORTER_INTERFACE_HPP_
 #define RM_BASE__TRANSPORTER_INTERFACE_HPP_
 
@@ -24,8 +25,8 @@ class TransporterInterface
 {
 public:
   using SharedPtr = std::shared_ptr<TransporterInterface>;
-  virtual bool open() {return false;}
-  virtual bool close() {return false;}
+  virtual bool open() = 0;
+  virtual void close() = 0;
   virtual bool is_open() = 0;
   // return recv len>0,return <0 if error
   virtual int read(unsigned char * buffer, int len) = 0;

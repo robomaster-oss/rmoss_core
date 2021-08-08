@@ -166,15 +166,14 @@ bool UartTransporter::open()
   return true;
 }
 
-bool UartTransporter::close()
+void UartTransporter::close()
 {
   if (!is_open_) {
-    return true;
+    return;
   }
   ::close(fd_);
   fd_ = -1;
   is_open_ = false;
-  return true;
 }
 
 bool UartTransporter::is_open()

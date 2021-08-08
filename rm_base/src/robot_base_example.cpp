@@ -24,8 +24,8 @@ namespace protocol_example
 {
 typedef enum : unsigned char
 {
-  Gimbal_Angle_Control = 0x01,
-  Change_Mode = 0xa1
+  GimbalAngleControl = 0x01,
+  ChangeMode = 0xa1
 } ProtocolExample;
 }
 
@@ -47,7 +47,7 @@ RobotBaseExample::RobotBaseExample(
 void RobotBaseExample::gimbal_cmd_cb(const rmoss_interfaces::msg::GimbalCmd::SharedPtr msg)
 {
   FixedPacket16 packet;
-  packet.load_data<unsigned char>(protocol_example::Gimbal_Angle_Control, 1);
+  packet.load_data<unsigned char>(protocol_example::GimbalAngleControl, 1);
   packet.load_data<unsigned char>(0x00, 2);
   packet.load_data<float>(msg->position.pitch, 3);
   packet.load_data<float>(msg->position.yaw, 7);
@@ -65,7 +65,7 @@ void RobotBaseExample::listen_loop()
       // the packet have already unpacked.
       unsigned char cmd;
       packet.unload_data(cmd, 1);
-      if (cmd == (unsigned char)protocol_example::Change_Mode) {
+      if (cmd == (unsigned char)protocol_example::ChangeMode) {
         unsigned char mode = 0;
         packet.unload_data(mode, 2);
         if (mode == 0x00) {

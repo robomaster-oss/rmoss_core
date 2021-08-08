@@ -71,7 +71,7 @@ bool FixedPacketTool<capacity>::recv_packet(FixedPacket<capacity> & packet)
   int recv_len = transporter_->read(tmp_buffer, capacity);
   if (recv_len > 0) {
     // check packet
-    if (packet.check(tmp_buffer, recv_len) == 0) {
+    if (packet.check(tmp_buffer, recv_len)) {
       packet.copy_from(tmp_buffer);
       return true;
     } else {
@@ -84,7 +84,7 @@ bool FixedPacketTool<capacity>::recv_packet(FixedPacket<capacity> & packet)
       recv_buf_len_ = recv_buf_len_ + recv_len;
       // 遍历校验
       for (int i = 0; (i + capacity) <= recv_buf_len_; i++) {
-        if (packet.check(recv_buffer_ + i, capacity) == 0) {
+        if (packet.check(recv_buffer_ + i, capacity)) {
           packet.copy_from(recv_buffer_ + i);
           // 读取一帧后，更新接收缓存
           int k = 0;

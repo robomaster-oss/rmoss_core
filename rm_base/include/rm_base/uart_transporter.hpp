@@ -31,11 +31,11 @@ public:
   : device_path_(device_path), speed_(speed), flow_ctrl_(flow_ctrl),
     databits_(databits), stopbits_(stopbits), parity_(parity) {}
 
-  virtual bool is_open();
-  virtual bool open();
-  virtual bool close();
-  virtual int read(unsigned char * buffer, int len);
-  virtual int write(const unsigned char * buffer, int len);
+  bool open() override;
+  void close() override;
+  bool is_open() override;
+  int read(unsigned char * buffer, int len) override;
+  int write(const unsigned char * buffer, int len) override;
 
 private:
   bool set_param(

@@ -1,0 +1,6 @@
+
+repositories:
+  rmoss_interfaces:
+    type: git
+    url: https://github.com/robomaster-oss/rmoss_interfaces.git
+    version: main

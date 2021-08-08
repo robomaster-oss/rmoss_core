@@ -20,11 +20,11 @@ def generate_launch_description():
         Node(package='rm_cam',
             executable='virtual_image_cam',
             parameters=[
-                {'camera_name': 'front_camera'},
                 {'image_path': image_path},
-                {'cam_fps': 30},
+                {'camera_name': 'front_camera'},
                 {'camera_matrix': [1552.7, 0.0, 640.0, 0.0, 1537.9, 360.0, 0.0, 0.0, 1.0]},
                 {'camera_distortion': [0.0, 0.0, 0.0, 0.0, 0.0]},
+                {'fps': 30},
             ],
             output='screen')
     ])

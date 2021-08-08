@@ -13,6 +13,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(rmoss_interfaces REQUIRED)
 find_package(image_transport REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(OpenCV REQUIRED)
@@ -20,12 +21,13 @@ find_package(OpenCV REQUIRED)
 # Include
 include_directories(include)
 # Create rm_cam lib
-AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
 add_library(${PROJECT_NAME} ${DIR_SRCS})
 ament_target_dependencies(${PROJECT_NAME}
-    rclcpp 
+    rclcpp
     sensor_msgs
-    image_transport 
+    rmoss_interfaces
+    image_transport
     cv_bridge
     OpenCV
 )
@@ -59,7 +61,7 @@ install(TARGETS usb_cam virtual_image_cam virtual_video_cam
 )
 
 # Install launch res directories
-install(DIRECTORY launch res
+install(DIRECTORY launch resource config
   DESTINATION share/${PROJECT_NAME}
 )
 
@@ -72,9 +74,10 @@ endif()
 # specific order: dependents before dependencies
 ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp)
-ament_export_dependencies(sensor_msgs) 
-ament_export_dependencies(image_transport) 
-ament_export_dependencies(cv_bridge) 
-ament_export_dependencies(OpenCV)   
+ament_export_dependencies(sensor_msgs)
+ament_export_dependencies(rmoss_interfaces)
+ament_export_dependencies(image_transport)
+ament_export_dependencies(cv_bridge)
+ament_export_dependencies(OpenCV)
 
 ament_package()

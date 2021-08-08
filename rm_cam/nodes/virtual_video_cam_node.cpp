@@ -12,29 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <rclcpp/rclcpp.hpp>
+#include <memory>
+#include <string>
 
-#include "rm_cam/camera_task.hpp"
-#include "rm_cam/virtual_cam_dev.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "rm_cam/cam_server.hpp"
+#include "rm_cam/virtual_cam.hpp"
 
-using namespace rm_cam;
 
-int main(int argc, char* argv[]) {
-    // creat ros2 node
-    rclcpp::init(argc, argv);
-    auto node = std::make_shared<rclcpp::Node>("virtual_video_cam");
-    // declare parameter
-    node->declare_parameter("video_path");
-    std::string video_path = node->get_parameter("video_path").as_string();
-    // create device
-    auto cam_dev = std::make_shared<VirtualCamDev>();
-    cam_dev->setVideoSource(video_path);
-    cam_dev->open();
-    // create a camera node
-    auto cam_task = std::make_shared<CameraTask>(node, cam_dev);
-    // run node until it's exited
-    rclcpp::spin(node);
-    // clean up
-    rclcpp::shutdown();
-    return 0;
+int main(int argc, char * argv[])
+{
+  // creat ros2 node
+  rclcpp::init(argc, argv);
+  auto node = std::make_shared<rclcpp::Node>("virtual_video_cam");
+  // declare parameter
+  node->declare_parameter("video_path");
+  std::string video_path = node->get_parameter("video_path").as_string();
+  // create device
+  auto cam_dev = std::make_shared<rm_cam::VirtualCam>(rm_cam::VirtualCam::VIDEO_MODE, video_path);
+  // create a camera node
+  auto cam_task = std::make_shared<rm_cam::CamServer>(node, cam_dev);
+  // run node until it's exited
+  rclcpp::spin(node);
+  // clean up
+  rclcpp::shutdown();
+  return 0;
 }

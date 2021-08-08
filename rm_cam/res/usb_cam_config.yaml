@@ -1,8 +1,0 @@
-usb_cam:
-    ros__parameters:
-        cam_topic_name: "front_camera" 
-        usb_cam_path : "/dev/video0"
-        cam_width: 640
-        cam_height: 480
-        cam_fps: 20
-

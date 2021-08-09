@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build and Test (foxy)
 on:
   pull_request:
     branches: [ main ]
@@ -8,14 +8,62 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checking out
+      - name: Check out
         uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+      - name: Check Changed files
+        id: check_changed_files
+        uses: tj-actions/changed-files@v9.2
+      - name: Set CI flag
+        id: ci_flag   
+        run: |
+          for file in ${{ steps.check_changed_files.outputs.all_changed_files }}
+          do
+            echo "::set-output name=rmoss_core::true"
+            if [[ $file == rm_util* ]]; then
+              echo "::set-output name=rm_util::true"
+            elif [[ $file == rm_base/* ]]; then
+              echo "::set-output name=rm_base::true"
+            elif [[ $file == rm_cam/* ]]; then
+              echo "::set-output name=rm_cam::true"
+            elif [[ $file == rm_projectile_motion/* ]]; then
+              echo "::set-output name=rm_projectile_motion::true"
+            else
+              continue
+            fi
+          done  
       - name: Setup ROS 2
         uses: ros-tooling/setup-ros@v0.2
         with:
           required-ros-distributions: foxy
-      - name: Build and test
+      - name: Build rmoss_core
         uses: ros-tooling/action-ros-ci@v0.2
         with:
           target-ros2-distro: foxy
           vcs-repo-file-url: "${{ github.workspace }}/tools/dependency.repos"
+          skip-tests: true
+      - name: Test rm_util
+        if: steps.ci_flag.outputs.rm_util == 'true'
+        run: |
+          source /opt/ros/foxy/setup.sh
+          cd ros_ws
+          colcon test --packages-select rm_util --event-handlers console_cohesion+ --return-code-on-test-failure
+      - name: Test rm_base
+        if: steps.ci_flag.outputs.rm_base == 'true'
+        run: |
+          source /opt/ros/foxy/setup.sh
+          cd ros_ws
+          colcon test --packages-select rm_base --event-handlers console_cohesion+ --return-code-on-test-failure
+      - name: Test rm_cam
+        if: steps.ci_flag.outputs.rm_cam == 'true'
+        run: |
+          source /opt/ros/foxy/setup.sh
+          cd ros_ws
+          colcon test --packages-select rm_cam --event-handlers console_cohesion+ --return-code-on-test-failure
+      - name: Test rm_projectile_motion
+        if: steps.ci_flag.outputs.rm_projectile_motion == 'true'
+        run: |
+          source /opt/ros/foxy/setup.sh
+          cd ros_ws
+          colcon test --packages-select rm_projectile_motion --event-handlers console_cohesion+ --return-code-on-test-failure

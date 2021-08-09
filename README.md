@@ -1,3 +1,8 @@
+# rmoss_core
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Build and Test](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci_foxy.yml/badge.svg?branch=main&event=schedule)](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci_foxy.yml)
+
 ![](rmoss_bg.png)
 RoboMasterOSS是一个面向RoboMaster的开源软件栈项目，目的是为RoboMaster机器人软件开发提供了一个快速的，灵活的开发工具，支持算法原型研究和robomaster比赛应用开发。
 
@@ -8,7 +13,7 @@ RoboMasterOSS是一个面向RoboMaster的开源软件栈项目，目的是为Rob
 >
 > 更多详情参考官网：[www.robomaster.com](https://www.robomaster.com/)
 
-# rmoss_core
+
 
 rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础功能模块包，如相机模块，弹道运动模块等。
 

@@ -1,8 +1,8 @@
 # rmoss_core
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1a5495d4fddf48e4baede6e2351d7d7d)](https://app.codacy.com/gh/robomaster-oss/rmoss_core?utm_source=github.com&utm_medium=referral&utm_content=robomaster-oss/rmoss_core&utm_campaign=Badge_Grade_Settings)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Build and Test](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci_foxy.yml/badge.svg?branch=main&event=schedule)](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci_foxy.yml)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1a5495d4fddf48e4baede6e2351d7d7d)](https://app.codacy.com/gh/robomaster-oss/rmoss_core?utm_source=github.com&utm_medium=referral&utm_content=robomaster-oss/rmoss_core&utm_campaign=Badge_Grade_Settings)
 
 ![](rmoss_bg.png)
 RoboMasterOSS是一个面向RoboMaster的开源软件栈项目，目的是为RoboMaster机器人软件开发提供了一个快速的，灵活的开发工具，支持算法原型研究和robomaster比赛应用开发。

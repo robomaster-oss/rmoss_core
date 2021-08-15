@@ -1,4 +1,4 @@
-name: Build and Test (foxy)
+name: Build and Test (Galactic)
 on:
   pull_request:
     branches: [ main ]
@@ -36,34 +36,34 @@ jobs:
       - name: Setup ROS 2
         uses: ros-tooling/setup-ros@v0.2
         with:
-          required-ros-distributions: foxy
+          required-ros-distributions: galactic
       - name: Build rmoss_core
         uses: ros-tooling/action-ros-ci@v0.2
         with:
-          target-ros2-distro: foxy
+          target-ros2-distro: galactic
           vcs-repo-file-url: "${{ github.workspace }}/tools/dependency.repos"
           skip-tests: true
       - name: Test rm_util
         if: steps.ci_flag.outputs.rm_util == 'true'
         run: |
-          source /opt/ros/foxy/setup.sh
+          source /opt/ros/galactic/setup.sh
           cd ros_ws
           colcon test --packages-select rm_util --event-handlers console_cohesion+ --return-code-on-test-failure
       - name: Test rm_base
         if: steps.ci_flag.outputs.rm_base == 'true'
         run: |
-          source /opt/ros/foxy/setup.sh
+          source /opt/ros/galactic/setup.sh
           cd ros_ws
           colcon test --packages-select rm_base --event-handlers console_cohesion+ --return-code-on-test-failure
       - name: Test rm_cam
         if: steps.ci_flag.outputs.rm_cam == 'true'
         run: |
-          source /opt/ros/foxy/setup.sh
+          source /opt/ros/galactic/setup.sh
           cd ros_ws
           colcon test --packages-select rm_cam --event-handlers console_cohesion+ --return-code-on-test-failure
       - name: Test rm_projectile_motion
         if: steps.ci_flag.outputs.rm_projectile_motion == 'true'
         run: |
-          source /opt/ros/foxy/setup.sh
+          source /opt/ros/galactic/setup.sh
           cd ros_ws
           colcon test --packages-select rm_projectile_motion --event-handlers console_cohesion+ --return-code-on-test-failure

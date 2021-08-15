@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Build and Test](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci_foxy.yml/badge.svg?branch=main&event=schedule)](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci_foxy.yml)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1a5495d4fddf48e4baede6e2351d7d7d)](https://app.codacy.com/gh/robomaster-oss/rmoss_core?utm_source=github.com&utm_medium=referral&utm_content=robomaster-oss/rmoss_core&utm_campaign=Badge_Grade_Settings)
+[![Codacy grade](https://img.shields.io/codacy/grade/1a5495d4fddf48e4baede6e2351d7d7d)](https://app.codacy.com/gh/robomaster-oss/rmoss_core?utm_source=github.com&utm_medium=referral&utm_content=robomaster-oss/rmoss_core&utm_campaign=Badge_Grade_Settings)
 
 ![](rmoss_bg.png)
 RoboMasterOSS是一个面向RoboMaster的开源软件栈项目，目的是为RoboMaster机器人软件开发提供了一个快速的，灵活的开发工具，支持算法原型研究和robomaster比赛应用开发。
@@ -13,8 +13,6 @@ RoboMasterOSS是一个面向RoboMaster的开源软件栈项目，目的是为Rob
 > - 在RoboMaster 2019赛季中，参赛队伍需自主研发不同种类和功能的机器人，在指定的比赛场地内进行战术对抗，通过操控机器人发射弹丸攻击敌方机器人和基地。每局比赛7分钟，比赛结束时，基地剩余血量高的一方获得比赛胜利。
 >
 > 更多详情参考官网：[www.robomaster.com](https://www.robomaster.com/)
-
-
 
 rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础功能模块包，如相机模块，弹道运动模块等。
 
@@ -33,7 +31,8 @@ rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础�
 
 ## 2.使用说明
 
-* 目前仅支持`ROS2 foxy`版本
+* 目前仅支持`ROS2 galactic`版本 (追踪最新ROS版本)
+
 * 环境依赖：
   *  [rmoss_interfaces](https://github.com/robomaster-oss/rmoss_interfaces) : ROS2 interfaces (.msg, .srv, .action) used in the RoboMaster OSS Projects
 
@@ -62,7 +61,6 @@ colcon build
 
 * 各个模块解耦，方便模块化测试，特别是算法层不受硬件的影响，可以被方便的复用。
 * 真实机器人与仿真机器人处于对等的地位，方便算法在真实机器人与仿真器上进行快速测试与迁移。
-
 
 ## 4.维护者及开源许可证
 

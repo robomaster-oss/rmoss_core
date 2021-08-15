@@ -1,7 +1,7 @@
 # rmoss_core
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Build and Test](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci_foxy.yml/badge.svg?branch=main&event=schedule)](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci_foxy.yml)
+[![Build and Test](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci.yml/badge.svg?branch=main&event=schedule)](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci_foxy.yml)
 [![Codacy grade](https://img.shields.io/codacy/grade/1a5495d4fddf48e4baede6e2351d7d7d)](https://app.codacy.com/gh/robomaster-oss/rmoss_core?utm_source=github.com&utm_medium=referral&utm_content=robomaster-oss/rmoss_core&utm_campaign=Badge_Grade_Settings)
 
 ![](rmoss_bg.png)

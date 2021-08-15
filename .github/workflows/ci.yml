@@ -1,5 +1,7 @@
 name: Build and Test (Galactic)
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
   schedule:

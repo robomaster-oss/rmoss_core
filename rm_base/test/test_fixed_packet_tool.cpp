@@ -22,12 +22,9 @@
 #include "rm_base/fixed_packet.hpp"
 #include "rm_base/fixed_packet_tool.hpp"
 
-TEST(FixedPacketTool, init)
+TEST(FixedPacketTool, construct_with_nullptr)
 {
-  auto factory = std::make_shared<TransporterFactory>();
-  auto transporter1 = factory->get_transporter1();
-  auto packet_tool = std::make_shared<rm_base::FixedPacketTool<32>>(transporter1);
-  SUCCEED();
+  EXPECT_THROW(rm_base::FixedPacketTool<32>(nullptr), std::invalid_argument);
 }
 
 TEST(FixedPacketTool, send_and_recv)
@@ -41,7 +38,6 @@ TEST(FixedPacketTool, send_and_recv)
   // send
   int a = 10;
   packet1.load_data(a, 10);
-  packet1.pack();
   bool send_ret = packet_tool1->send_packet(packet1);
   ASSERT_TRUE(send_ret);
   // recv

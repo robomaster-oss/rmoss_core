@@ -35,7 +35,7 @@ RobotBaseExample::RobotBaseExample(
 : node_(node), transporter_(transporter)
 {
   // init
-  packet_tool_ = std::make_shared<FixedPacket16Tool>(transporter);
+  packet_tool_ = std::make_shared<FixedPacketTool<16>>(transporter);
   // sub
   cmd_gimbal_sub_ = node_->create_subscription<rmoss_interfaces::msg::GimbalCmd>(
     "cmd_gimbal", 10,
@@ -46,12 +46,11 @@ RobotBaseExample::RobotBaseExample(
 
 void RobotBaseExample::gimbal_cmd_cb(const rmoss_interfaces::msg::GimbalCmd::SharedPtr msg)
 {
-  FixedPacket16 packet;
+  FixedPacket<16> packet;
   packet.load_data<unsigned char>(protocol_example::GimbalAngleControl, 1);
   packet.load_data<unsigned char>(0x00, 2);
   packet.load_data<float>(msg->position.pitch, 3);
   packet.load_data<float>(msg->position.yaw, 7);
-  packet.pack();
   packet_tool_->send_packet(packet);
   // delay for data send.
   std::this_thread::sleep_for(std::chrono::milliseconds(5));
@@ -59,10 +58,9 @@ void RobotBaseExample::gimbal_cmd_cb(const rmoss_interfaces::msg::GimbalCmd::Sha
 
 void RobotBaseExample::listen_loop()
 {
-  FixedPacket16 packet;
+  FixedPacket<16> packet;
   while (rclcpp::ok()) {
     if (packet_tool_->recv_packet(packet)) {
-      // the packet have already unpacked.
       unsigned char cmd;
       packet.unload_data(cmd, 1);
       if (cmd == (unsigned char)protocol_example::ChangeMode) {

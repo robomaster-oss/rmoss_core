@@ -181,14 +181,14 @@ bool UartTransporter::is_open()
   return is_open_;
 }
 
-int UartTransporter::read(unsigned char * buffer, int len)
+int UartTransporter::read(void * buffer, size_t len)
 {
   int ret = ::read(fd_, buffer, len);
   tcflush(fd_, TCIFLUSH);
   return ret;
 }
 
-int UartTransporter::write(const unsigned char * buffer, int len)
+int UartTransporter::write(const void * buffer, size_t len)
 {
   int ret = ::write(fd_, buffer, len);
   return ret;

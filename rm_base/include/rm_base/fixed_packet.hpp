@@ -22,32 +22,35 @@ namespace rm_base
 {
 
 // 定长数据包封装
+// [head_byte(0xff),...(data_bytes)...,check_byte,tail_byte(0x0d)]
 template<int capacity = 16>
 class FixedPacket
 {
 public:
   using SharedPtr = std::shared_ptr<FixedPacket>;
-  FixedPacket();
-  ~FixedPacket() {}
+  FixedPacket()
+  {
+    memset(buffer_, 0, capacity);
+    buffer_[0] = 0xff;  // 帧头
+    buffer_[capacity - 1] = 0x0d;  // 帧尾
+  }
 
 public:
-  // 设置校验位
-  void pack();
-  // 检查校验位，是否为合法数据帧
-  bool check(unsigned char * recv_buffer, int recv_len);
-  // 清除缓存
-  void clear();
+  // 清除缓存, date_bytes和check_byte都用0填充
+  void clear() {memset(buffer_ + 1, 0, capacity - 2);}
+  // 设置flag
+  void set_check_byte(uint8_t check_byte) {buffer_[capacity - 2] = check_byte;}
   // copy数据到缓存buffer
-  void copy_from(const unsigned char * src) {memcpy(buffer_, src, capacity);}
+  void copy_from(const void * src) {memcpy(buffer_, src, capacity);}
   // 获取缓存buffer
-  const unsigned char * buffer() const {return buffer_;}
+  const uint8_t * buffer() const {return buffer_;}
 
   // 自定义装载数据
   template<typename T, int data_len = sizeof(T)>
   bool load_data(T const & data, int index)
   {
     // 越界检测
-    if (index > 0 && ((index + data_len) < (capacity - 1))) {
+    if (index > 0 && ((index + data_len) < (capacity - 2))) {
       memcpy(buffer_ + index, &data, data_len);
       return true;
     }
@@ -59,7 +62,7 @@ public:
   bool unload_data(T & data, int index)
   {
     // 越界检测
-    if (index > 0 && ((index + data_len) < (capacity - 1))) {
+    if (index > 0 && ((index + data_len) < (capacity - 2))) {
       memcpy(&data, buffer_ + index, data_len);
       return true;
     }
@@ -68,46 +71,8 @@ public:
 
 private:
   // 数据包缓存buffer
-  unsigned char buffer_[capacity];
+  uint8_t buffer_[capacity];  // NOLINT
 };
-
-
-template<int capacity>
-FixedPacket<capacity>::FixedPacket()
-{
-  memset(buffer_, 0, capacity);
-}
-
-
-template<int capacity>
-void FixedPacket<capacity>::pack()
-{
-  buffer_[0] = 0xff;  // 帧头
-  buffer_[capacity - 1] = 0x0d;  // 帧尾
-}
-
-// 数据帧检查
-template<int capacity>
-bool FixedPacket<capacity>::check(unsigned char * tmp_buffer, int recv_len)
-{
-  // 检查长度
-  if (recv_len != capacity) {
-    return false;
-  }
-  // 检查帧头，帧尾,
-  if ((tmp_buffer[0] != 0xff) || (tmp_buffer[capacity - 1] != 0x0d)) {
-    return false;
-  }
-  return true;
-}
-
-// 数据帧清空
-template<int capacity>
-void FixedPacket<capacity>::clear()
-{
-  memset(buffer_, 0, capacity);    // 每个字节都用0填充
-}
-
 
 using FixedPacket16 = FixedPacket<16>;
 using FixedPacket32 = FixedPacket<32>;

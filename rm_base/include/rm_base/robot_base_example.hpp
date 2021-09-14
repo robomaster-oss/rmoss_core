@@ -43,7 +43,7 @@ private:
   std::unique_ptr<std::thread> listen_thread_;
   // tool
   TransporterInterface::SharedPtr transporter_;
-  FixedPacket16Tool::SharedPtr packet_tool_;
+  FixedPacketTool<16>::SharedPtr packet_tool_;
   // sub
   rclcpp::Subscription<rmoss_interfaces::msg::GimbalCmd>::SharedPtr cmd_gimbal_sub_;
 };

@@ -41,11 +41,11 @@ public:
   {
     return true;
   }
-  int read(unsigned char * buffer, int len) override
+  int read(void * buffer, size_t len) override
   {
     return ::read(fifo_rd_fd_, buffer, len);
   }
-  int write(const unsigned char * buffer, int len) override
+  int write(const void * buffer, size_t len) override
   {
     return ::write(fifo_wr_fd_, buffer, len);
   }

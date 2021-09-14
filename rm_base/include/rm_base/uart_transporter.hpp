@@ -26,7 +26,7 @@ class UartTransporter : public TransporterInterface
 {
 public:
   UartTransporter(
-    std::string device_path = "/dev/ttyUSB0", int speed = 115200,
+    const std::string & device_path = "/dev/ttyUSB0", int speed = 115200,
     int flow_ctrl = 0, int databits = 0, int stopbits = 1, int parity = 'N')
   : device_path_(device_path), speed_(speed), flow_ctrl_(flow_ctrl),
     databits_(databits), stopbits_(stopbits), parity_(parity) {}
@@ -34,8 +34,8 @@ public:
   bool open() override;
   void close() override;
   bool is_open() override;
-  int read(unsigned char * buffer, int len) override;
-  int write(const unsigned char * buffer, int len) override;
+  int read(void * buffer, size_t len) override;
+  int write(const void * buffer, size_t len) override;
 
 private:
   bool set_param(

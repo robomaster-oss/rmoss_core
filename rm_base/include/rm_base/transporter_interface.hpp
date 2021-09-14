@@ -28,10 +28,10 @@ public:
   virtual bool open() = 0;
   virtual void close() = 0;
   virtual bool is_open() = 0;
-  // return recv len>0,return <0 if error
-  virtual int read(unsigned char * buffer, int len) = 0;
-  // return send len>0,return <0 if error
-  virtual int write(const unsigned char * buffer, int len) = 0;
+  // return recv len>0, return <0 if error
+  virtual int read(void * buffer, size_t len) = 0;
+  // return send len>0, return <0 if error
+  virtual int write(const void * buffer, size_t len) = 0;
 };
 
 }  // namespace rm_base

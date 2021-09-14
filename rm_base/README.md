@@ -13,32 +13,21 @@ rm_base是rmoss_core 中的一个基础功能包，提供了与机器人底层ST
 
 * `transporter_interface.hpp` : 定义通用数据传输设备接口
 * `uart_transporter.hpp/cpp` : 串口设备通用驱动（实现了`TransporterInterface`接口）
-* `fixed_packet.hpp` : 固定长度数据包，封装了数据拆包，解包，校验等功能（模板类，支持不同长度的包）。
-* `fixed_packet_tool.hpp` : 固定数据包收发工具（模板类，与`fixed_packet.hpp` 有关）
+* `fixed_packet.hpp` : 固定长度数据包，封装了数据加载，卸载功能，提供了数据包与字节流之间的相互转化操作（模板类，支持不同长度的包）。
+* `fixed_packet_tool.hpp` : 固定数据包收发工具，可直接直接发送与接收数据包，封装底层操作（模板类，与`fixed_packet.hpp` 有关）
 * `robot_base_example.hpp/cpp` : ROS顶层模块，ROS与STM32通信示例。
 
 ## 2.快速使用
 
 提供了一个开发样例，可以快速验证，同时也为二次开发提供了参考。
 
-__通信协议示例：__
-
-* [protocol_example](doc/protocol_example .md)
-
-__修改配置文件：__
-
-需要准备一个usb串口模块
-
-__运行节点：__
+运行节点，需要修改配置文件，并准备一个usb串口模块：
 
 ```bash 
  ros2 run rm_base robot_base_example
 ```
 
 ## 3.二次开发
-
-* `fixed_packet.hpp/cpp`：提供了数据包抽象类，封装了数据包与字节流之间的相互转化操作。
-* `fixed_packet_tool.hpp/cpp` : 在依赖通信的设备的情况下，进一步简化通信过程，可直接直接发送与接收数据包，封装底层操作。
 
 ### 3.1 FixedPacket模块类
 
@@ -53,68 +42,62 @@ FixedPacket32 packet； // 等价于FixedPacket<32>
 FixedPacket64 packet； // 等价于FixedPacket<64>
 ```
 
-__创建数据包：__
+数据包数据布局 （以16 Byte定长数据包为例）
 
-* 新建对象->加载数据-> 打包
+| 数据头字节（0xff） |   数据字节    |  校验字节   | 数据尾字节（0x0d） |
+| :----------------: | :-----------: | :---------: | :----------------: |
+|     0（1Byte）     | 1-13 (13Byte) | 14（1Byte） |    15（1Byte）     |
+
+数据包操作
 
 ```c++
-FixedPacket16 packet;  // 新建对象
+FixedPacket<16> packet;  // 新建对象
+/*******自定义加载数据************/
 float angle=10;
-// 显式装载数据（建议显式）
-packet.load_data<float>(angle,3);  // 一个参数为数据，第二个数据为数据位置
+packet.load_data<float>(angle,3);  // 一个参数为数据，第二个数据为数据位置（建议显式）
 // 隐式装载
 packet.load_data(angle,3);
-packet.pack();  // 打包数据
-```
-
-__解析数据包：__
-
-* 新建对象 -> 校验buffer-> 复制buffer存入包中-> 取出数据
-
-
-```c++
-/*******自定义解析数据************/
-FixedPacket16 packet;//新建对象
-//check and copy recv_buffer
-packet.check(recv_buffer, recv_len);
-packet.copy_from(recv_buffer);
-float angle=0;
+/*******自定义卸载数据************/
+float angle2=0;
 packet.unload_data(angle,3);//取出数据（隐式，建议隐式）
+/**********其他操作**************/
+packet.clear();  // 清零数据包中的数据字节和校验字节
+packet.copy_from();  // 拷贝并覆盖数据包中中的buffer
+packet.buffer();  // 获取数据包中的buffer (const修饰，只读)
 ```
 
-* 发送与接收FixedPacket.
+* 其中只有数据位字节才能使用`load_data()`和`unload_data()`操作，校验字节可通过`set_check_byte()`进行设置。
 
 ### 3.2 FixedPacketTool模板类
 
-* 利用FixedPacketTool简化了数据传输流程，不需要考虑底层字节数据传输细节。
+利用FixedPacketTool简化了数据传输流程，不需要考虑底层字节数据传输细节。
 
 ```c++
-//需要依赖通信设备，假设已经获得正常工作的通信设备。
+// 需要依赖通信设备，假设已经获得正常工作的通信设备。
 TransporterInterface::SharedPtr transporter;
-//实例化数据包工具，初始化的时候，传入通信设备指针
+// 实例化数据包工具，初始化的时候，传入通信设备指针
 FixedPacket16Tool::SharedPtr packet_tool_;
-packet_tool_=std::make_shared<FixedPacket16Tool>(transporter);
+packet_tool_=std::make_shared<FixedPacketTool<16>>(transporter);
 ```
 
-**利用FixedPacketTool发送数据** 
+利用FixedPacketTool发送数据
 
 ```c++
 #数据包
-FixedPacket16 packet;
+FixedPacket<16> packet;
 packet.load_data<unsigned char(protocol_example::GimbalAngleControl,1);
 packet.load_data<unsigned char>(0x00,2);
 packet.load_data<float>(info->pitch_angle,3);
 packet.load_data<float>(info->yaw_angle,7);
-packet.pack();
 #发送
 packet_tool_->send_packet(packet);
 ```
 
-**利用FixedPacketTool接收数据** 
+利用FixedPacketTool接收数据
 
 ```c++
-FixedPacket16 packet;
-//  recv_packet()为堵塞函数，并已经包含校验等操作。
+FixedPacket<16> packet;
+// recv_packet()为堵塞函数，并已经包含校验等操作。
 while(packet_tool_->recv_packet(packet)){
 	unsigned char cmd;
 	packet.unload_data(cmd,1);
@@ -127,8 +110,8 @@ while(packet_tool_->recv_packet(packet)){
 virtual bool open() = 0;
 virtual void close() = 0;
 virtual bool is_open() = 0;
-virtual int read(unsigned char * buffer, int len) = 0;  // 接收数据
-virtual int write(const unsigned char * buffer, int len) = 0;  // 发送数据
+virtual int read(void * buffer, size_t len) = 0;  // 接收数据
+virtual int write(const void * buffer, size_t len) = 0;  // 发送数据
 ```
 
 * 可参考`UartTransporter` 实现，未来考虑实现`UdpTransporter`

@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-import sys
-
 import rclpy
 from rm_interfaces.msg import GimbalCmd
 
@@ -19,7 +17,7 @@ def main():
         try:
             pitch = float(input("pitch_angle: "))
             yaw = float(input("yaw_angle: "))
-        except:
+        except ValueError:
             break
         info=getGimbalContolMsg(pitch,yaw)
         pub.publish(info)

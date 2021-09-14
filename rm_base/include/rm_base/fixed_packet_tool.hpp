@@ -17,39 +17,59 @@
 
 #include <iostream>
 #include <memory>
+#include <stdexcept>
+
 #include "rm_base/transporter_interface.hpp"
 #include "rm_base/fixed_packet.hpp"
 
-#define RECV_BUFFER_MAX_LEN 128
-
 namespace rm_base
 {
-
 template<int capacity = 16>
 class FixedPacketTool
 {
 public:
   using SharedPtr = std::shared_ptr<FixedPacketTool>;
+  FixedPacketTool() = delete;
   explicit FixedPacketTool(std::shared_ptr<TransporterInterface> transporter)
-  : transporter_(transporter) {}
-  ~FixedPacketTool() {}
-
-public:
-  bool is_open()
+  : transporter_(transporter)
   {
-    if (transporter_) {
-      return transporter_->is_open();
+    if (!transporter) {
+      throw std::invalid_argument("transporter is nullptr");
     }
-    return false;
   }
+
+  bool is_open() {return transporter_->is_open();}
   bool send_packet(const FixedPacket<capacity> & packet);
   bool recv_packet(FixedPacket<capacity> & packet);
 
 private:
+  bool check_packet(uint8_t * tmp_buffer, int recv_len);
+
+private:
   std::shared_ptr<TransporterInterface> transporter_;
-  unsigned char recv_buffer_[RECV_BUFFER_MAX_LEN];
+  // data
+  uint8_t tmp_buffer_[capacity];  // NOLINT
+  uint8_t recv_buffer_[capacity * 2];  // NOLINT
   int recv_buf_len_;
+  // TODO(gezp): 定义更加规范的错误码的枚举变量
+  int send_err_code_{0};
+  int recv_err_code_{0};
 };
+
+template<int capacity>
+bool FixedPacketTool<capacity>::check_packet(uint8_t * buffer, int recv_len)
+{
+  // 检查长度
+  if (recv_len != capacity) {
+    return false;
+  }
+  // 检查帧头，帧尾,
+  if ((buffer[0] != 0xff) || (buffer[capacity - 1] != 0x0d)) {
+    return false;
+  }
+  // TODO(gezp): 检查check_byte(buffer[capacity-2]),可采用异或校验(BCC)
+  return true;
+}
 
 template<int capacity>
 bool FixedPacketTool<capacity>::send_packet(const FixedPacket<capacity> & packet)
@@ -67,24 +87,23 @@ bool FixedPacketTool<capacity>::send_packet(const FixedPacket<capacity> & packet
 template<int capacity>
 bool FixedPacketTool<capacity>::recv_packet(FixedPacket<capacity> & packet)
 {
-  static unsigned char tmp_buffer[RECV_BUFFER_MAX_LEN];
-  int recv_len = transporter_->read(tmp_buffer, capacity);
+  int recv_len = transporter_->read(tmp_buffer_, capacity);
   if (recv_len > 0) {
     // check packet
-    if (packet.check(tmp_buffer, recv_len)) {
-      packet.copy_from(tmp_buffer);
+    if (check_packet(tmp_buffer_, recv_len)) {
+      packet.copy_from(tmp_buffer_);
       return true;
     } else {
       // 如果是断帧，拼接缓存，并遍历校验，获得合法数据
-      if (recv_buf_len_ + recv_len > RECV_BUFFER_MAX_LEN) {
+      if (recv_buf_len_ + recv_len > capacity * 2) {
         recv_buf_len_ = 0;
       }
       // 拼接缓存
-      memcpy(recv_buffer_ + recv_buf_len_, tmp_buffer, recv_len);
+      memcpy(recv_buffer_ + recv_buf_len_, tmp_buffer_, recv_len);
       recv_buf_len_ = recv_buf_len_ + recv_len;
       // 遍历校验
       for (int i = 0; (i + capacity) <= recv_buf_len_; i++) {
-        if (packet.check(recv_buffer_ + i, capacity)) {
+        if (check_packet(recv_buffer_ + i, capacity)) {
           packet.copy_from(recv_buffer_ + i);
           // 读取一帧后，更新接收缓存
           int k = 0;
@@ -96,23 +115,22 @@ bool FixedPacketTool<capacity>::recv_packet(FixedPacket<capacity> & packet)
         }
       }
       // 表明断帧，或错误帧。
-      std::cout << "packet check error!" << std::endl;
+      recv_err_code_ = -1;
       return false;
     }
   } else {
-    if (transporter_) {
-      // reconnect
-      transporter_->close();
-      transporter_->open();
-    }
-    std::cout << "serial dev error" << std::endl;
+    // reconnect
+    transporter_->close();
+    transporter_->open();
+    // 串口错误
+    recv_err_code_ = -2;
     return false;
   }
 }
 
-using FixedPacket16Tool = FixedPacketTool<16>;
-using FixedPacket32Tool = FixedPacketTool<32>;
-using FixedPacket64Tool = FixedPacketTool<64>;
+using FixedPacketTool16 = FixedPacketTool<16>;
+using FixedPacketTool32 = FixedPacketTool<32>;
+using FixedPacketTool64 = FixedPacketTool<64>;
 
 }  // namespace rm_base
 

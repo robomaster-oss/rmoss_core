@@ -114,5 +114,4 @@ virtual int read(void * buffer, size_t len) = 0;  // 接收数据
 virtual int write(const void * buffer, size_t len) = 0;  // 发送数据
 ```
 
-* 可参考`UartTransporter` 实现，未来考虑实现`UdpTransporter`
-
+* 可参考`UartTransporter` 和`UdpTransporter` 的实现。

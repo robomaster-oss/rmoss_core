@@ -33,7 +33,7 @@ public:
   void set_projectile_solver(std::shared_ptr<ProjectileSolverInterface> solver) {solver_ = solver;}
   // position :input, position of target object in gimbal frame
   // pitch,yaw : output, angle of gimbal
-  bool calculate(cv::Point3f position, float & pitch, float & yaw);
+  bool solve(cv::Point3f position, float & pitch, float & yaw);
 
 private:
   std::shared_ptr<ProjectileSolverInterface> solver_;

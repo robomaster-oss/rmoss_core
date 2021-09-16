@@ -23,7 +23,7 @@ projectile_tansform_tool = std::make_shared<rm_projectile_motion::GimbalTransfor
 //求解例子
 cv::Point3f position(6,2,2);
 float pitch,yaw;
-projectile_tansform_tool_->calculate(position,pitch,yaw);
+projectile_tansform_tool_->solve(position,pitch,yaw);
 ```
 
 * position坐标系为右手坐标系，枪口为x方向

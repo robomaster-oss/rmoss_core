@@ -17,7 +17,7 @@
 namespace rm_projectile_motion
 {
 
-bool GimbalTransformTool::calculate(cv::Point3f position, float & pitch, float & yaw)
+bool GimbalTransformTool::solve(cv::Point3f position, float & pitch, float & yaw)
 {
   if (!solver_) {
     // if model is nullptr, use line model.

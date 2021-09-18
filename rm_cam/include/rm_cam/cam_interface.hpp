@@ -15,6 +15,7 @@
 #ifndef RM_CAM__CAM_INTERFACE_HPP_
 #define RM_CAM__CAM_INTERFACE_HPP_
 
+#include <unordered_map>
 #include "opencv2/opencv.hpp"
 
 namespace rm_cam
@@ -37,7 +38,7 @@ enum class CamParamType
   Fps
 };
 
-// common interface for camera device (usb cam,virtual cam,etc.)
+// common interface for camera device (usb cam, virtual cam, etc.)
 class CamInterface
 {
 public:
@@ -45,15 +46,27 @@ public:
   virtual void close() = 0;
   virtual bool is_open() = 0;
   virtual bool grab_image(cv::Mat & imgae) = 0;
-  // set and get parameter interface (optional)
-  virtual bool set_parameter(CamParamType /*type*/, int /*value*/)
+  // set and get parameter
+  virtual bool set_parameter(CamParamType type, int value)
   {
-    return false;
+    if (params_.find(type) != params_.end()) {
+      params_[type] = value;
+      return true;
+    } else {
+      return false;
+    }
   }
-  virtual bool get_parameter(CamParamType /*type*/, int & /*value*/)
+  virtual bool get_parameter(CamParamType type, int & value)
   {
-    return false;
+    if (params_.find(type) != params_.end()) {
+      value = params_[type];
+      return true;
+    } else {
+      return false;
+    }
   }
+  // camera parameters
+  std::unordered_map<CamParamType, int> params_;
 };
 }  // namespace rm_cam
 

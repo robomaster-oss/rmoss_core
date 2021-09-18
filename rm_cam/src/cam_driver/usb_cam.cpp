@@ -19,6 +19,13 @@
 namespace rm_cam
 {
 
+UsbCam::UsbCam(const std::string & dev_path)
+: dev_path_(dev_path)
+{
+  params_[CamParamType::Fps] = 30;
+  params_[CamParamType::Width] = 640;
+  params_[CamParamType::Height] = 480;
+}
 
 UsbCam::~UsbCam()
 {
@@ -38,8 +45,8 @@ bool UsbCam::open()
     cap_.set(
       cv::CAP_PROP_FOURCC,
       cv::VideoWriter::fourcc('M', 'J', 'P', 'G'));
-    cap_.set(cv::CAP_PROP_FRAME_WIDTH, cam_width_);
-    cap_.set(cv::CAP_PROP_FRAME_HEIGHT, cam_height_);
+    cap_.set(cv::CAP_PROP_FRAME_WIDTH, params_[CamParamType::Width]);
+    cap_.set(cv::CAP_PROP_FRAME_HEIGHT, params_[CamParamType::Height]);
     is_open_ = true;
     return true;
   } else {
@@ -68,50 +75,6 @@ bool UsbCam::grab_image(cv::Mat & image)
       return true;
     }
   }
-  return false;
-}
-
-bool UsbCam::set_parameter(CamParamType type, int value)
-{
-  if (is_open_) {
-    return false;
-  }
-  if (type == CamParamType::Width) {
-    cam_width_ = value;
-    return true;
-  } else if (type == CamParamType::Height) {
-    cam_width_ = value;
-    return true;
-  } else if (type == CamParamType::Fps) {
-    cam_fps_ = value;
-    return true;
-  }
-  return false;
-}
-
-bool UsbCam::get_parameter(CamParamType type, int & value)
-{
-  switch (type) {
-    case CamParamType::Width:
-      value = cam_width_;
-      return true;
-    case CamParamType::Height:
-      value = cam_height_;
-      return true;
-    case CamParamType::Exposure:
-      return false;
-    case CamParamType::Fps:
-      value = cam_fps_;
-      return true;
-    default:
-      return false;
-  }
-}
-
-bool UsbCam::set_exposure(int value)
-{
-  // TODO(gezp): setting of exposure isn't supported in OpenCV
-  (void)(value);
   return false;
 }
 

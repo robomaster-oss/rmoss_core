@@ -12,6 +12,7 @@ endif()
 # Find package
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(rmoss_interfaces REQUIRED)
 find_package(image_transport REQUIRED)
@@ -20,11 +21,19 @@ find_package(OpenCV REQUIRED)
 
 # Include
 include_directories(include)
+
 # Create rm_cam lib
-aux_source_directory(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
-add_library(${PROJECT_NAME} ${DIR_SRCS})
+add_library(${PROJECT_NAME} SHARED
+  src/cam_driver/usb_cam.cpp
+  src/cam_driver/virtual_cam.cpp
+  src/cam_server.cpp
+  src/usb_cam_node.cpp
+  src/virtual_cam_node.cpp
+)
+
 ament_target_dependencies(${PROJECT_NAME}
     rclcpp
+    rclcpp_components
     sensor_msgs
     rmoss_interfaces
     image_transport
@@ -33,14 +42,15 @@ ament_target_dependencies(${PROJECT_NAME}
 )
 
 # Create executable nodes
-add_executable(usb_cam nodes/usb_cam_node.cpp)
+add_executable(usb_cam src/usb_cam_main.cpp)
 target_link_libraries(usb_cam ${PROJECT_NAME})
 
-add_executable(virtual_image_cam nodes/virtual_image_cam_node.cpp)
-target_link_libraries(virtual_image_cam ${PROJECT_NAME})
+add_executable(virtual_cam src/virtual_cam_main.cpp)
+target_link_libraries(virtual_cam ${PROJECT_NAME})
 
-add_executable(virtual_video_cam nodes/virtual_video_cam_node.cpp)
-target_link_libraries(virtual_video_cam ${PROJECT_NAME})
+# register component nodes
+rclcpp_components_register_nodes(${PROJECT_NAME} "rm_cam::UsbCamNode")
+rclcpp_components_register_nodes(${PROJECT_NAME} "rm_cam::VirtualCamNode")
 
 # Install include directories
 install(DIRECTORY include/
@@ -56,7 +66,7 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 # Install executable nodes
-install(TARGETS usb_cam virtual_image_cam virtual_video_cam
+install(TARGETS usb_cam virtual_cam
   DESTINATION lib/${PROJECT_NAME}
 )
 

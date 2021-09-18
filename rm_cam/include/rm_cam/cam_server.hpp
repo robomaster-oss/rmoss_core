@@ -28,11 +28,15 @@
 
 namespace rm_cam
 {
-// a general ros node class example for camera.
+// camera task wrapper to publish image
 class CamServer
 {
 public:
-  CamServer(rclcpp::Node::SharedPtr node, std::shared_ptr<CamInterface> cam_intercace);
+  CamServer(
+    rclcpp::Node * node,
+    std::shared_ptr<CamInterface> cam_intercace);
+
+  // bool set_camera_
 
 private:
   void timer_callback();
@@ -42,7 +46,7 @@ private:
     rmoss_interfaces::srv::GetCameraInfo::Response::SharedPtr response);
 
 private:
-  rclcpp::Node::SharedPtr node_;
+  rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr node_logging_;
   image_transport::Publisher img_pub_;
   rclcpp::Service<rmoss_interfaces::srv::GetCameraInfo>::SharedPtr camera_info_service_;
   rclcpp::TimerBase::SharedPtr timer_;
@@ -50,8 +54,11 @@ private:
   std::shared_ptr<CamInterface> cam_intercace_;
   // data
   cv::Mat img_;
-  std::vector<double> camera_matrix_;
-  std::vector<double> camera_distortion_;
+  std::vector<double> camera_k_;  // 3*3=9
+  std::vector<double> camera_p_;  // 3*4=12
+  std::vector<double> camera_d_;
+  bool has_camera_info_{false};
+  int fps_{30};
   int reopen_cnt{0};
 };
 

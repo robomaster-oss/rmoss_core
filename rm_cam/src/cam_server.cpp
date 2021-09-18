@@ -27,42 +27,93 @@ using namespace std::chrono_literals;
 namespace rm_cam
 {
 
-CamServer::CamServer(rclcpp::Node::SharedPtr node, std::shared_ptr<CamInterface> cam_intercace)
-: node_(node), cam_intercace_(cam_intercace)
+constexpr const CamParamType kCamParamTypes[] = {
+  CamParamType::Width,
+  CamParamType::Height,
+  CamParamType::AutoExposure,
+  CamParamType::Exposure,
+  CamParamType::Brightness,
+  CamParamType::AutoWhiteBalance,
+  CamParamType::WhiteBalance,
+  CamParamType::Gain,
+  CamParamType::Gamma,
+  CamParamType::Contrast,
+  CamParamType::Saturation,
+  CamParamType::Hue,
+  CamParamType::Fps
+};
+
+constexpr const char * kCamParamTypeNames[] = {
+  "width",
+  "height",
+  "auto_exposure",
+  "exposure",
+  "brightness",
+  "auto_white_balance",
+  "white_balance",
+  "gain",
+  "gamma",
+  "contrast",
+  "saturation",
+  "hue",
+  "fps"
+};
+
+CamServer::CamServer(
+  rclcpp::Node * node,
+  std::shared_ptr<CamInterface> cam_intercace)
+: cam_intercace_(cam_intercace)
 {
+  node_logging_ = node->get_node_logging_interface();
+  // 相机参数获取并设置，配置文件中的值会覆盖默认值
+  int data;
+  constexpr int param_num = sizeof(kCamParamTypes) / sizeof(CamParamType);
+  for (int i = 0; i < param_num; i++) {
+    if (cam_intercace_->get_parameter(kCamParamTypes[i], data)) {
+      node->declare_parameter(kCamParamTypeNames[i], data);
+      node->get_parameter(kCamParamTypeNames[i], data);
+      cam_intercace_->set_parameter(kCamParamTypes[i], data);
+    }
+  }
+  // 记录fps
+  cam_intercace_->get_parameter(rm_cam::CamParamType::Fps, fps_);
+  // 打开摄像头
+  if (!cam_intercace_->open()) {
+    RCLCPP_ERROR(node_logging_->get_logger(), "fail to open camera!");
+    return;
+  }
+  // fps比较特殊，如果fps没有被设置，或值非法，则设置为默认值30
+  if (fps_ <= 0) {
+    fps_ = 30;
+    cam_intercace_->set_parameter(rm_cam::CamParamType::Fps, 30);
+  }
   // declare parameters
-  node_->declare_parameter("camera_name", "camera");
-  node->declare_parameter("image_width", 640);
-  node->declare_parameter("image_height", 480);
-  node->declare_parameter("Fps", 30);
-  node_->declare_parameter("camera_matrix", rclcpp::ParameterValue(std::vector<double>()));
-  node_->declare_parameter("camera_distortion", rclcpp::ParameterValue(std::vector<double>()));
+  node->declare_parameter("camera_name", "camera");
+  node->declare_parameter("camera_k", rclcpp::ParameterValue(std::vector<double>()));
+  node->declare_parameter("camera_d", rclcpp::ParameterValue(std::vector<double>()));
+  node->declare_parameter("camera_p", rclcpp::ParameterValue(std::vector<double>()));
   // get parameters
-  auto camera_name = node_->get_parameter("camera_name").as_string();
-  auto width = node_->get_parameter("image_width").as_int();
-  auto height = node_->get_parameter("image_height").as_int();
-  auto Fps = node_->get_parameter("Fps").as_int();
-  auto period_ms = std::chrono::milliseconds(static_cast<int64_t>(1000.0 / Fps));
-  node_->get_parameter("camera_matrix", camera_matrix_);
-  if (camera_matrix_.size() != 9) {
-    RCLCPP_WARN(node_->get_logger(), "camera matrix is invalid! size: %d", camera_matrix_.size());
+  auto camera_name = node->get_parameter("camera_name").as_string();
+  node->get_parameter("camera_k", camera_k_);
+  if (!camera_k_.empty() && camera_k_.size() != 9) {
+    RCLCPP_ERROR(
+      node_logging_->get_logger(),
+      "the size of the camera intrinsic parameter should be 9");
   }
-  node_->get_parameter("camera_distortion", camera_distortion_);
-  if (camera_distortion_.size() != 5) {
-    RCLCPP_WARN(
-      node_->get_logger(), "camera distortion is invalid! size: %d", camera_distortion_.size());
+  node->get_parameter("camera_d", camera_d_);
+  node->get_parameter("camera_p", camera_p_);
+  if (!camera_p_.empty() && camera_p_.size() != 12) {
+    RCLCPP_ERROR(
+      node_logging_->get_logger(),
+      "the size of the camera extrinsic parameter should be 12");
   }
-  // set camera
-  cam_intercace_->set_parameter(rm_cam::CamParamType::Width, width);
-  cam_intercace_->set_parameter(rm_cam::CamParamType::Height, height);
-  cam_intercace_->set_parameter(rm_cam::CamParamType::Fps, Fps);
-  cam_intercace_->open();
   // create image publisher
-  img_pub_ = image_transport::create_publisher(node_.get(), camera_name + "/image_raw");
-  timer_ = node_->create_wall_timer(period_ms, std::bind(&CamServer::timer_callback, this));
+  img_pub_ = image_transport::create_publisher(node, camera_name + "/image_raw");
+  auto period_ms = std::chrono::milliseconds(static_cast<int64_t>(1000.0 / fps_));
+  timer_ = node->create_wall_timer(period_ms, std::bind(&CamServer::timer_callback, this));
   // create GetCameraInfo service
   using namespace std::placeholders;
-  camera_info_service_ = node_->create_service<rmoss_interfaces::srv::GetCameraInfo>(
+  camera_info_service_ = node->create_service<rmoss_interfaces::srv::GetCameraInfo>(
     camera_name + "/get_camera_info",
     std::bind(&CamServer::camera_info_callback, this, _1, _2, _3));
 }
@@ -73,13 +124,13 @@ void CamServer::timer_callback()
     // publish image msg
     sensor_msgs::msg::Image::SharedPtr img_msg = cv_bridge::CvImage(
       std_msgs::msg::Header(), "bgr8", img_).toImageMsg();
-    img_msg->header.frame_id = "camera";
+
     img_msg->header.stamp = rclcpp::Clock().now();
     img_pub_.publish(img_msg);
   } else {
     // try to reopen camera
     if (reopen_cnt % 100 == 0) {
-      RCLCPP_INFO(node_->get_logger(), "Reopen Camera!");
+      RCLCPP_INFO(node_logging_->get_logger(), "Reopen Camera!");
       cam_intercace_->close();
       std::this_thread::sleep_for(100ms);
       cam_intercace_->open();
@@ -101,12 +152,8 @@ void CamServer::camera_info_callback(
   camera_info.height = data;
   cam_intercace_->get_parameter(rm_cam::CamParamType::Width, data);
   camera_info.width = data;
-  if (camera_matrix_.size() != 9 || camera_distortion_.size() != 5) {
-    response->success = false;
-    return;
-  }
-  std::copy_n(camera_matrix_.begin(), 9, camera_info.k.begin());
-  camera_info.d = camera_distortion_;
+  std::copy_n(camera_k_.begin(), 9, camera_info.k.begin());
+  camera_info.d = camera_d_;
   response->success = true;
 }
 

@@ -21,6 +21,9 @@ namespace rm_cam
 
 VirtualCam::VirtualCam(int mode, const std::string & path)
 {
+  params_[CamParamType::Fps] = 0;
+  params_[CamParamType::Width] = 0;
+  params_[CamParamType::Height] = 0;
   if (mode == IMAGE_MODE) {
     image_path_ = path;
     current_mode_ = IMAGE_MODE;
@@ -35,17 +38,17 @@ bool VirtualCam::open()
   if (current_mode_ == IMAGE_MODE) {
     img_ = cv::imread(image_path_);
     if (!img_.empty()) {
-      cam_width_ = img_.cols;
-      cam_height_ = img_.rows;
+      params_[CamParamType::Width] = img_.cols;
+      params_[CamParamType::Height] = img_.rows;
       is_open_ = true;
       return true;
     }
   } else if (current_mode_ == VIDEO_MODE) {
     if (cap_.open(video_path_)) {
-      cam_height_ = cap_.get(cv::CAP_PROP_FRAME_HEIGHT);
-      cam_width_ = cap_.get(cv::CAP_PROP_FRAME_WIDTH);
+      params_[CamParamType::Width] = cap_.get(cv::CAP_PROP_FRAME_WIDTH);
+      params_[CamParamType::Height] = cap_.get(cv::CAP_PROP_FRAME_HEIGHT);
       total_frames_ = cap_.get(cv::CAP_PROP_FRAME_COUNT);
-      cam_fps_ = cap_.get(cv::CAP_PROP_FPS);
+      params_[CamParamType::Fps] = cap_.get(cv::CAP_PROP_FPS);
       is_open_ = true;
       return true;
     }
@@ -74,39 +77,5 @@ bool VirtualCam::grab_image(cv::Mat & image)
   }
   return false;
 }
-
-bool VirtualCam::set_parameter(CamParamType type, int value)
-{
-  if (is_open_) {
-    return false;
-  }
-  if (type == CamParamType::Width) {
-    return cam_width_ == value;
-  } else if (type == CamParamType::Height) {
-    return cam_width_ == value;
-  } else if (type == CamParamType::Fps) {
-    cam_fps_ = value;
-    return true;
-  }
-  return false;
-}
-
-bool VirtualCam::get_parameter(CamParamType type, int & value)
-{
-  switch (type) {
-    case CamParamType::Width:
-      value = cam_width_;
-      return true;
-    case CamParamType::Height:
-      value = cam_height_;
-      return true;
-    case CamParamType::Fps:
-      value = cam_fps_;
-      return true;
-    default:
-      return false;
-  }
-}
-
 
 }  // namespace rm_cam

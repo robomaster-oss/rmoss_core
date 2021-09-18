@@ -11,36 +11,31 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef RM_CAM__USB_CAM_HPP_
-#define RM_CAM__USB_CAM_HPP_
+
+#ifndef RM_CAM__VIRTUAL_CAM_NODE_HPP_
+#define RM_CAM__VIRTUAL_CAM_NODE_HPP_
 
 #include <string>
+#include <memory>
 
-#include "opencv2/opencv.hpp"
-#include "rm_cam/cam_interface.hpp"
+#include "rclcpp/rclcpp.hpp"
+
+#include "rm_cam/virtual_cam.hpp"
+#include "rm_cam/cam_server.hpp"
 
 namespace rm_cam
 {
-// the usb camera (UVC) device, based on opencv
-class UsbCam : public CamInterface
+// ROS Node wrapper for VirtualCam.
+class VirtualCamNode : public rclcpp::Node
 {
 public:
-  explicit UsbCam(const std::string & dev_path);
-  ~UsbCam();
-
-public:
-  bool open() override;
-  void close() override;
-  bool is_open() override;
-  bool grab_image(cv::Mat & image) override;
+  explicit VirtualCamNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
 private:
-  std::string dev_path_;
-  cv::VideoCapture cap_;
-  // flag
-  bool is_open_{false};
+  std::shared_ptr<rm_cam::CamInterface> cam_dev_;
+  std::shared_ptr<rm_cam::CamServer> cam_server_;
 };
 
 }  // namespace rm_cam
 
-#endif  // RM_CAM__USB_CAM_HPP_
+#endif  // RM_CAM__VIRTUAL_CAM_NODE_HPP_

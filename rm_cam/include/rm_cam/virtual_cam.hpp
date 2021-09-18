@@ -33,8 +33,6 @@ public:
   void close() override {}
   bool is_open() override;
   bool grab_image(cv::Mat & image) override;
-  bool set_parameter(CamParamType type, int value) override;
-  bool get_parameter(CamParamType type, int & value) override;
 
 private:
   // for image
@@ -45,10 +43,6 @@ private:
   cv::VideoCapture cap_;
   int total_frames_;
   int current_frame;
-  // camera para
-  int cam_width_;
-  int cam_height_;
-  int cam_fps_;
   // flag
   bool is_open_ = false;
   int current_mode_;

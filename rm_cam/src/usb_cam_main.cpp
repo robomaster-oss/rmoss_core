@@ -13,28 +13,15 @@
 // limitations under the License.
 
 #include <memory>
-#include <string>
 
 #include "rclcpp/rclcpp.hpp"
-#include "rm_cam/cam_server.hpp"
-#include "rm_cam/usb_cam.hpp"
-
+#include "rm_cam/usb_cam_node.hpp"
 
 int main(int argc, char * argv[])
 {
-  // creat ros2 node
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<rclcpp::Node>("usb_cam");
-  // declare and get parameter
-  node->declare_parameter("usb_cam_path", "/dev/video0");
-  std::string dev_name = node->get_parameter("usb_cam_path").as_string();
-  // create device
-  auto cam_dev = std::make_shared<rm_cam::UsbCam>(dev_name);
-  // create a camera node
-  auto cam_task = std::make_shared<rm_cam::CamServer>(node, cam_dev);
-  // run node until it's exited
+  auto node = std::make_shared<rm_cam::UsbCamNode>();
   rclcpp::spin(node);
-  // clean up
   rclcpp::shutdown();
   return 0;
 }

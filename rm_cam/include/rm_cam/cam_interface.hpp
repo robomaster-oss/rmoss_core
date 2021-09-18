@@ -65,6 +65,8 @@ public:
       return false;
     }
   }
+
+protected:
   // camera parameters
   std::unordered_map<CamParamType, int> params_;
 };

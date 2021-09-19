@@ -28,7 +28,7 @@
 
 namespace rm_cam
 {
-// camera task wrapper to publish image
+// camera server wrapper to publish image
 class CamServer
 {
 public:

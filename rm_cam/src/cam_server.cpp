@@ -115,26 +115,30 @@ CamServer::CamServer(
   camera_info_service_ = node->create_service<rmoss_interfaces::srv::GetCameraInfo>(
     camera_name + "/get_camera_info",
     std::bind(&CamServer::camera_info_callback, this, _1, _2, _3));
+  RCLCPP_INFO(node_->get_logger(), "init successfully!");
 }
 
 void CamServer::timer_callback()
 {
   if (cam_intercace_->grab_image(img_)) {
+    auto header = std_msgs::msg::Header();
+    header.stamp = node_->now();
     // publish image msg
     sensor_msgs::msg::Image::SharedPtr img_msg = cv_bridge::CvImage(
-      std_msgs::msg::Header(), "bgr8", img_).toImageMsg();
-
-    img_msg->header.stamp = rclcpp::Clock().now();
+      header, "bgr8", img_).toImageMsg();
     img_pub_.publish(img_msg);
   } else {
     // try to reopen camera
-    if (reopen_cnt % 100 == 0) {
-      RCLCPP_INFO(node_->get_logger(), "Reopen Camera!");
+    if (reopen_cnt % fps_ == 0) {
       cam_intercace_->close();
       std::this_thread::sleep_for(100ms);
-      cam_intercace_->open();
-      reopen_cnt++;
+      if (cam_intercace_->open()) {
+        RCLCPP_INFO(node_->get_logger(), "reopen camera successed!");
+      } else {
+        RCLCPP_INFO(node_->get_logger(), "reopen camera failed!");
+      }
     }
+    reopen_cnt++;
   }
 }
 

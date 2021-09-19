@@ -27,19 +27,21 @@ add_library(${PROJECT_NAME} SHARED
   src/cam_driver/usb_cam.cpp
   src/cam_driver/virtual_cam.cpp
   src/cam_server.cpp
+  src/cam_client.cpp
   src/usb_cam_node.cpp
   src/virtual_cam_node.cpp
 )
 
-ament_target_dependencies(${PROJECT_NAME}
-    rclcpp
-    rclcpp_components
-    sensor_msgs
-    rmoss_interfaces
-    image_transport
-    cv_bridge
-    OpenCV
+set(dependencies
+  rclcpp
+  rclcpp_components
+  sensor_msgs
+  rmoss_interfaces
+  image_transport
+  cv_bridge
+  OpenCV
 )
+ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
 # Create executable nodes
 add_executable(usb_cam src/usb_cam_main.cpp)
@@ -79,15 +81,11 @@ install(DIRECTORY launch resource config
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
+  add_subdirectory(test)
 endif()
 
 # specific order: dependents before dependencies
 ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_export_dependencies(rclcpp)
-ament_export_dependencies(sensor_msgs)
-ament_export_dependencies(rmoss_interfaces)
-ament_export_dependencies(image_transport)
-ament_export_dependencies(cv_bridge)
-ament_export_dependencies(OpenCV)
+ament_export_dependencies(${dependencies})
 
 ament_package()

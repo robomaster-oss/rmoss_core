@@ -13,7 +13,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(image_transport REQUIRED)
+find_package(rmoss_interfaces REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(OpenCV REQUIRED)
 
@@ -26,7 +26,7 @@ add_library(${PROJECT_NAME} SHARED ${DIR_SRCS})
 ament_target_dependencies(${PROJECT_NAME}
     rclcpp
     sensor_msgs
-    image_transport
+    rmoss_interfaces
     cv_bridge
     OpenCV
 )

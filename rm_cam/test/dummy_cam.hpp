@@ -24,10 +24,10 @@
 class DummyCam : public rm_cam::CamInterface
 {
 public:
-  explicit DummyCam(int witdh = 640, int higeht = 480)
+  DummyCam()
   {
-    params_[rm_cam::CamParamType::Width] = witdh;
-    params_[rm_cam::CamParamType::Height] = higeht;
+    params_[rm_cam::CamParamType::Width] = 640;
+    params_[rm_cam::CamParamType::Height] = 480;
   }
   bool open() override
   {

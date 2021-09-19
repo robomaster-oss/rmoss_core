@@ -5,10 +5,9 @@
 rm_cam是rmoss_core 中的一个基础功能包，提供了usb相机ROS节点和虚拟相机ROS节点相关功能，同时，还支持二次开发，支持自定义相机扩展，加速开发。主要实现功能如下：
 
 - **usb相机ROS节点**
-- **基于图片的虚拟相机ROS节点**
-- **基于视频的虚拟相机ROS节点**
+- **基于图片与视频的虚拟相机ROS节点**
 
-为了提高扩展能力，该模块将 **相机操作** 与 **相机ROS节点** 进行解偶，通过 **相机接口** 实现，所以，对于不同的工业相机，有不同的驱动，通过该 **相机接口** ，可以无需关心ROS部分，快速实现 **相机ROS节点** , 支持[ROS Composition](https://docs.ros.org/en/galactic/Tutorials/Composition.html)方式启动。详细介绍参考二次开发部分。
+为了提高扩展能力，该模块将 **相机操作** 与 **相机ROS节点** 进行解偶，通过相机接口实现，所以，对于不同的工业相机，有不同的驱动，通过该相机接口，可以无需关心ROS部分，快速实现相机ROS节点, 支持[ROS Composition](https://docs.ros.org/en/galactic/Tutorials/Composition.html)方式启动。详细介绍参考二次开发部分。
 
 文件说明：
 

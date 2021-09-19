@@ -14,21 +14,14 @@
 
 #include <memory>
 #include "rclcpp/rclcpp.hpp"
-#include "rm_base/robot_base_example.hpp"
-#include "rm_base/uart_transporter.hpp"
+#include "rm_base/simple_robot_base_node.hpp"
 
 int main(int argc, char * argv[])
 {
   // create ros2 node
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<rclcpp::Node>("robot_base");
-  // creat transporter device
-  auto transporter = std::make_shared<rm_base::UartTransporter>("/dev/ttyUSB0");
-  // create RobotBase Task
-  auto robot_base_example = std::make_shared<rm_base::RobotBaseExample>(node, transporter);
-  // run node until it's exited
+  auto node = std::make_shared<rm_base::SimpleRobotBaseNode>();
   rclcpp::spin(node);
-  // clean up
   rclcpp::shutdown();
   return 0;
 }

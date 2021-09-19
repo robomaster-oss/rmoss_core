@@ -15,7 +15,8 @@ rm_base是rmoss_core 中的一个基础功能包，提供了与机器人底层ST
 * `uart_transporter.hpp/cpp` : 串口设备通用驱动（实现了`TransporterInterface`接口）
 * `fixed_packet.hpp` : 固定长度数据包，封装了数据加载，卸载功能，提供了数据包与字节流之间的相互转化操作（模板类，支持不同长度的包）。
 * `fixed_packet_tool.hpp` : 固定数据包收发工具，可直接直接发送与接收数据包，封装底层操作（模板类，与`fixed_packet.hpp` 有关）
-* `robot_base_example.hpp/cpp` : ROS顶层模块，ROS与STM32通信示例。
+* `simple_robot_base_node.hpp/cpp` : ROS顶层模块`SimpleRobotBaseNode`，ROS与STM32通信示例。
+* `simple_robot_base_main.cpp` : `SimpleRobotBaseNode`节点的main()入口。
 
 ## 2.快速使用
 
@@ -24,8 +25,10 @@ rm_base是rmoss_core 中的一个基础功能包，提供了与机器人底层ST
 运行节点，需要修改配置文件，并准备一个usb串口模块：
 
 ```bash 
- ros2 run rm_base robot_base_example
+ ros2 run rm_base simple_robot_base
 ```
+
+* `SimpleRobotBaseNode`节点已经注册为`rclcpp component`, 支持[ROS Composition](https://docs.ros.org/en/galactic/Tutorials/Composition.html)方式启动。
 
 ## 3.二次开发
 

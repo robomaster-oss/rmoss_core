@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef RM_BASE__ROBOT_BASE_EXAMPLE_HPP_
-#define RM_BASE__ROBOT_BASE_EXAMPLE_HPP_
+#ifndef RM_BASE__SIMPLE_ROBOT_BASE_NODE_HPP_
+#define RM_BASE__SIMPLE_ROBOT_BASE_NODE_HPP_
 
 #include <thread>
 #include <memory>
@@ -25,12 +25,10 @@
 
 namespace rm_base
 {
-
-class RobotBaseExample
+class SimpleRobotBaseNode : public rclcpp::Node
 {
 public:
-  RobotBaseExample(rclcpp::Node::SharedPtr node, TransporterInterface::SharedPtr transporter);
-  ~RobotBaseExample() {}
+  explicit SimpleRobotBaseNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
 public:
   void listen_loop();
@@ -50,4 +48,4 @@ private:
 
 }  // namespace rm_base
 
-#endif  // RM_BASE__ROBOT_BASE_EXAMPLE_HPP_
+#endif  // RM_BASE__SIMPLE_ROBOT_BASE_NODE_HPP_

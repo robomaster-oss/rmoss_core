@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "rm_base/robot_base_example.hpp"
+#include "rm_base/simple_robot_base_node.hpp"
 
 #include <thread>
 #include <memory>
+
+#include "rm_base/uart_transporter.hpp"
+#include "rm_base/udp_transporter.hpp"
 
 namespace rm_base
 {
@@ -29,22 +32,21 @@ typedef enum : unsigned char
 } ProtocolExample;
 }
 
-RobotBaseExample::RobotBaseExample(
-  rclcpp::Node::SharedPtr node,
-  TransporterInterface::SharedPtr transporter)
-: node_(node), transporter_(transporter)
+SimpleRobotBaseNode::SimpleRobotBaseNode(const rclcpp::NodeOptions & options)
+: Node("simple_robot_base", options)
 {
   // init
+  auto transporter = std::make_shared<rm_base::UartTransporter>("/dev/ttyUSB0");
   packet_tool_ = std::make_shared<FixedPacketTool<16>>(transporter);
   // sub
-  cmd_gimbal_sub_ = node_->create_subscription<rmoss_interfaces::msg::GimbalCmd>(
+  cmd_gimbal_sub_ = create_subscription<rmoss_interfaces::msg::GimbalCmd>(
     "cmd_gimbal", 10,
-    std::bind(&RobotBaseExample::gimbal_cmd_cb, this, std::placeholders::_1));
+    std::bind(&SimpleRobotBaseNode::gimbal_cmd_cb, this, std::placeholders::_1));
   // task thread
-  listen_thread_ = std::make_unique<std::thread>(&RobotBaseExample::listen_loop, this);
+  listen_thread_ = std::make_unique<std::thread>(&SimpleRobotBaseNode::listen_loop, this);
 }
 
-void RobotBaseExample::gimbal_cmd_cb(const rmoss_interfaces::msg::GimbalCmd::SharedPtr msg)
+void SimpleRobotBaseNode::gimbal_cmd_cb(const rmoss_interfaces::msg::GimbalCmd::SharedPtr msg)
 {
   FixedPacket<16> packet;
   packet.load_data<unsigned char>(protocol_example::GimbalAngleControl, 1);
@@ -56,7 +58,7 @@ void RobotBaseExample::gimbal_cmd_cb(const rmoss_interfaces::msg::GimbalCmd::Sha
   std::this_thread::sleep_for(std::chrono::milliseconds(5));
 }
 
-void RobotBaseExample::listen_loop()
+void SimpleRobotBaseNode::listen_loop()
 {
   FixedPacket<16> packet;
   while (rclcpp::ok()) {
@@ -67,11 +69,11 @@ void RobotBaseExample::listen_loop()
         unsigned char mode = 0;
         packet.unload_data(mode, 2);
         if (mode == 0x00) {
-          RCLCPP_INFO(node_->get_logger(), "change mode: normal mode");
+          RCLCPP_INFO(get_logger(), "change mode: normal mode");
         } else if (mode == 0x01) {
-          RCLCPP_INFO(node_->get_logger(), "change mode: auto aim mode");
+          RCLCPP_INFO(get_logger(), "change mode: auto aim mode");
         } else {
-          RCLCPP_INFO(node_->get_logger(), "change mode:  mode err!");
+          RCLCPP_INFO(get_logger(), "change mode:  mode err!");
         }
       } else {
         // invalid cmd
@@ -80,5 +82,11 @@ void RobotBaseExample::listen_loop()
   }
 }
 
-
 }  // namespace rm_base
+
+#include "rclcpp_components/register_node_macro.hpp"
+
+// Register the component with class_loader.
+// This acts as a sort of entry point, allowing the component to be discoverable when its library
+// is being loaded into a running process.
+RCLCPP_COMPONENTS_REGISTER_NODE(rm_base::SimpleRobotBaseNode)

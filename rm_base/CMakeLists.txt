@@ -12,6 +12,7 @@ endif()
 # Find package
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
 find_package(rmoss_interfaces REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
@@ -19,16 +20,23 @@ find_package(geometry_msgs REQUIRED)
 include_directories(include)
 
 # Create rm_base lib
-aux_source_directory(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
-add_library(${PROJECT_NAME} ${DIR_SRCS})
+add_library(${PROJECT_NAME} SHARED
+  src/transporter_driver/uart_transporter.cpp
+  src/transporter_driver/udp_transporter.cpp
+  src/simple_robot_base_node.cpp
+)
 ament_target_dependencies(${PROJECT_NAME}
     rclcpp
+    rclcpp_components
     rmoss_interfaces
     geometry_msgs
 )
 # Create robot_base_example node
-add_executable(robot_base_example nodes/robot_base_example_node.cpp)
-target_link_libraries(robot_base_example ${PROJECT_NAME})
+add_executable(simple_robot_base src/simple_robot_base_main.cpp)
+target_link_libraries(simple_robot_base ${PROJECT_NAME})
+
+# register component nodes
+rclcpp_components_register_nodes(${PROJECT_NAME} "rm_base::SimpleRobotBaseNode")
 
 # Install include directories
 install(DIRECTORY include/
@@ -43,7 +51,7 @@ install(TARGETS ${PROJECT_NAME}
     INCLUDES DESTINATION include
 )
 # Install executable nodes
-install(TARGETS robot_base_example
+install(TARGETS simple_robot_base
   DESTINATION lib/${PROJECT_NAME}
 )
 # Install executable scripts

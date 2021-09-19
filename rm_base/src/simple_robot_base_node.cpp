@@ -33,13 +33,13 @@ typedef enum : unsigned char
 }
 
 SimpleRobotBaseNode::SimpleRobotBaseNode(const rclcpp::NodeOptions & options)
-: Node("simple_robot_base", options)
 {
+  node_ = std::make_shared<rclcpp::Node>("simple_robot_base", options);
   // init
   auto transporter = std::make_shared<rm_base::UartTransporter>("/dev/ttyUSB0");
   packet_tool_ = std::make_shared<FixedPacketTool<16>>(transporter);
   // sub
-  cmd_gimbal_sub_ = create_subscription<rmoss_interfaces::msg::GimbalCmd>(
+  cmd_gimbal_sub_ = node_->create_subscription<rmoss_interfaces::msg::GimbalCmd>(
     "cmd_gimbal", 10,
     std::bind(&SimpleRobotBaseNode::gimbal_cmd_cb, this, std::placeholders::_1));
   // task thread
@@ -69,11 +69,11 @@ void SimpleRobotBaseNode::listen_loop()
         unsigned char mode = 0;
         packet.unload_data(mode, 2);
         if (mode == 0x00) {
-          RCLCPP_INFO(get_logger(), "change mode: normal mode");
+          RCLCPP_INFO(node_->get_logger(), "change mode: normal mode");
         } else if (mode == 0x01) {
-          RCLCPP_INFO(get_logger(), "change mode: auto aim mode");
+          RCLCPP_INFO(node_->get_logger(), "change mode: auto aim mode");
         } else {
-          RCLCPP_INFO(get_logger(), "change mode:  mode err!");
+          RCLCPP_INFO(node_->get_logger(), "change mode:  mode err!");
         }
       } else {
         // invalid cmd

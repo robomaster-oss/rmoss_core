@@ -33,10 +33,8 @@ class CamServer
 {
 public:
   CamServer(
-    rclcpp::Node * node,
+    rclcpp::Node::SharedPtr node,
     std::shared_ptr<CamInterface> cam_intercace);
-
-  // bool set_camera_
 
 private:
   void timer_callback();
@@ -46,7 +44,7 @@ private:
     rmoss_interfaces::srv::GetCameraInfo::Response::SharedPtr response);
 
 private:
-  rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr node_logging_;
+  rclcpp::Node::SharedPtr node_;
   image_transport::Publisher img_pub_;
   rclcpp::Service<rmoss_interfaces::srv::GetCameraInfo>::SharedPtr camera_info_service_;
   rclcpp::TimerBase::SharedPtr timer_;

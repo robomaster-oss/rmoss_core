@@ -20,13 +20,13 @@
 namespace rm_cam
 {
 VirtualCamNode::VirtualCamNode(const rclcpp::NodeOptions & options)
-: Node("virtual_cam", options)
 {
+  node_ = std::make_shared<rclcpp::Node>("virtual_cam", options);
   // declare and get parameter
-  declare_parameter("image_path", "");
-  declare_parameter("video_path", "");
-  auto image_path = get_parameter("image_path").as_string();
-  auto video_path = get_parameter("video_path").as_string();
+  node_->declare_parameter("image_path", "");
+  node_->declare_parameter("video_path", "");
+  auto image_path = node_->get_parameter("image_path").as_string();
+  auto video_path = node_->get_parameter("video_path").as_string();
   // create device
   std::shared_ptr<CamInterface> cam_dev;
   if (!image_path.empty()) {
@@ -34,11 +34,11 @@ VirtualCamNode::VirtualCamNode(const rclcpp::NodeOptions & options)
   } else if (!video_path.empty()) {
     cam_dev_ = std::make_shared<rm_cam::VirtualCam>(rm_cam::VirtualCam::VIDEO_MODE, video_path);
   } else {
-    RCLCPP_WARN(get_logger(), "image_path or video_path is empty");
+    RCLCPP_WARN(node_->get_logger(), "image_path or video_path is empty");
     return;
   }
   // create task server
-  cam_server_ = std::make_shared<rm_cam::CamServer>(this, cam_dev_);
+  cam_server_ = std::make_shared<rm_cam::CamServer>(node_, cam_dev_);
 }
 
 }  // namespace rm_cam

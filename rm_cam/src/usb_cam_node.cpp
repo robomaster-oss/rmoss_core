@@ -25,15 +25,15 @@ using namespace std::chrono_literals;
 namespace rm_cam
 {
 UsbCamNode::UsbCamNode(const rclcpp::NodeOptions & options)
-: Node("usb_cam", options)
 {
+  node_ = std::make_shared<rclcpp::Node>("usb_cam", options);
   // declare parameters
-  declare_parameter("usb_cam_path", "/dev/video0");
+  node_->declare_parameter("usb_cam_path", "/dev/video0");
   // get parameters
-  auto dev_name = get_parameter("usb_cam_path").as_string();
+  auto dev_name = node_->get_parameter("usb_cam_path").as_string();
   // create camera device
   cam_dev_ = std::make_shared<rm_cam::UsbCam>(dev_name);
-  cam_server_ = std::make_shared<rm_cam::CamServer>(this, cam_dev_);
+  cam_server_ = std::make_shared<rm_cam::CamServer>(node_, cam_dev_);
 }
 
 }  // namespace rm_cam

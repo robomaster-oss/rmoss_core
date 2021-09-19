@@ -25,12 +25,17 @@
 
 namespace rm_base
 {
-class SimpleRobotBaseNode : public rclcpp::Node
+// Node wrapper for SimpleRobotBase
+class SimpleRobotBaseNode
 {
 public:
   explicit SimpleRobotBaseNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
 public:
+  rclcpp::node_interfaces::NodeBaseInterface::SharedPtr get_node_base_interface()
+  {
+    return node_->get_node_base_interface();
+  }
   void listen_loop();
 
 private:

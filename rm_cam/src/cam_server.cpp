@@ -60,11 +60,10 @@ constexpr const char * kCamParamTypeNames[] = {
 };
 
 CamServer::CamServer(
-  rclcpp::Node * node,
+  rclcpp::Node::SharedPtr node,
   std::shared_ptr<CamInterface> cam_intercace)
-: cam_intercace_(cam_intercace)
+: node_(node), cam_intercace_(cam_intercace)
 {
-  node_logging_ = node->get_node_logging_interface();
   // 相机参数获取并设置，配置文件中的值会覆盖默认值
   int data;
   constexpr int param_num = sizeof(kCamParamTypes) / sizeof(CamParamType);
@@ -79,7 +78,7 @@ CamServer::CamServer(
   cam_intercace_->get_parameter(rm_cam::CamParamType::Fps, fps_);
   // 打开摄像头
   if (!cam_intercace_->open()) {
-    RCLCPP_ERROR(node_logging_->get_logger(), "fail to open camera!");
+    RCLCPP_ERROR(node_->get_logger(), "fail to open camera!");
     return;
   }
   // fps比较特殊，如果fps没有被设置，或值非法，则设置为默认值30
@@ -97,18 +96,18 @@ CamServer::CamServer(
   node->get_parameter("camera_k", camera_k_);
   if (!camera_k_.empty() && camera_k_.size() != 9) {
     RCLCPP_ERROR(
-      node_logging_->get_logger(),
+      node_->get_logger(),
       "the size of the camera intrinsic parameter should be 9");
   }
   node->get_parameter("camera_d", camera_d_);
   node->get_parameter("camera_p", camera_p_);
   if (!camera_p_.empty() && camera_p_.size() != 12) {
     RCLCPP_ERROR(
-      node_logging_->get_logger(),
+      node_->get_logger(),
       "the size of the camera extrinsic parameter should be 12");
   }
   // create image publisher
-  img_pub_ = image_transport::create_publisher(node, camera_name + "/image_raw");
+  img_pub_ = image_transport::create_publisher(node.get(), camera_name + "/image_raw");
   auto period_ms = std::chrono::milliseconds(static_cast<int64_t>(1000.0 / fps_));
   timer_ = node->create_wall_timer(period_ms, std::bind(&CamServer::timer_callback, this));
   // create GetCameraInfo service
@@ -130,7 +129,7 @@ void CamServer::timer_callback()
   } else {
     // try to reopen camera
     if (reopen_cnt % 100 == 0) {
-      RCLCPP_INFO(node_logging_->get_logger(), "Reopen Camera!");
+      RCLCPP_INFO(node_->get_logger(), "Reopen Camera!");
       cam_intercace_->close();
       std::this_thread::sleep_for(100ms);
       cam_intercace_->open();

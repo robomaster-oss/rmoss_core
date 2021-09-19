@@ -19,7 +19,7 @@ include_directories(include)
 
 #create rm_projectile_motion lib
 aux_source_directory(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
-add_library(${PROJECT_NAME} ${DIR_SRCS})
+add_library(${PROJECT_NAME} SHARED ${DIR_SRCS})
 ament_target_dependencies(${PROJECT_NAME}
     rclcpp
     OpenCV

@@ -22,7 +22,8 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "opencv2/opencv.hpp"
-#include "image_transport/image_transport.hpp"
+#include "sensor_msgs/msg/image.hpp"
+#include "sensor_msgs/msg/camera_info.hpp"
 #include "rmoss_interfaces/srv/get_camera_info.hpp"
 #include "rm_cam/cam_interface.hpp"
 
@@ -45,7 +46,7 @@ private:
 
 private:
   rclcpp::Node::SharedPtr node_;
-  image_transport::Publisher img_pub_;
+  rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr img_pub_;
   rclcpp::Service<rmoss_interfaces::srv::GetCameraInfo>::SharedPtr camera_info_service_;
   rclcpp::TimerBase::SharedPtr timer_;
   // camera_device interface
@@ -53,7 +54,7 @@ private:
   // data
   cv::Mat img_;
   std::vector<double> camera_k_;  // 3*3=9
-  std::vector<double> camera_p_;  // 3*4=12
+  std::vector<double> camera_p_{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0};  // 3*4=12
   std::vector<double> camera_d_;
   bool has_camera_info_{false};
   int fps_{30};

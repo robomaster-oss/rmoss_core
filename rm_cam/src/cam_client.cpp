@@ -76,17 +76,17 @@ bool CamClient::get_camera_info(sensor_msgs::msg::CameraInfo & info)
   exec->add_callback_group(callback_group, node_->get_node_base_interface());
   while (!client->wait_for_service(std::chrono::seconds(1))) {
     if (!rclcpp::ok()) {
-      RCLCPP_ERROR(node_->get_logger(), "client interrupted while waiting for service to appear.");
+      RCLCPP_ERROR(node_->get_logger(), "[get_camera_info] client interrupted.");
       return false;
     }
-    RCLCPP_INFO(node_->get_logger(), "waiting for service to appear...");
+    RCLCPP_INFO(node_->get_logger(), "[get_camera_info] waiting for service.");
   }
   auto request = std::make_shared<rmoss_interfaces::srv::GetCameraInfo::Request>();
   auto result_future = client->async_send_request(request);
   if (exec->spin_until_future_complete(result_future, 5s) !=
     rclcpp::FutureReturnCode::SUCCESS)
   {
-    RCLCPP_ERROR(node_->get_logger(), "service call failed.");
+    RCLCPP_ERROR(node_->get_logger(), "[get_camera_info] waiting for service failed.");
     return false;
   }
   auto result = result_future.get();
@@ -94,6 +94,7 @@ bool CamClient::get_camera_info(sensor_msgs::msg::CameraInfo & info)
     info = result->camera_info;
     return true;
   } else {
+    RCLCPP_ERROR(node_->get_logger(), "[get_camera_info] service call failed.");
     return false;
   }
 }

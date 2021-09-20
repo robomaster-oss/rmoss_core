@@ -78,36 +78,37 @@ CamServer::CamServer(
   cam_intercace_->get_parameter(rm_cam::CamParamType::Fps, fps_);
   // 打开摄像头
   if (!cam_intercace_->open()) {
-    RCLCPP_ERROR(node_->get_logger(), "fail to open camera!");
+    RCLCPP_FATAL(node_->get_logger(), "fail to open camera!");
     return;
   }
-  // fps比较特殊，如果fps没有被设置，或值非法，则设置为默认值30
+  // 如果fps值非法，则设置为默认值30
   if (fps_ <= 0) {
     fps_ = 30;
     cam_intercace_->set_parameter(rm_cam::CamParamType::Fps, 30);
   }
+  std::string camera_name = "camera";
   // declare parameters
   node->declare_parameter("camera_name", "camera");
-  node->declare_parameter("camera_k", rclcpp::ParameterValue(std::vector<double>()));
-  node->declare_parameter("camera_d", rclcpp::ParameterValue(std::vector<double>()));
-  node->declare_parameter("camera_p", rclcpp::ParameterValue(std::vector<double>()));
-  // get parameters
-  auto camera_name = node->get_parameter("camera_name").as_string();
+  node->declare_parameter("camera_k", camera_k_);
+  node->declare_parameter("camera_p", camera_p_);
+  node->declare_parameter("camera_d", camera_d_);
+  node->get_parameter("camera_name", camera_name);
   node->get_parameter("camera_k", camera_k_);
-  if (!camera_k_.empty() && camera_k_.size() != 9) {
-    RCLCPP_ERROR(
-      node_->get_logger(),
-      "the size of the camera intrinsic parameter should be 9");
-  }
-  node->get_parameter("camera_d", camera_d_);
   node->get_parameter("camera_p", camera_p_);
-  if (!camera_p_.empty() && camera_p_.size() != 12) {
+  node->get_parameter("camera_d", camera_d_);
+  // check parameters
+  if (camera_k_.size() != 9) {
     RCLCPP_ERROR(
       node_->get_logger(),
-      "the size of the camera extrinsic parameter should be 12");
+      "the size of camera intrinsic parameter(%ld) != 9", camera_k_.size());
+  }
+  if (camera_p_.size() != 12) {
+    RCLCPP_ERROR(
+      node_->get_logger(),
+      "the size of camera extrinsic parameter(%ld) != 12", camera_p_.size());
   }
   // create image publisher
-  img_pub_ = image_transport::create_publisher(node.get(), camera_name + "/image_raw");
+  img_pub_ = node_->create_publisher<sensor_msgs::msg::Image>(camera_name + "/image_raw", 1);
   auto period_ms = std::chrono::milliseconds(static_cast<int64_t>(1000.0 / fps_));
   timer_ = node->create_wall_timer(period_ms, std::bind(&CamServer::timer_callback, this));
   // create GetCameraInfo service
@@ -126,16 +127,16 @@ void CamServer::timer_callback()
     // publish image msg
     sensor_msgs::msg::Image::SharedPtr img_msg = cv_bridge::CvImage(
       header, "bgr8", img_).toImageMsg();
-    img_pub_.publish(img_msg);
+    img_pub_->publish(*img_msg);
   } else {
     // try to reopen camera
     if (reopen_cnt % fps_ == 0) {
       cam_intercace_->close();
       std::this_thread::sleep_for(100ms);
       if (cam_intercace_->open()) {
-        RCLCPP_INFO(node_->get_logger(), "reopen camera successed!");
+        RCLCPP_WARN(node_->get_logger(), "reopen camera successed!");
       } else {
-        RCLCPP_INFO(node_->get_logger(), "reopen camera failed!");
+        RCLCPP_WARN(node_->get_logger(), "reopen camera failed!");
       }
     }
     reopen_cnt++;
@@ -155,9 +156,14 @@ void CamServer::camera_info_callback(
   camera_info.height = data;
   cam_intercace_->get_parameter(rm_cam::CamParamType::Width, data);
   camera_info.width = data;
-  std::copy_n(camera_k_.begin(), 9, camera_info.k.begin());
-  camera_info.d = camera_d_;
-  response->success = true;
+  if (camera_k_.size() == 9 && camera_p_.size() == 12) {
+    std::copy_n(camera_k_.begin(), 9, camera_info.k.begin());
+    std::copy_n(camera_p_.begin(), 12, camera_info.p.begin());
+    camera_info.d = camera_d_;
+    response->success = true;
+  } else {
+    response->success = false;
+  }
 }
 
 

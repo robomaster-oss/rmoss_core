@@ -17,6 +17,7 @@
 
 #include <memory>
 #include <string>
+#include <thread>
 
 #include "rm_cam/cam_interface.hpp"
 
@@ -24,7 +25,8 @@
 class DummyCam : public rm_cam::CamInterface
 {
 public:
-  DummyCam()
+  explicit DummyCam(int grap_time_ms = 10)
+  : grap_time_ms_(grap_time_ms)
   {
     params_[rm_cam::CamParamType::Width] = 640;
     params_[rm_cam::CamParamType::Height] = 480;
@@ -53,6 +55,7 @@ public:
       if (is_falut_) {
         return false;
       }
+      std::this_thread::sleep_for(std::chrono::milliseconds(grap_time_ms_));
       image = img_.clone();
       return true;
     }
@@ -67,6 +70,7 @@ public:
 private:
   // for image
   cv::Mat img_;
+  int grap_time_ms_{10};
   // flag
   bool is_open_{false};
   bool is_falut_{false};

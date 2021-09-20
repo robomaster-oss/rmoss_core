@@ -15,7 +15,6 @@
   <depend>rclcpp</depend>
   <depend>rmoss_interfaces</depend>
   <depend>sensor_msgs</depend>
-  <depend>image_transport</depend>
   <depend>libopencv-dev</depend>
   <depend>cv_bridge</depend>
 

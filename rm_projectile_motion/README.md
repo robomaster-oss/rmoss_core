@@ -6,7 +6,7 @@ rm_projectile_motion是rmoss_core中的一个基础功能包，对子弹在飞�
 
 主要文件：
 
-* `iterative_solver.hpp/cpp` : 基于数值迭代的弹道逆运动求解器，即给定子弹飞行正运动学方程，可根据给定目标位置，计算所需仰角。
+* `iterative_projectile_solver.hpp/cpp` : 基于数值迭代的弹道逆运动求解器，即给定子弹飞行正运动学方程，可根据给定目标位置，计算所需仰角。
 * `gravity_projectile_solver.hpp/cpp` : 考虑重力因素的弹道逆运动求解器
 * `gaf_projectile_solver.hpp/cpp` : 考虑重力和空气摩擦阻力因素的弹道逆运动求解器（不稳定）
 * `gimbal_transform_tool.hpp/cpp` : 云台转角计算工具，需要传入求解器，利用弹道模型计算pitch, yaw角度
@@ -21,8 +21,8 @@ auto solver = std::make_shared<rm_projectile_motion::GravityProjectileSolver>(25
 //创建gimbal_transform_tool，传入求解器
 projectile_tansform_tool = std::make_shared<rm_projectile_motion::GimbalTransformTool>(solver);
 //求解例子
-cv::Point3f position(6,2,2);
-float pitch,yaw;
+Eigen::Vector3d position(6,2,2);
+double pitch,yaw;
 projectile_tansform_tool_->solve(position,pitch,yaw);
 ```
 

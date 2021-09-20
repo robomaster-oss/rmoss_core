@@ -12,19 +12,25 @@ endif()
 #find package
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(OpenCV REQUIRED)
+find_package(eigen3_cmake_module REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 #include
 include_directories(include)
 
 #create rm_projectile_motion lib
-aux_source_directory(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
-add_library(${PROJECT_NAME} SHARED ${DIR_SRCS})
-ament_target_dependencies(${PROJECT_NAME}
-    rclcpp
-    OpenCV
+add_library(${PROJECT_NAME} SHARED
+  src/iterative_projectile_solver/iterative_projectile_solver.cpp
+  src/iterative_projectile_solver/gravity_projectile_solver.cpp
+  src/iterative_projectile_solver/gaf_projectile_solver.cpp
+  src/gimbal_transform_tool.cpp
 )
-
+set(dependencies
+  rclcpp
+  Eigen3
+  eigen3_cmake_module
+)
+ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 # Install include directories
 install(DIRECTORY include/
   DESTINATION include
@@ -40,8 +46,7 @@ install(TARGETS ${PROJECT_NAME}
 
 #export rm_projectile_motion lib
 ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_export_dependencies(rclcpp)
-ament_export_dependencies(OpenCV)
+ament_export_dependencies(${dependencies})
 
 #test
 if(BUILD_TESTING)

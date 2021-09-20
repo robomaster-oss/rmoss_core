@@ -15,14 +15,15 @@
 #include "rm_projectile_motion/gravity_projectile_solver.hpp"
 #include <cmath>
 
-const float GRAVITY = 9.7913;
+const double GRAVITY = 9.7913;
 
 namespace rm_projectile_motion
 {
 
 // 抛物线模型
 // x:m,  launch_angle:rad, y:m  t:s
-void GravityProjectileSolver::forward_motion(float given_angle, float given_x, float & h, float & t)
+void GravityProjectileSolver::forward_motion(
+  double given_angle, double given_x, double & h, double & t)
 {
   t = given_x / (initial_vel_ * cos(given_angle));
   h = initial_vel_ * sin(given_angle) * t - GRAVITY * t * t / 2;

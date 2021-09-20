@@ -19,14 +19,14 @@
 namespace rm_projectile_motion
 {
 
-bool IterativeProjectileSolver::solve(float target_x, float target_h, float & angle)
+bool IterativeProjectileSolver::solve(double target_x, double target_h, double & angle)
 {
-  float aimed_h, h, dh;
-  float tmp_angle = 0;
-  float t = 0;
+  double aimed_h, h, dh;
+  double tmp_angle = 0;
+  double t = 0;
   aimed_h = target_h;
   for (int i = 0; i < max_iter_; i++) {
-    tmp_angle = static_cast<float>(atan2(aimed_h, target_x));
+    tmp_angle = atan2(aimed_h, target_x);
     if (tmp_angle > 80 * M_PI / 180 || tmp_angle < -80 * M_PI / 180) {
       // cout << "[IterativeProjectileSolver]:当前迭代角度超过范围(-80d,80d)"<< endl;
       return false;
@@ -38,11 +38,11 @@ bool IterativeProjectileSolver::solve(float target_x, float target_h, float & an
     }
     dh = target_h - h;
     aimed_h = aimed_h + dh;
-    if (fabsf(dh) < 0.001) {
+    if (fabs(dh) < 0.001) {
       break;
     }
   }
-  if (fabsf(dh) > 0.01) {
+  if (fabs(dh) > 0.01) {
     // cout << "[IterativeProjectileSolver]:误差距离过大："<<dh<<endl;
     return false;
   }

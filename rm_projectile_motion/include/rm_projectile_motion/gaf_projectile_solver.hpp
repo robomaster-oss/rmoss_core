@@ -24,16 +24,16 @@ namespace rm_projectile_motion
 class GafProjectileSolver : public IterativeProjectileSolver
 {
 public:
-  GafProjectileSolver(float initial_vel, float friction_coeff);
+  GafProjectileSolver(double initial_vel, double friction_coeff);
   ~GafProjectileSolver() = default;
 
 public:
-  void forward_motion(float given_angle, float given_x, float & h, float & t);
+  void forward_motion(double given_angle, double given_x, double & h, double & t);
 
 private:
   // parameter
-  float initial_vel_;
-  float friction_coeff_;
+  double initial_vel_;
+  double friction_coeff_;
 };
 
 }  // namespace rm_projectile_motion

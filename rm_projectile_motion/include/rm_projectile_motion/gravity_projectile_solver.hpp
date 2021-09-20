@@ -24,13 +24,13 @@ namespace rm_projectile_motion
 class GravityProjectileSolver : public IterativeProjectileSolver
 {
 public:
-  explicit GravityProjectileSolver(float initial_vel)
+  explicit GravityProjectileSolver(double initial_vel)
   : initial_vel_(initial_vel) {}
 
-  void forward_motion(float given_angle, float given_x, float & h, float & t);
+  void forward_motion(double given_angle, double given_x, double & h, double & t);
 
 private:
-  float initial_vel_;
+  double initial_vel_;
 };
 
 }  // namespace rm_projectile_motion

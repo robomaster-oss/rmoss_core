@@ -26,13 +26,13 @@ public:
   IterativeProjectileSolver()
   : max_iter_(10) {}
   void set_max_iter(int max_iter) {max_iter_ = max_iter;}
-  virtual bool solve(float target_x, float target_h, float & angle);
+  virtual bool solve(double target_x, double target_h, double & angle);
   ///////// 在水平坐标系下
   // x: input,射击距离/m
   // launch_angle: input,出射角度/rad
   // y: output,射击的y落点/m
   // t: output,射击飞行时间/s
-  virtual void forward_motion(float given_angle, float given_x, float & h, float & t) = 0;
+  virtual void forward_motion(double given_angle, double given_x, double & h, double & t) = 0;
 
 private:
   int max_iter_;

@@ -17,20 +17,20 @@
 namespace rm_projectile_motion
 {
 
-bool GimbalTransformTool::solve(cv::Point3f position, float & pitch, float & yaw)
+bool GimbalTransformTool::solve(double x, double y, double z, double & pitch, double & yaw)
 {
   if (!solver_) {
     // if model is nullptr, use line model.
-    pitch = -static_cast<float>(atan2(position.z, position.x));
+    pitch = -atan2(z, x);
   } else {
-    float angle;
-    if (solver_->solve(position.z, position.x, angle)) {
+    double angle;
+    if (solver_->solve(z, x, angle)) {
       pitch = -angle;
     } else {
       return false;
     }
   }
-  yaw = static_cast<float>(atan2(position.y, position.x));
+  yaw = atan2(y, x);
   return true;
 }
 

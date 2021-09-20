@@ -15,9 +15,9 @@
 #ifndef RM_PROJECTILE_MOTION__GIMBAL_TRANSFORM_TOOL_HPP_
 #define RM_PROJECTILE_MOTION__GIMBAL_TRANSFORM_TOOL_HPP_
 
-#include <opencv2/opencv.hpp>
 #include <memory>
 
+#include "Eigen/Geometry"
 #include "rm_projectile_motion/projectile_solver_interface.hpp"
 
 namespace rm_projectile_motion
@@ -33,7 +33,11 @@ public:
   void set_projectile_solver(std::shared_ptr<ProjectileSolverInterface> solver) {solver_ = solver;}
   // position :input, position of target object in gimbal frame
   // pitch,yaw : output, angle of gimbal
-  bool solve(cv::Point3f position, float & pitch, float & yaw);
+  bool solve(double x, double y, double z, double & pitch, double & yaw);
+  bool solve(Eigen::Vector3d position, double & pitch, double & yaw)
+  {
+    return solve(position(0), position(1), position(2), pitch, yaw);
+  }
 
 private:
   std::shared_ptr<ProjectileSolverInterface> solver_;

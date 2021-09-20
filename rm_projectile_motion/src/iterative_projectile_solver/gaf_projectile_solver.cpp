@@ -17,23 +17,23 @@
 
 #include <cmath>
 
-const float GRAVITY = 9.7913;
+const double GRAVITY = 9.7913;
 
 namespace rm_projectile_motion
 {
 
-GafProjectileSolver::GafProjectileSolver(float initial_vel, float friction_coeff)
+GafProjectileSolver::GafProjectileSolver(double initial_vel, double friction_coeff)
 : initial_vel_(initial_vel), friction_coeff_(friction_coeff)
 {
   set_max_iter(100);
 }
 
 // air friction of x-axis is considered（仅下降阶段考虑）
-void GafProjectileSolver::forward_motion(float given_angle, float given_x, float & h, float & t)
+void GafProjectileSolver::forward_motion(double given_angle, double given_x, double & h, double & t)
 {
-  float v = initial_vel_;
+  double v = initial_vel_;
   if (given_angle > 0.01) {      // 存在上升阶段
-    float t0, x0, y0;      // 上升阶段（最高点）
+    double t0, x0, y0;      // 上升阶段（最高点）
     t0 = v * sin(given_angle) / GRAVITY;
     x0 = v * cos(given_angle) * t0;
     y0 = GRAVITY * t0 * t0 / 2;
@@ -41,7 +41,7 @@ void GafProjectileSolver::forward_motion(float given_angle, float given_x, float
       t = given_x / (v * cos(given_angle));
       h = v * sin(given_angle) * t - GRAVITY * t * t / 2;
     } else {               // 先上升,后下降
-      float t1, x1;        // 下降阶段
+      double t1, x1;        // 下降阶段
       x1 = given_x - x0;
       t1 = (exp(friction_coeff_ * x1) - 1) /
         (friction_coeff_ * v * cos(given_angle));

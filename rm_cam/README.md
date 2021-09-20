@@ -2,25 +2,31 @@
 
 ## 1.简介
 
-rm_cam是rmoss_core 中的一个基础功能包，提供了usb相机ROS节点和虚拟相机ROS节点相关功能，同时，还支持二次开发，支持自定义相机扩展，加速开发。主要实现功能如下：
+`rm_cam`是`rmoss_core`中的一个基础功能包，提供了usb相机ROS节点和虚拟相机ROS节点相关功能，同时，实现了一个`camera C/S`模型，封装了图像获取等操作，只需要注重图像处理部分。主要实现功能如下：
 
-- **usb相机ROS节点**
-- **基于图片与视频的虚拟相机ROS节点**
+- usb相机ROS节点 ：获取usb相机图像，并发布成ROS topic (`sensor_msgs::msg::Image`).
+- 基于图片与视频的虚拟相机ROS节点：将视频或者图片发布成ROS topic (`sensor_msgs::msg::Image`).
+- `camera C/S`模型：`CamServer`负责将相机获取的图像发布成ROS topic ， `CamClient` 负责订阅图像ROS topic，并调用`callback`进行图像处理。
 
-为了提高扩展能力，该模块将 **相机操作** 与 **相机ROS节点** 进行解偶，通过相机接口实现，所以，对于不同的工业相机，有不同的驱动，通过该相机接口，可以无需关心ROS部分，快速实现相机ROS节点, 支持[ROS Composition](https://docs.ros.org/en/galactic/Tutorials/Composition.html)方式启动。详细介绍参考二次开发部分。
+`camera C/S`模型如下图所示：
+
+![](cam_server_client.png)
+
+同时相机节点支持二次开发，支持自定义相机扩展，该模块将相机操作(`CamDevice`) 与相机ROS节点 (`CamServer`) 进行解偶，对于不同的工业相机有不同的驱动，通过该相机接口，可以无需关心ROS部分，快速实现相机ROS节点, 支持[ROS Composition](https://docs.ros.org/en/galactic/Tutorials/Composition.html)方式启动, 详细介绍参考二次开发部分。
 
 文件说明：
 
 * `cam_interface.hpp`：定义通用相机设备接口
 * `usb_cam.hpp/cpp` : usb相机设备实现。
 * `virtual_cam.hpp/cpp`：虚拟相机设备实现，支持基于图片和基于视频两种方式。
-* `cam_server.hpp/cpp` : 通用ROS相机工具，发布图像topic数据，支持获取相机参数服务。
-* `usb_cam_node.hpp/cpp` ，`virtual_cam_node.hpp/cpp` :  ROS顶层模块（基于`CamInterface`和`CamServer`），实现usb相机节点和虚拟相机节点。
+* `cam_server.hpp/cpp` :  `CamServer` 模块，负责将相机获取的图像发布成ROS topic，支持获取相机参数服务。
+* `cam_client.hpp/cpp` :  `CamClient` 模块，订阅图像ROS topic，并调用`callback`进行图像处理。
+* `usb_cam_node.hpp/cpp` ，`virtual_cam_node.hpp/cpp` :  ROS顶层模块（基于`UsbCam`,`VirtualCam`和`CamServer`），实现usb相机节点和虚拟相机节点。
 * `usb_cam_main.cpp` ，`virtual_cam_main.cpp` :  usb相机节点和虚拟相机节点main入口。
 
 ## 2.快速使用
 
-### 2.1 usb相机：
+### usb相机：
 
 launch方式运行：
 
@@ -30,7 +36,7 @@ ros2 launch rm_cam usb_cam.launch.py  #使用默认/dev/video0
 
 * 参数在yaml文件中（`config/cam_params.yaml`）
 
-### 2.2 虚拟相机：
+### 虚拟相机：
 
 launch方式运行图片虚拟相机：
 
@@ -54,7 +60,7 @@ ros2 run rm_cam virtual_cam --ros-args -p "video_path:=/home/ubuntu/test.avi"
 
 * 至少需要一个参数`video_path`
 
-### 2.3 ROS Composition启动
+### ROS Composition启动
 
 launch方式运行composition测试demo
 

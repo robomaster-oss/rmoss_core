@@ -31,9 +31,9 @@ rmoss_util::set_debug(true);
 通用调试宏定义
 
 ```c++
-//rmoss_DEBUG(text); text为一条语句 ，如果静态调试开关为false，括号里面的语句不会被执行。
-rmoss_DEBUG(imshow("dst", dst));
-rmoss_DEBUG(std::cout<<"data"<<std::endl);
+//RMOSS_DEBUG(text); text为一条语句 ，如果静态调试开关为false，括号里面的语句不会被执行。
+RMOSS_DEBUG(imshow("dst", dst));
+RMOSS_DEBUG(std::cout<<"data"<<std::endl);
 ```
 
 图像调试函数
@@ -44,7 +44,7 @@ void draw_rotated_rect(cv::Mat &img,cv::RotatedRect r,cv::Scalar color=green);
 void draw_4points(cv::Mat &img, cv::Point2f *point2fs,cv::Scalar color=green);
 void draw_convex_hull(cv::Mat &img,std::vector<cv::Point2f> points,cv::Scalar color=green);
 //使用
-rmoss_DEBUG(rmoss_util::draw_rotated_rect(img,r));
+RMOSS_DEBUG(rmoss_util::draw_rotated_rect(img,r));
 ```
 
 #### math模块

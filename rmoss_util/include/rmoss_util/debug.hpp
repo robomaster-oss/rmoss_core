@@ -18,7 +18,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-#define rmoss_DEBUG(text) \
+#define RMOSS_DEBUG(text) \
   if (rmoss_util::get_debug()) text
 
 namespace rmoss_util

@@ -1,0 +1,24 @@
+usb_cam:
+    ros__parameters:
+        usb_cam_path: "/dev/video0"
+        camera_name: "front_camera"
+        camera_k: [1552.7, 0.0, 640.0, 0.0, 1537.9, 360.0, 0.0, 0.0, 1.0]
+        camera_d: [0, 0, 0, 0, 0] 
+        width: 640
+        height: 480
+        fps: 20
+
+virtual_image_cam:
+    ros__parameters:
+        image_path : "/home/ubuntu/ros2_ws/src/rmoss_core/rmoss_cam/resource/test.jpg"
+        camera_name: "front_camera"
+        camera_k: [1552.7, 0.0, 640.0, 0.0, 1537.9, 360.0, 0.0, 0.0, 1.0]
+        camera_d: [0, 0, 0, 0, 0] 
+        fps: 20
+
+virtual_video_cam:
+    ros__parameters:
+        video_path : "~/test.avi"
+        camera_name: "front_camera"
+        camera_k: [1552.7, 0.0, 640.0, 0.0, 1537.9, 360.0, 0.0, 0.0, 1.0]
+        camera_d: [0, 0, 0, 0, 0]

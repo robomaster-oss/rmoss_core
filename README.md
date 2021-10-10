@@ -33,8 +33,13 @@ rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础�
 
 * 目前仅支持`ROS2 galactic`版本 (追踪最新ROS版本)
 
-* 环境依赖：
-  *  [rmoss_interfaces](https://github.com/robomaster-oss/rmoss_interfaces) : ROS2 interfaces (.msg, .srv, .action) used in the RoboMaster OSS Projects
+环境依赖：
+*  [rmoss_interfaces](https://github.com/robomaster-oss/rmoss_interfaces) : ROS2 interfaces (.msg, .srv, .action) used in the RoboMaster OSS Projects
+
+第三方常用库
+* 矩阵运算，3D几何：Eigen3
+* 图像相关：OpenCV4
+
 
 环境配置
 

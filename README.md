@@ -18,6 +18,8 @@ rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础�
 
 * rmoss_core后续的工作方向为规范化，遵守[ROS2代码规范](https://docs.ros.org/en/galactic/Contributing/Code-Style-Language-Versions.html), 增加代码单元测试, 集成CI自动测试, 目标成为一个标准的ROS2项目, 更多开发计划详见[Roadmap](https://robomaster-oss.github.io/rmoss_tutorials/#/roadmap)
 
+* 如果你对RMOSS开源项目感兴趣，欢迎加入QQ群（729117957）进行交流讨论.
+
 ## 1.主要模块
 
 |          模块          |                           功能说明                           |

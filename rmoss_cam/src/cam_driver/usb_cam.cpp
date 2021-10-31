@@ -78,4 +78,24 @@ bool UsbCam::grab_image(cv::Mat & image)
   return false;
 }
 
+// set and get parameter
+bool UsbCam::set_parameter(CamParamType type, int value)
+{
+  if (params_.find(type) != params_.end()) {
+    params_[type] = value;
+    return true;
+  } else {
+    return false;
+  }
+}
+bool UsbCam::get_parameter(CamParamType type, int & value)
+{
+  if (params_.find(type) != params_.end()) {
+    value = params_[type];
+    return true;
+  } else {
+    return false;
+  }
+}
+
 }  // namespace rmoss_cam

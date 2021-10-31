@@ -82,17 +82,15 @@ virtual bool open() = 0;  // 打开设备
 virtual void close() = 0;  // 关闭设备
 virtual bool is_open() = 0;  //检测设备是否打开
 virtual bool grab_image(cv::Mat & imgae) = 0;  //获取图像
-//采用map存储参数,需要在构造函数中进行设置初始值params_[key]=init_value,
-//通过set_parameter和get_parameter()设置获取参数，未进行初始化的参数放回false
-std::unordered_map<CamParamType, int> params_;
-bool set_parameter(CamParamType type,int value);
-bool get_parameter(CamParamType type,int& value);
+virtual bool set_parameter(CamParamType type,int value) = 0; //设置参数
+virtual bool get_parameter(CamParamType type,int& value) = 0; //获取参数
 ```
 
 相机接口运行模型 （简化模型，不考虑运行时修改参数）
 
 * 一般运行流程：`set_parameter()`->`open()`->`grab_image()`->`close()` 
 * 参数设置应该在相机关闭下进行设置，若需要修改相机参数（如曝光），需要先重启相机进行设置，即：`close()`-> `set_parameter()`->`open()` 
+* 参数set和get方法可以参考`UsbCam`和`VirualCam`的实现，采用`unordered_map`存储参数。
 
 相机参数（CamParamType）说明：
 

@@ -47,28 +47,8 @@ public:
   virtual bool is_open() = 0;
   virtual bool grab_image(cv::Mat & imgae) = 0;
   // set and get parameter
-  virtual bool set_parameter(CamParamType type, int value)
-  {
-    if (params_.find(type) != params_.end()) {
-      params_[type] = value;
-      return true;
-    } else {
-      return false;
-    }
-  }
-  virtual bool get_parameter(CamParamType type, int & value)
-  {
-    if (params_.find(type) != params_.end()) {
-      value = params_[type];
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-protected:
-  // camera parameters
-  std::unordered_map<CamParamType, int> params_;
+  virtual bool set_parameter(CamParamType type, int value) = 0;
+  virtual bool get_parameter(CamParamType type, int & value) = 0;
 };
 }  // namespace rmoss_cam
 

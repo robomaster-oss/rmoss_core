@@ -15,6 +15,7 @@
 #define RMOSS_CAM__USB_CAM_HPP_
 
 #include <string>
+#include <unordered_map>
 
 #include "opencv2/opencv.hpp"
 #include "rmoss_cam/cam_interface.hpp"
@@ -33,10 +34,14 @@ public:
   void close() override;
   bool is_open() override;
   bool grab_image(cv::Mat & image) override;
+  bool set_parameter(CamParamType type, int value) override;
+  bool get_parameter(CamParamType type, int & value) override;
 
 private:
   std::string dev_path_;
   cv::VideoCapture cap_;
+  // camera parameters
+  std::unordered_map<CamParamType, int> params_;
   // flag
   bool is_open_{false};
 };

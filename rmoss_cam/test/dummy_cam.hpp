@@ -17,6 +17,7 @@
 
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <thread>
 
 #include "rmoss_cam/cam_interface.hpp"
@@ -61,7 +62,24 @@ public:
     }
     return false;
   }
-
+  bool set_parameter(rmoss_cam::CamParamType type, int value) override
+  {
+    if (params_.find(type) != params_.end()) {
+      params_[type] = value;
+      return true;
+    } else {
+      return false;
+    }
+  }
+  bool get_parameter(rmoss_cam::CamParamType type, int & value) override
+  {
+    if (params_.find(type) != params_.end()) {
+      value = params_[type];
+      return true;
+    } else {
+      return false;
+    }
+  }
   void set_falut()
   {
     is_falut_ = true;
@@ -71,6 +89,8 @@ private:
   // for image
   cv::Mat img_;
   int grap_time_ms_{10};
+  // camera parameters
+  std::unordered_map<rmoss_cam::CamParamType, int> params_;
   // flag
   bool is_open_{false};
   bool is_falut_{false};

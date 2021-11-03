@@ -16,32 +16,21 @@ RoboMasterOSS是一个面向RoboMaster的开源软件栈项目，目的是为Rob
 
 rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础功能模块包，如相机模块，弹道运动模块等。
 
-* rmoss_core后续的工作方向为规范化，遵守[ROS2代码规范](https://docs.ros.org/en/galactic/Contributing/Code-Style-Language-Versions.html), 增加代码单元测试, 集成CI自动测试, 目标成为一个标准的ROS2项目, 更多开发计划详见[Roadmap](https://robomaster-oss.github.io/rmoss_tutorials/#/roadmap)
-
-* 如果你对RMOSS开源项目感兴趣，欢迎加入QQ群（729117957）进行交流讨论.
-
-## 1.主要模块
+## 主要模块
 
 |          模块          |                           功能说明                           |
 | :--------------------: | :----------------------------------------------------------: |
-|        `rmoss_util`       | 公共工具包: 包含调试,图像处理,ROS公共封装工具等公共基础工具。        |
+|        `rmoss_util`       | 公共工具包: 包含调试,图像处理,ROS公共封装工具等公共基础工具。   |
+|     `rmoss_interfaces`    | ROS2 interface包：包含RM相关msg，srv，action定义文件        |
 |        `rmoss_base`       | 基本通信工具包：提供单板计算机(SBC)与嵌入式系统(MCU)通信等相关工具。 |
 |        `rmoss_cam`        | 相机工具包：提供相机的ROS封装工具，实现usb相机，以及图片视频虚拟相机。   |
 | `rmoss_projectile_motion` | 弹道运动工具包: 求解弹道逆运动学，由目标位置计算云台仰角  |
 
-* rmoss项目使用ROS的坐标系标准以及基本单位标准 [REP 103](https://ros.org/reps/rep-0103.html). 
+* `rmoss_interfaces` : 单独仓库，作为各个ROS模块的桥梁。
 
-## 2.使用说明
+## 使用说明
 
-* 目前仅支持`ROS2 galactic`版本 (追踪最新ROS版本)
-
-环境依赖：
-*  [rmoss_interfaces](https://github.com/robomaster-oss/rmoss_interfaces) : ROS2 interfaces (.msg, .srv, .action) used in the RoboMaster OSS Projects
-
-第三方常用库
-* 矩阵运算，3D几何：Eigen3
-* 图像相关：OpenCV4
-
+* 目前仅支持`ROS2 Galactic`版本 (追踪最新ROS版本)
 
 环境配置
 
@@ -55,21 +44,16 @@ colcon build
 
 * 相关功能包使用详见相应package的README.md
 
-## 3.RMOSS 软件框架
+## RMOSS开发指南
 
-![](rmoss_arch.png)
+* [RMOSS基本设计模式](https://robomaster-oss.github.io/rmoss_tutorials/#/design/rmoss_design): RMOSS系统架构与模块设计模式。
+* [RMOSS项目规范](https://robomaster-oss.github.io/rmoss_tutorials/#/developer_guides/rmoss_project_spec): 包括代码风格，单位标准，机器人坐标系方向约定等项目规范。
 
-该结构适用于RoboMaster机器人软件结构，将算法任务层与机器人硬件层进行解耦，通过Interface layer进行耦合。
+`rmoss_core`后续的工作方向为规范化，遵守ROS2代码规范, 增加代码单元测试, 集成CI自动测试, 目标成为一个标准的ROS2项目, 更多开发计划详见[Roadmap](https://robomaster-oss.github.io/rmoss_tutorials/#/roadmap)
 
-* Interface Layer和Task Layer将模块化，基于ROS2进行开发，以ROS package的形式进行组织。
-* 该软件框架作为RMOSS项目开发的基本软件结构，rmoss_core/rmoss_contrib/rmoss_ign等项目将遵循该模式。
+* 如果你对RMOSS开源项目感兴趣，欢迎加入QQ群（729117957）进行交流讨论.
 
-主要优势如下：
-
-* 各个模块解耦，方便模块化测试，特别是算法层不受硬件的影响，可以被方便的复用。
-* 真实机器人与仿真机器人处于对等的地位，方便算法在真实机器人与仿真器上进行快速测试与迁移。
-
-## 4.维护者及开源许可证
+## 维护者及开源许可证
 
 Maintainer : Zhenpeng Ge,  zhenpeng.ge@qq.com
 

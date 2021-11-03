@@ -17,24 +17,6 @@ jobs:
       - name: Check Changed files
         id: check_changed_files
         uses: tj-actions/changed-files@v9.2
-      - name: Set CI flag
-        id: ci_flag   
-        run: |
-          for file in ${{ steps.check_changed_files.outputs.all_changed_files }}
-          do
-            echo "::set-output name=rmoss_core::true"
-            if [[ $file == rmoss_util* ]]; then
-              echo "::set-output name=rmoss_util::true"
-            elif [[ $file == rmoss_base/* ]]; then
-              echo "::set-output name=rmoss_base::true"
-            elif [[ $file == rmoss_cam/* ]]; then
-              echo "::set-output name=rmoss_cam::true"
-            elif [[ $file == rmoss_projectile_motion/* ]]; then
-              echo "::set-output name=rmoss_projectile_motion::true"
-            else
-              continue
-            fi
-          done  
       - name: Setup ROS 2
         uses: ros-tooling/setup-ros@v0.2
         with:
@@ -46,25 +28,21 @@ jobs:
           vcs-repo-file-url: "${{ github.workspace }}/tools/dependency.repos"
           skip-tests: true
       - name: Test rmoss_util
-        if: steps.ci_flag.outputs.rmoss_util == 'true'
         run: |
           source /opt/ros/galactic/setup.sh
           cd ros_ws
           colcon test --packages-select rmoss_util --event-handlers console_cohesion+ --return-code-on-test-failure
       - name: Test rmoss_base
-        if: steps.ci_flag.outputs.rmoss_base == 'true'
         run: |
           source /opt/ros/galactic/setup.sh
           cd ros_ws
           colcon test --packages-select rmoss_base --event-handlers console_cohesion+ --return-code-on-test-failure
       - name: Test rmoss_cam
-        if: steps.ci_flag.outputs.rmoss_cam == 'true'
         run: |
           source /opt/ros/galactic/setup.sh
           cd ros_ws
           colcon test --packages-select rmoss_cam --event-handlers console_cohesion+ --return-code-on-test-failure
       - name: Test rmoss_projectile_motion
-        if: steps.ci_flag.outputs.rmoss_projectile_motion == 'true'
         run: |
           source /opt/ros/galactic/setup.sh
           cd ros_ws

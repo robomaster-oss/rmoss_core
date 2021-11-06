@@ -89,9 +89,15 @@ CamServer::CamServer(
   std::string camera_name = "camera";
   // declare parameters
   node->declare_parameter("camera_name", "camera");
-  node->declare_parameter("camera_k", camera_k_);
-  node->declare_parameter("camera_p", camera_p_);
-  node->declare_parameter("camera_d", camera_d_);
+  if (!node->has_parameter("camera_k")) {
+    node->declare_parameter("camera_k", camera_k_);
+  }
+  if (!node->has_parameter("camera_p")) {
+    node->declare_parameter("camera_p", camera_p_);
+  }
+  if (!node->has_parameter("camera_d")) {
+    node->declare_parameter("camera_d", camera_d_);
+  }
   node->get_parameter("camera_name", camera_name);
   node->get_parameter("camera_k", camera_k_);
   node->get_parameter("camera_p", camera_p_);

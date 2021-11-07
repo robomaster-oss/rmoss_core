@@ -1,20 +1,19 @@
 # rmoss_util模块
 
-## 1.简介
+## 简介
 
 rmoss_util是rmoss_core 中的一个公共基础包，提供一些公共基础工具及功能。主要实现了以下几个功能：
 
-* 提供一些调试工具（如在图像上绘制四边形，显示图片，调试开关等）
-* 提供一些简单图像处理工具（如基于单目视觉的3D位置解算工具，数学公式函数实现等）
+* 提供一些调试工具
+* 提供一些简单图像处理工具
 
 主要文件：
+* `debug.hpp/cpp` : 调试工具
+* `image_utils.hpp/cpp`（不建议使用，开发中） : 图像工具，提供一些图像处理或计算相关工具。
+* `time_utils.hpp/cpp`（不建议使用，开发中） : 时间工具，用于测量运行时间。
+* `mono_measure_tool.hpp/cpp`（不建议使用，开发中） : 单目测量工具类，单目算法封装（PNP解算，相似三角形反投影等）
 
-* `types.hpp` : 公共定义
-* `debug.hpp/cpp` : 调试工具，相关调试工具
-* `math.hpp/cpp` : 数学工具，提供一些图像处理或计算相关工具
-* `mono_measure_tool.hpp/cpp` : 单目测量工具类，单目算法封装（PNP解算，相似三角形反投影等）
-
-## 2.快速使用
+## 快速使用
 
 #### debug模块
 
@@ -28,28 +27,30 @@ rmoss_util::get_debug();
 rmoss_util::set_debug(true);
 ```
 
-通用调试宏定义
+通用调试宏使用
 
 ```c++
-//RMOSS_DEBUG(text); text为一条语句 ，如果静态调试开关为false，括号里面的语句不会被执行。
+// RMOSS_DEBUG(text); text为一条语句 ，如果静态调试开关为false，括号里面的语句不会被执行。
 RMOSS_DEBUG(imshow("dst", dst));
+// 用于输出调试信息
 RMOSS_DEBUG(std::cout<<"data"<<std::endl);
-```
-
-图像调试函数
-
-```c++
-//在图像上绘制多边形
-void draw_rotated_rect(cv::Mat &img,cv::RotatedRect r,cv::Scalar color=green);
-void draw_4points(cv::Mat &img, cv::Point2f *point2fs,cv::Scalar color=green);
-void draw_convex_hull(cv::Mat &img,std::vector<cv::Point2f> points,cv::Scalar color=green);
-//使用
+// 在图像上绘制多边形，用于调试图像
 RMOSS_DEBUG(rmoss_util::draw_rotated_rect(img,r));
 ```
 
-#### math模块
+#### image_utils模块
 
-提供相关图像计算工具
+简单画图
+
+```c++
+//
+void draw_rotated_rect(cv::Mat &img,cv::RotatedRect r,cv::Scalar color=green);
+void draw_4points(cv::Mat &img, cv::Point2f *point2fs,cv::Scalar color=green);
+void draw_convex_hull(cv::Mat &img,std::vector<cv::Point2f> points,cv::Scalar color=green);
+
+```
+
+数学计算
 
 ```c++
 //两点构成直线的倾角，相对常规坐标系，（不同于图像坐标系）常规坐标系y轴方向为向上。
@@ -67,13 +68,3 @@ rmoss_util::MonoMeasureTool mono_location_tool_;
 mono_location_tool_.set_camera_info(camera_intrinsic, camera_distortion);
 mono_location_tool_.solve_pnp(detected_points, small_armor_points, target_postion);
 ```
-
-## 3.维护者及开源许可证
-
-Maintainer:
-
-* wyx, 1418555317@qq.com
-
-* Zhenpeng Ge,  zhenpeng.ge@qq.com
-
-rmoss_util is provided under Apache License 2.0.

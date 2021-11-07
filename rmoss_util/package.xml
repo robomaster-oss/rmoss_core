@@ -4,7 +4,7 @@
     <name>rmoss_util</name>
     <version>0.9.0</version>
     <description>
-      RoboMaster common util package,include debug, math utils and so on.
+      RoboMaster common util package,include debug, image utils and so on.
     </description>
     <maintainer email="zhenpeng.ge@qq.com">zhenpeng ge</maintainer>
     <license>Apache License 2.0</license>

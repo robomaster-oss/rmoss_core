@@ -25,9 +25,8 @@
 #include "sensor_msgs/msg/image.hpp"
 #include "sensor_msgs/msg/camera_info.hpp"
 #include "rmoss_interfaces/srv/get_camera_info.hpp"
-#include "rmoss_interfaces/srv/get_task_status.hpp"
-#include "rmoss_interfaces/srv/control_task.hpp"
 #include "rmoss_cam/cam_interface.hpp"
+#include "rmoss_util/task_manager.hpp"
 
 namespace rmoss_cam
 {
@@ -44,19 +43,12 @@ private:
   void get_camera_info_cb(
     const rmoss_interfaces::srv::GetCameraInfo::Request::SharedPtr request,
     rmoss_interfaces::srv::GetCameraInfo::Response::SharedPtr response);
-  void get_task_status_cb(
-    const rmoss_interfaces::srv::GetTaskStatus::Request::SharedPtr request,
-    rmoss_interfaces::srv::GetTaskStatus::Response::SharedPtr response);
-  void control_task_cb(
-    const rmoss_interfaces::srv::ControlTask::Request::SharedPtr request,
-    rmoss_interfaces::srv::ControlTask::Response::SharedPtr response);
 
 private:
   rclcpp::Node::SharedPtr node_;
   rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr img_pub_;
   rclcpp::Service<rmoss_interfaces::srv::GetCameraInfo>::SharedPtr get_camera_info_srv_;
-  rclcpp::Service<rmoss_interfaces::srv::GetTaskStatus>::SharedPtr get_task_status_srv_;
-  rclcpp::Service<rmoss_interfaces::srv::ControlTask>::SharedPtr control_task_srv_;
+  rmoss_util::TaskManager::SharedPtr task_manager_;
   rclcpp::TimerBase::SharedPtr timer_;
   // camera_device interface
   std::shared_ptr<CamInterface> cam_intercace_;

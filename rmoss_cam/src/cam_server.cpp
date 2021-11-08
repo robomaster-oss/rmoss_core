@@ -125,12 +125,32 @@ CamServer::CamServer(
   get_camera_info_srv_ = node->create_service<rmoss_interfaces::srv::GetCameraInfo>(
     camera_name + "/get_camera_info",
     std::bind(&CamServer::get_camera_info_cb, this, _1, _2));
-  get_task_status_srv_ = node->create_service<rmoss_interfaces::srv::GetTaskStatus>(
-    std::string(node_->get_name()) + "/get_task_status",
-    std::bind(&CamServer::get_task_status_cb, this, _1, _2));
-  control_task_srv_ = node->create_service<rmoss_interfaces::srv::ControlTask>(
-    std::string(node_->get_name()) + "/control_task",
-    std::bind(&CamServer::control_task_cb, this, _1, _2));
+  // task manager
+  auto get_task_status_cb = [&]() {
+      if (run_flag_) {
+        if (!cam_status_ok_) {
+          return rmoss_util::TaskStatus::Error;
+        }
+        return rmoss_util::TaskStatus::Running;
+      } else {
+        if (!cam_intercace_->is_open()) {
+          return rmoss_util::TaskStatus::Error;
+        }
+        return rmoss_util::TaskStatus::Idle;
+      }
+    };
+  auto control_task_cb = [&](rmoss_util::TaskCmd cmd) {
+      if (cmd == rmoss_util::TaskCmd::Start) {
+        run_flag_ = true;
+      } else if (cmd == rmoss_util::TaskCmd::Stop) {
+        run_flag_ = false;
+      } else {
+        return false;
+      }
+      return true;
+    };
+  task_manager_ = std::make_shared<rmoss_util::TaskManager>(
+    node_, get_task_status_cb, control_task_cb);
   RCLCPP_INFO(node_->get_logger(), "init successfully!");
 }
 
@@ -181,37 +201,6 @@ void CamServer::get_camera_info_cb(
     response->success = true;
   } else {
     response->success = false;
-  }
-}
-
-void CamServer::get_task_status_cb(
-  const rmoss_interfaces::srv::GetTaskStatus::Request::SharedPtr request,
-  rmoss_interfaces::srv::GetTaskStatus::Response::SharedPtr response)
-{
-  (void)request;
-  if (run_flag_) {
-    response->status = response->RUNNING;
-    if (!cam_status_ok_) {
-      response->status = response->ERROR;
-    }
-  } else {
-    response->status = response->IDLE;
-    if (!cam_intercace_->is_open()) {
-      response->status = response->ERROR;
-    }
-  }
-}
-void CamServer::control_task_cb(
-  const rmoss_interfaces::srv::ControlTask::Request::SharedPtr request,
-  rmoss_interfaces::srv::ControlTask::Response::SharedPtr response)
-{
-  response->success = false;
-  if (request->cmd == request->START) {
-    run_flag_ = true;
-    response->success = true;
-  } else if (request->cmd == request->STOP) {
-    run_flag_ = false;
-    response->success = true;
   }
 }
 

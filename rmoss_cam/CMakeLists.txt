@@ -15,6 +15,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(rmoss_interfaces REQUIRED)
+find_package(rmoss_util REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(OpenCV REQUIRED)
 
@@ -36,6 +37,7 @@ set(dependencies
   rclcpp_components
   sensor_msgs
   rmoss_interfaces
+  rmoss_util
   cv_bridge
   OpenCV
 )
@@ -71,7 +73,7 @@ install(TARGETS usb_cam virtual_cam
 )
 
 # Install launch res directories
-install(DIRECTORY launch resource config
+install(DIRECTORY launch resource config scripts
   DESTINATION share/${PROJECT_NAME}
 )
 

@@ -9,13 +9,14 @@ rmoss_util是rmoss_core 中的一个公共基础包，提供一些公共基础�
 
 主要文件：
 * `debug.hpp/cpp` : 调试工具
+* `task_manager.hpp/cpp` : 任务管理封装，向外提供获取任务状态和控制任务服务。
 * `image_utils.hpp/cpp`（不建议使用，开发中） : 图像工具，提供一些图像处理或计算相关工具。
 * `time_utils.hpp/cpp`（不建议使用，开发中） : 时间工具，用于测量运行时间。
 * `mono_measure_tool.hpp/cpp`（不建议使用，开发中） : 单目测量工具类，单目算法封装（PNP解算，相似三角形反投影等）
 
 ## 快速使用
 
-#### debug模块
+### debug模块
 
 静态调试开关：控制是否显示调试信息
 
@@ -38,7 +39,30 @@ RMOSS_DEBUG(std::cout<<"data"<<std::endl);
 RMOSS_DEBUG(rmoss_util::draw_rotated_rect(img,r));
 ```
 
-#### image_utils模块
+### TaskManager模块
+
+使用样例
+```c++
+// task manager
+auto get_task_status_cb = [&]() {
+    return rmoss_util::TaskStatus::Running;
+  };
+auto control_task_cb = [&](rmoss_util::TaskCmd cmd) {
+    if (cmd == rmoss_util::TaskCmd::Start) {
+      // do something
+    } else if (cmd == rmoss_util::TaskCmd::Stop) {
+      // do something
+    } else {
+        return false;
+    }
+    return true;
+  };
+auto task_manager_ = std::make_shared<rmoss_util::TaskManager>(node_, get_task_status_cb, control_task_cb);
+```
+* 获取任务状态的service名字为：`<node_name>/get_task_status`
+* 控制任务的service名字为：`<node_name>/control_status`
+
+### image_utils模块
 
 简单画图
 
@@ -59,7 +83,7 @@ float calc_inclination_angle(cv::Point2f point1, cv::Point2f point2);
 float calc_inner_angle(cv::Point2f vertex_point, cv::Point2f point1, cv::Point2f point2);
 ```
 
-#### mono_measure_tool模块
+### mono_measure_tool模块
 
 工具类，主要包括基于PNP，和相似三角形投影算法的单目算法封装，2d->3d点位置解算。
 

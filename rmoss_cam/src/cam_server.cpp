@@ -74,13 +74,12 @@ CamServer::CamServer(
       cam_intercace_->set_parameter(kCamParamTypes[i], data);
     }
   }
-  // 记录fps
-  cam_intercace_->get_parameter(rmoss_cam::CamParamType::Fps, fps_);
   // 打开摄像头
   if (!cam_intercace_->open()) {
     RCLCPP_FATAL(node_->get_logger(), "fail to open camera!");
-    return;
   }
+  // 获取fps
+  cam_intercace_->get_parameter(rmoss_cam::CamParamType::Fps, fps_);
   // 如果fps值非法，则设置为默认值30
   if (fps_ <= 0) {
     fps_ = 30;
@@ -89,6 +88,7 @@ CamServer::CamServer(
   std::string camera_name = "camera";
   // declare parameters
   node->declare_parameter("camera_name", "camera");
+  node->declare_parameter("autostart", run_flag_);
   if (!node->has_parameter("camera_k")) {
     node->declare_parameter("camera_k", camera_k_);
   }
@@ -99,6 +99,7 @@ CamServer::CamServer(
     node->declare_parameter("camera_d", camera_d_);
   }
   node->get_parameter("camera_name", camera_name);
+  node->get_parameter("autostart", run_flag_);
   node->get_parameter("camera_k", camera_k_);
   node->get_parameter("camera_p", camera_p_);
   node->get_parameter("camera_d", camera_d_);
@@ -119,15 +120,25 @@ CamServer::CamServer(
   timer_ = node->create_wall_timer(period_ms, std::bind(&CamServer::timer_callback, this));
   // create GetCameraInfo service
   using namespace std::placeholders;
-  camera_info_service_ = node->create_service<rmoss_interfaces::srv::GetCameraInfo>(
+  get_camera_info_srv_ = node->create_service<rmoss_interfaces::srv::GetCameraInfo>(
     camera_name + "/get_camera_info",
-    std::bind(&CamServer::camera_info_callback, this, _1, _2, _3));
+    std::bind(&CamServer::get_camera_info_cb, this, _1, _2));
+  get_task_status_srv_ = node->create_service<rmoss_interfaces::srv::GetTaskStatus>(
+    std::string(node_->get_name()) + "/get_task_status",
+    std::bind(&CamServer::get_task_status_cb, this, _1, _2));
+  control_task_srv_ = node->create_service<rmoss_interfaces::srv::ControlTask>(
+    std::string(node_->get_name()) + "/control_task",
+    std::bind(&CamServer::control_task_cb, this, _1, _2));
   RCLCPP_INFO(node_->get_logger(), "init successfully!");
 }
 
 void CamServer::timer_callback()
 {
+  if (!run_flag_) {
+    return;
+  }
   if (cam_intercace_->grab_image(img_)) {
+    cam_status_ok_ = true;
     auto header = std_msgs::msg::Header();
     header.stamp = node_->now();
     // publish image msg
@@ -136,6 +147,7 @@ void CamServer::timer_callback()
     img_pub_->publish(*img_msg);
   } else {
     // try to reopen camera
+    cam_status_ok_ = false;
     if (reopen_cnt % fps_ == 0) {
       cam_intercace_->close();
       std::this_thread::sleep_for(100ms);
@@ -149,12 +161,10 @@ void CamServer::timer_callback()
   }
 }
 
-void CamServer::camera_info_callback(
-  const std::shared_ptr<rmw_request_id_t> request_header,
+void CamServer::get_camera_info_cb(
   const rmoss_interfaces::srv::GetCameraInfo::Request::SharedPtr request,
   rmoss_interfaces::srv::GetCameraInfo::Response::SharedPtr response)
 {
-  (void)request_header;
   (void)request;
   auto & camera_info = response->camera_info;
   int data;
@@ -172,5 +182,35 @@ void CamServer::camera_info_callback(
   }
 }
 
+void CamServer::get_task_status_cb(
+  const rmoss_interfaces::srv::GetTaskStatus::Request::SharedPtr request,
+  rmoss_interfaces::srv::GetTaskStatus::Response::SharedPtr response)
+{
+  (void)request;
+  if (run_flag_) {
+    response->status = response->RUNNING;
+    if (!cam_status_ok_) {
+      response->status = response->ERROR;
+    }
+  } else {
+    response->status = response->IDLE;
+    if (!cam_intercace_->is_open()) {
+      response->status = response->ERROR;
+    }
+  }
+}
+void CamServer::control_task_cb(
+  const rmoss_interfaces::srv::ControlTask::Request::SharedPtr request,
+  rmoss_interfaces::srv::ControlTask::Response::SharedPtr response)
+{
+  response->success = false;
+  if (request->cmd == request->START) {
+    run_flag_ = true;
+    response->success = true;
+  } else if (request->cmd == request->STOP) {
+    run_flag_ = false;
+    response->success = true;
+  }
+}
 
 }  // namespace rmoss_cam

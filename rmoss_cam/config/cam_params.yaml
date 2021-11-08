@@ -7,6 +7,7 @@ usb_cam:
         width: 640
         height: 480
         fps: 20
+        autostart: true
 
 virtual_image_cam:
     ros__parameters:
@@ -15,6 +16,7 @@ virtual_image_cam:
         camera_k: [1552.7, 0.0, 640.0, 0.0, 1537.9, 360.0, 0.0, 0.0, 1.0]
         camera_d: [0, 0, 0, 0, 0] 
         fps: 20
+        autostart: true
 
 virtual_video_cam:
     ros__parameters:
@@ -22,3 +24,4 @@ virtual_video_cam:
         camera_name: "front_camera"
         camera_k: [1552.7, 0.0, 640.0, 0.0, 1537.9, 360.0, 0.0, 0.0, 1.0]
         camera_d: [0, 0, 0, 0, 0]
+        autostart: true

@@ -74,16 +74,18 @@ CamServer::CamServer(
       cam_intercace_->set_parameter(kCamParamTypes[i], data);
     }
   }
-  // 打开摄像头
-  if (!cam_intercace_->open()) {
-    RCLCPP_FATAL(node_->get_logger(), "fail to open camera!");
-  }
   // 获取fps
   cam_intercace_->get_parameter(rmoss_cam::CamParamType::Fps, fps_);
   // 如果fps值非法，则设置为默认值30
   if (fps_ <= 0) {
     fps_ = 30;
     cam_intercace_->set_parameter(rmoss_cam::CamParamType::Fps, 30);
+  }
+  // 打开摄像头
+  if (!cam_intercace_->open()) {
+    RCLCPP_FATAL(
+      node_->get_logger(), "fail to open camera: %s",
+      cam_intercace_->error_message().c_str());
   }
   std::string camera_name = "camera";
   // declare parameters

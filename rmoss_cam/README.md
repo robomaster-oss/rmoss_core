@@ -84,6 +84,7 @@ virtual bool is_open() = 0;  //检测设备是否打开
 virtual bool grab_image(cv::Mat & imgae) = 0;  //获取图像
 virtual bool set_parameter(CamParamType type,int value) = 0; //设置参数
 virtual bool get_parameter(CamParamType type,int& value) = 0; //获取参数
+virtual std::string error_message() = 0;  // error message when open(),grab_image(),set_parameter(),get_parameter() return false.
 ```
 
 相机接口运行模型 （简化模型，不考虑运行时修改参数）

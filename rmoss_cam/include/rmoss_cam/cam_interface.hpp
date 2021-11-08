@@ -15,7 +15,7 @@
 #ifndef RMOSS_CAM__CAM_INTERFACE_HPP_
 #define RMOSS_CAM__CAM_INTERFACE_HPP_
 
-#include <unordered_map>
+#include <string>
 #include "opencv2/opencv.hpp"
 
 namespace rmoss_cam
@@ -49,6 +49,8 @@ public:
   // set and get parameter
   virtual bool set_parameter(CamParamType type, int value) = 0;
   virtual bool get_parameter(CamParamType type, int & value) = 0;
+  // error message when open(),grab_image(),set_parameter(),get_parameter() return false.
+  virtual std::string error_message() = 0;
 };
 }  // namespace rmoss_cam
 

@@ -40,19 +40,21 @@ bool UsbCam::open()
     return true;
   }
   // open device
-  if (cap_.open(dev_path_)) {
-    // success to open
-    cap_.set(
-      cv::CAP_PROP_FOURCC,
-      cv::VideoWriter::fourcc('M', 'J', 'P', 'G'));
-    cap_.set(cv::CAP_PROP_FRAME_WIDTH, params_[CamParamType::Width]);
-    cap_.set(cv::CAP_PROP_FRAME_HEIGHT, params_[CamParamType::Height]);
-    is_open_ = true;
-    return true;
-  } else {
+  if (!cap_.open(dev_path_)) {
     // fail to open
+    error_message_ = dev_path_ + "is invalid";
     return false;
   }
+  // set camera
+  cap_.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'));
+  cap_.set(cv::CAP_PROP_FRAME_WIDTH, params_[CamParamType::Width]);
+  cap_.set(cv::CAP_PROP_FRAME_HEIGHT, params_[CamParamType::Height]);
+  if (!cap_.isOpened()) {
+    error_message_ = dev_path_ + "is invalid";
+    return false;
+  }
+  is_open_ = true;
+  return true;
 }
 
 void UsbCam::close()
@@ -70,12 +72,15 @@ bool UsbCam::is_open()
 
 bool UsbCam::grab_image(cv::Mat & image)
 {
-  if (cap_.isOpened()) {
-    if (cap_.read(image)) {
-      return true;
-    }
+  if (!is_open_) {
+    error_message_ = "camera is not open";
+    return false;
   }
-  return false;
+  if (!cap_.read(image)) {
+    error_message_ = "cv::VideoCapture.read() error";
+    return false;
+  }
+  return true;
 }
 
 // set and get parameter
@@ -85,6 +90,7 @@ bool UsbCam::set_parameter(CamParamType type, int value)
     params_[type] = value;
     return true;
   } else {
+    error_message_ = "";
     return false;
   }
 }
@@ -94,6 +100,7 @@ bool UsbCam::get_parameter(CamParamType type, int & value)
     value = params_[type];
     return true;
   } else {
+    error_message_ = "";
     return false;
   }
 }

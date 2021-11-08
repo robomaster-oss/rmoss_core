@@ -36,9 +36,11 @@ public:
   bool grab_image(cv::Mat & image) override;
   bool set_parameter(CamParamType type, int value) override;
   bool get_parameter(CamParamType type, int & value) override;
+  std::string error_message() override {return error_message_;}
 
 private:
   std::string dev_path_;
+  std::string error_message_;
   cv::VideoCapture cap_;
   // camera parameters
   std::unordered_map<CamParamType, int> params_;

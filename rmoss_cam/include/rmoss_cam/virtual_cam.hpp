@@ -31,25 +31,27 @@ public:
   explicit VirtualCam(int mode, const std::string & path);
 
   bool open() override;
-  void close() override {}
+  void close() override;
   bool is_open() override;
   bool grab_image(cv::Mat & image) override;
   bool set_parameter(CamParamType type, int value) override;
   bool get_parameter(CamParamType type, int & value) override;
+  std::string error_message() override {return error_message_;}
 
 private:
   // for image
-  std::string image_path_;
   cv::Mat img_;
   // for video
-  std::string video_path_;
   cv::VideoCapture cap_;
   int total_frames_;
   int current_frame;
   // camera parameters
   std::unordered_map<CamParamType, int> params_;
+  std::string init_error_message_;
+  std::string error_message_;
   // flag
-  bool is_open_ = false;
+  bool init_ok_{false};
+  bool is_open_{false};
   int current_mode_;
 };
 

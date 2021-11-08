@@ -80,6 +80,10 @@ public:
       return false;
     }
   }
+  std::string error_message() override
+  {
+    return error_message_;
+  }
   void set_falut()
   {
     is_falut_ = true;
@@ -91,6 +95,7 @@ private:
   int grap_time_ms_{10};
   // camera parameters
   std::unordered_map<rmoss_cam::CamParamType, int> params_;
+  std::string error_message_;
   // flag
   bool is_open_{false};
   bool is_falut_{false};

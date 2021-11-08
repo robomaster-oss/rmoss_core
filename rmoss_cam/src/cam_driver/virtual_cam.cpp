@@ -21,60 +21,75 @@ namespace rmoss_cam
 
 VirtualCam::VirtualCam(int mode, const std::string & path)
 {
-  params_[CamParamType::Fps] = 0;
-  params_[CamParamType::Width] = 0;
-  params_[CamParamType::Height] = 0;
+  current_mode_ = mode;
   if (mode == IMAGE_MODE) {
-    image_path_ = path;
-    current_mode_ = IMAGE_MODE;
-  } else {
-    video_path_ = path;
-    current_mode_ = VIDEO_MODE;
+    img_ = cv::imread(path);
+    if (img_.empty()) {
+      init_error_message_ = path + "is invalid";
+      return;
+    }
+    params_[CamParamType::Fps] = 30;
+    params_[CamParamType::Width] = img_.cols;
+    params_[CamParamType::Height] = img_.rows;
+    init_ok_ = true;
+  } else if (mode == VIDEO_MODE) {
+    if (!cap_.open(path)) {
+      init_error_message_ = path + "is invalid";
+      return;
+    }
+    params_[CamParamType::Width] = cap_.get(cv::CAP_PROP_FRAME_WIDTH);
+    params_[CamParamType::Height] = cap_.get(cv::CAP_PROP_FRAME_HEIGHT);
+    params_[CamParamType::Fps] = cap_.get(cv::CAP_PROP_FPS);
+    total_frames_ = cap_.get(cv::CAP_PROP_FRAME_COUNT);
+    init_ok_ = true;
   }
+  init_error_message_ = "unknow mode (" + std::to_string(mode) + ")";
 }
 
 bool VirtualCam::open()
 {
-  if (current_mode_ == IMAGE_MODE) {
-    img_ = cv::imread(image_path_);
-    if (!img_.empty()) {
-      params_[CamParamType::Width] = img_.cols;
-      params_[CamParamType::Height] = img_.rows;
-      is_open_ = true;
-      return true;
-    }
-  } else if (current_mode_ == VIDEO_MODE) {
-    if (cap_.open(video_path_)) {
-      params_[CamParamType::Width] = cap_.get(cv::CAP_PROP_FRAME_WIDTH);
-      params_[CamParamType::Height] = cap_.get(cv::CAP_PROP_FRAME_HEIGHT);
-      total_frames_ = cap_.get(cv::CAP_PROP_FRAME_COUNT);
-      params_[CamParamType::Fps] = cap_.get(cv::CAP_PROP_FPS);
-      is_open_ = true;
-      return true;
-    }
+  if (is_open_) {
+    return true;
   }
-  return false;
+  if (!init_ok_) {
+    error_message_ = init_error_message_;
+    return false;
+  }
+  is_open_ = true;
+  return true;
+}
+
+void VirtualCam::close()
+{
+  if (is_open_) {
+    is_open_ = false;
+  }
 }
 
 bool VirtualCam::is_open() {return is_open_;}
 
 bool VirtualCam::grab_image(cv::Mat & image)
 {
-  if (is_open_) {
-    if (current_mode_ == IMAGE_MODE) {
-      image = img_.clone();
-      return true;
-    } else if (current_mode_ == VIDEO_MODE) {
-      if (cap_.read(image)) {
-        current_frame++;
-        if (current_frame > total_frames_ - 2) {
-          current_frame = 0;
-          cap_.set(cv::CAP_PROP_POS_FRAMES, 0);
-        }
-        return true;
-      }
-    }
+  if (!is_open_) {
+    error_message_ = "camera is not open";
+    return false;
   }
+  if (current_mode_ == IMAGE_MODE) {
+    image = img_.clone();
+    return true;
+  } else if (current_mode_ == VIDEO_MODE) {
+    if (!cap_.read(image)) {
+      error_message_ = "cv::VideoCapture.read() error";
+      return false;
+    }
+    current_frame++;
+    if (current_frame > total_frames_ - 2) {
+      current_frame = 0;
+      cap_.set(cv::CAP_PROP_POS_FRAMES, 0);
+    }
+    return true;
+  }
+  error_message_ = "unknow mode";
   return false;
 }
 
@@ -85,6 +100,7 @@ bool VirtualCam::set_parameter(CamParamType type, int value)
     params_[type] = value;
     return true;
   } else {
+    error_message_ = "";
     return false;
   }
 }
@@ -95,6 +111,7 @@ bool VirtualCam::get_parameter(CamParamType type, int & value)
     value = params_[type];
     return true;
   } else {
+    error_message_ = "";
     return false;
   }
 }

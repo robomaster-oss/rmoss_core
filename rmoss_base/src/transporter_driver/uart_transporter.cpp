@@ -36,7 +36,7 @@ bool UartTransporter::set_param(int speed, int flow_ctrl, int databits, int stop
   // tcgetattr(fd,&options)得到与fd指向对象的相关参数，并将它们保存于options,该函数还可以测试配置是否正确，
   // 该串口是否可用等。若调用成功，函数返回值为0，若调用失败，函数返回值为1.
   if (tcgetattr(fd_, &options) != 0) {
-    perror("Setup Serial err!!!");
+    error_message_ = "Setup Serial err";
     return false;
   }
   // 设置串口输入波特率和输出波特率
@@ -79,7 +79,8 @@ bool UartTransporter::set_param(int speed, int flow_ctrl, int databits, int stop
       options.c_cflag |= CS8;
       break;
     default:
-      fprintf(stderr, "Unsupported data size!!!\n");
+      error_message_ = "Unsupported data size";
+      return false;
   }
   // 设置校验位
   switch (parity) {
@@ -105,7 +106,8 @@ bool UartTransporter::set_param(int speed, int flow_ctrl, int databits, int stop
       options.c_cflag &= ~CSTOPB;
       break;
     default:
-      fprintf(stderr, "Unsupported parity\n");
+      error_message_ = "Unsupported parity";
+      return false;
   }
   // 设置停止位
   switch (stopbits) {
@@ -116,7 +118,8 @@ bool UartTransporter::set_param(int speed, int flow_ctrl, int databits, int stop
       options.c_cflag |= CSTOPB;
       break;
     default:
-      fprintf(stderr, "Unsupported stop bits\n");
+      error_message_ = "Unsupported stop bits";
+      return false;
   }
 
   // 修改输出模式，原始数据输出
@@ -132,7 +135,8 @@ bool UartTransporter::set_param(int speed, int flow_ctrl, int databits, int stop
 
   // 激活配置 (将修改后的termios数据设置到串口中）
   if (tcsetattr(fd_, TCSANOW, &options) != 0) {
-    perror("com set error!\n");
+    error_message_ = "com set error";
+    return false;
   }
   return true;
 }
@@ -144,22 +148,21 @@ bool UartTransporter::open()
   }
   fd_ = ::open(device_path_.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
   if (-1 == fd_) {
-    printf("can't open uart device: %s\n", device_path_.c_str());
+    error_message_ = "can't open uart device: ", device_path_;
     return false;
   }
   // 恢复串口为阻塞状态
   if (fcntl(fd_, F_SETFL, 0) < 0) {
-    printf("fcntl failed!\n");
+    error_message_ = "fcntl failed";
     return false;
   }
   // 测试是否为终端设备
   if (0 == isatty(STDIN_FILENO)) {
-    printf("standard input is not a terminal device\n");
+    error_message_ = "standard input is not a terminal device";
     return false;
   }
   // 设置串口数据帧格式
   if (set_param(speed_, flow_ctrl_, databits_, stopbits_, parity_)) {
-    printf("standard input is not a terminal device\n");
     return false;
   }
   is_open_ = true;

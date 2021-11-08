@@ -38,6 +38,7 @@ public:
   bool is_open() override;
   int read(void * buffer, size_t len) override;
   int write(const void * buffer, size_t len) override;
+  std::string error_message() override {return error_message_;}
 
 private:
   // 设备信息 (本身设备端口,目标设备ip与端口)
@@ -51,6 +52,7 @@ private:
   socklen_t to_addr_len_;
   // 设备状态
   bool is_open_{false};
+  std::string error_message_;
 };
 
 }  // namespace rmoss_base

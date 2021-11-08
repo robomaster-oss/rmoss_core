@@ -36,6 +36,7 @@ public:
   bool is_open() override;
   int read(void * buffer, size_t len) override;
   int write(const void * buffer, size_t len) override;
+  std::string error_message() override {return error_message_;}
 
 private:
   bool set_param(
@@ -47,6 +48,7 @@ private:
   int fd_{-1};
   // 设备状态
   bool is_open_{false};
+  std::string error_message_;
   // 设备参数
   std::string device_path_;
   int speed_;

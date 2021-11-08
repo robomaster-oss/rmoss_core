@@ -35,6 +35,7 @@ bool UdpTransporter::open()
   // recv port
   sock_recv_fd_ = socket(AF_INET, SOCK_DGRAM, 0);
   if (sock_recv_fd_ < 0) {
+    error_message_ = "create socket failed";
     return false;
   }
   struct sockaddr_in addr_serv;
@@ -44,6 +45,7 @@ bool UdpTransporter::open()
   addr_serv.sin_addr.s_addr = htonl(INADDR_ANY);
   // 绑定socket
   if (bind(sock_recv_fd_, (struct sockaddr *)&addr_serv, sizeof(addr_serv)) < 0) {
+    error_message_ = "bind port " + std::to_string(port_) + " failed";
     return false;
   }
   // set send port

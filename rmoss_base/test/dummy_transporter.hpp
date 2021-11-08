@@ -49,10 +49,15 @@ public:
   {
     return ::write(fifo_wr_fd_, buffer, len);
   }
+  std::string error_message() override
+  {
+    return error_message_;
+  }
 
 private:
   int fifo_rd_fd_;
   int fifo_wr_fd_;
+  std::string error_message_;
 };
 
 class TransporterFactory

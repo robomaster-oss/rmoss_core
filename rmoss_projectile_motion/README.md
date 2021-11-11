@@ -1,6 +1,6 @@
 # rmoss_projectile_motion模块
 
-## 1.简介
+## 简介
 
 rmoss_projectile_motion是rmoss_core中的一个基础功能包，对子弹在飞行弹道进行建模，根据目标位置，计算出云台所需要的转角。
 
@@ -11,7 +11,7 @@ rmoss_projectile_motion是rmoss_core中的一个基础功能包，对子弹在�
 * `gaf_projectile_solver.hpp/cpp` : 考虑重力和空气摩擦阻力因素的弹道逆运动求解器（不稳定）
 * `gimbal_transform_tool.hpp/cpp` : 云台转角计算工具，需要传入求解器，利用弹道模型计算pitch, yaw角度
 
-## 2.使用方法
+## 使用方法
 
 该包不支持ROS节点单独运行，只能通过库依赖的方式被调用。
 

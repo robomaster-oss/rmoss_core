@@ -1,6 +1,6 @@
 # rmoss_base模块
 
-## 1.简介
+## 简介
 
 rmoss_base是rmoss_core 中的一个基础功能包，提供了与机器人底层STM32通信的相关功能，是计算机与机器人之间的数据桥梁，实现了数据收发功能。
 
@@ -18,7 +18,7 @@ rmoss_base是rmoss_core 中的一个基础功能包，提供了与机器人底�
 * `simple_robot_base_node.hpp/cpp` : ROS顶层模块`SimpleRobotBaseNode`，ROS与STM32通信示例。
 * `simple_robot_base_main.cpp` : `SimpleRobotBaseNode`节点的main()入口。
 
-## 2.快速使用
+## 快速使用
 
 提供了一个开发样例，可以快速验证，同时也为二次开发提供了参考。
 
@@ -30,9 +30,9 @@ rmoss_base是rmoss_core 中的一个基础功能包，提供了与机器人底�
 
 * `SimpleRobotBaseNode`节点已经注册为`rclcpp component`, 支持[ROS Composition](https://docs.ros.org/en/galactic/Tutorials/Composition.html)方式启动。
 
-## 3.二次开发
+## 二次开发
 
-### 3.1 FixedPacket模块类
+### FixedPacket模块类
 
 ```c++
 // FixedPacket模块类
@@ -71,7 +71,7 @@ packet.buffer();  // 获取数据包中的buffer (const修饰，只读)
 
 * 其中只有数据位字节才能使用`load_data()`和`unload_data()`操作，校验字节可通过`set_check_byte()`进行设置。
 
-### 3.2 FixedPacketTool模板类
+### FixedPacketTool模板类
 
 利用FixedPacketTool简化了数据传输流程，不需要考虑底层字节数据传输细节。
 
@@ -107,7 +107,7 @@ while(packet_tool_->recv_packet(packet)){
 ｝
 ```
 
-### 3.3 TransporterInterface接口
+### TransporterInterface接口
 
 ```c++
 virtual bool open() = 0;
@@ -115,6 +115,7 @@ virtual void close() = 0;
 virtual bool is_open() = 0;
 virtual int read(void * buffer, size_t len) = 0;  // 接收数据
 virtual int write(const void * buffer, size_t len) = 0;  // 发送数据
+virtual std::string error_message() = 0;  // 当open()返回false时，获取error message。
 ```
 
 * 可参考`UartTransporter` 和`UdpTransporter` 的实现。

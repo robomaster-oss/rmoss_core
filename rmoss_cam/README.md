@@ -1,6 +1,6 @@
 # rmoss_cam模块
 
-## 1.简介
+## 简介
 
 `rmoss_cam`是`rmoss_core`中的一个基础功能包，提供了usb相机ROS节点和虚拟相机ROS节点相关功能，同时，实现了一个`camera C/S`模型，封装了图像获取等操作，只需要注重图像处理部分。主要实现功能如下：
 
@@ -24,7 +24,7 @@
 * `usb_cam_node.hpp/cpp` ，`virtual_cam_node.hpp/cpp` :  ROS顶层模块（基于`UsbCam`,`VirtualCam`和`CamServer`），实现usb相机节点和虚拟相机节点。
 * `usb_cam_main.cpp` ，`virtual_cam_main.cpp` :  usb相机节点和虚拟相机节点main入口。
 
-## 2.快速使用
+## 快速使用
 
 ### usb相机：
 
@@ -70,7 +70,7 @@ ros2 launch rmoss_cam composition.launch.py
 
 * 先创建容器`rmoss_container` ，然后将相机节点`rmoss_cam::VirtualCamNode` 加载到容器中，支持继续加载多个节点。
 
-## 3.二次开发
+## 二次开发
 
 cam_interface接口
 

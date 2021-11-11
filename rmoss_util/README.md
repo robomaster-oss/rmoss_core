@@ -53,14 +53,14 @@ auto control_task_cb = [&](rmoss_util::TaskCmd cmd) {
     } else if (cmd == rmoss_util::TaskCmd::Stop) {
       // do something
     } else {
-        return false;
+      return false;
     }
     return true;
   };
 auto task_manager_ = std::make_shared<rmoss_util::TaskManager>(node_, get_task_status_cb, control_task_cb);
 ```
 * 获取任务状态的service名字为：`<node_name>/get_task_status`
-* 控制任务的service名字为：`<node_name>/control_status`
+* 控制任务的service名字为：`<node_name>/control_task`
 
 ### image_utils模块
 

@@ -148,7 +148,7 @@ bool UartTransporter::open()
   }
   fd_ = ::open(device_path_.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
   if (-1 == fd_) {
-    error_message_ = "can't open uart device: ", device_path_;
+    error_message_ = "can't open uart device: " + device_path_;
     return false;
   }
   // 恢复串口为阻塞状态

@@ -59,8 +59,8 @@ void CamClient::img_cb(const sensor_msgs::msg::Image::ConstSharedPtr msg)
 {
   if (run_flag_) {
     auto img = cv_bridge::toCvShare(msg, "bgr8")->image.clone();
-    auto img_stamp = msg->header.stamp.sec + 0.000000001 * msg->header.stamp.nanosec;
-    process_fn_(img, img_stamp);
+    // auto img_stamp = msg->header.stamp.sec + 0.000000001 * msg->header.stamp.nanosec;
+    process_fn_(img, msg->header.stamp);
   }
 }
 

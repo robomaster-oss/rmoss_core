@@ -27,7 +27,7 @@
 
 namespace rmoss_cam
 {
-typedef std::function<void (cv::Mat &, double)> Callback;
+typedef std::function<void (cv::Mat &, rclcpp::Time)> Callback;
 // camera client wrapper to subscribe image (used by auto aim task, power rune task..)
 class CamClient
 {

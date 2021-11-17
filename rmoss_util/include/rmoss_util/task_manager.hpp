@@ -29,8 +29,8 @@ enum class TaskCmd:uint8_t {Start = 1, Stop};
 
 class TaskManager
 {
-  typedef std::function<enum TaskStatus ()> GetTaskStatusCallback;
-  typedef std::function<bool (enum TaskCmd)> ControlTaskCallback;
+  typedef std::function<TaskStatus ()> GetTaskStatusCallback;
+  typedef std::function<bool (TaskCmd)> ControlTaskCallback;
 
 public:
   using SharedPtr = std::shared_ptr<TaskManager>;

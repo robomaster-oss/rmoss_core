@@ -27,6 +27,7 @@
 #include "rmoss_interfaces/srv/get_camera_info.hpp"
 #include "rmoss_cam/cam_interface.hpp"
 #include "rmoss_util/task_manager.hpp"
+#include "camera_info_manager/camera_info_manager.hpp"
 
 namespace rmoss_cam
 {
@@ -50,16 +51,14 @@ private:
   rclcpp::Service<rmoss_interfaces::srv::GetCameraInfo>::SharedPtr get_camera_info_srv_;
   rmoss_util::TaskManager::SharedPtr task_manager_;
   rclcpp::TimerBase::SharedPtr timer_;
+  // camera info manager
+  std::shared_ptr<camera_info_manager::CameraInfoManager> camera_info_manager_;
   // camera_device interface
   std::shared_ptr<CamInterface> cam_intercace_;
   bool run_flag_{false};
   bool cam_status_ok_{false};
   // data
   cv::Mat img_;
-  std::vector<double> camera_k_;  // 3*3=9
-  std::vector<double> camera_p_{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0};  // 3*4=12
-  std::vector<double> camera_d_;
-  bool has_camera_info_{false};
   int fps_{30};
   int reopen_cnt{0};
 };

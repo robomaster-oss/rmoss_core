@@ -1,0 +1,19 @@
+image_width: 1280
+image_height: 720
+camera_name: front_camera
+camera_matrix:
+   rows: 3
+   cols: 3
+   data: [ 1552.7, 0.0, 640.0, 0.0, 1537.9, 360.0, 0.0, 0.0, 1.0 ]
+distortion_coefficients:
+   rows: 1
+   cols: 5
+   data: [ 0.00000000, 0.00000000, 0.00000000, 0.00000000, 0.00000000 ]
+rectification_matrix:
+   rows: 3
+   cols: 3
+   data: [ 1., 0., 0., 0., 1., 0., 0., 0., 1. ]
+projection_matrix:
+   rows: 3
+   cols: 4
+   data: [ 1.00000000, 0.00000000, 0.00000000, 0., 0.00000000, 1.00000000, 0.00000000, 0., 0.00000000, 0.00000000, 1.00000000, 0. ]

@@ -64,6 +64,15 @@ CamServer::CamServer(
   std::shared_ptr<CamInterface> cam_intercace)
 : node_(node), cam_intercace_(cam_intercace)
 {
+  std::string camera_name = "camera";
+  std::string camera_info_url = "";
+  // declare parameters
+  node->declare_parameter("camera_name", "camera");
+  node->declare_parameter("camera_info_url", camera_info_url);
+  node->declare_parameter("autostart", run_flag_);
+  node->get_parameter("camera_name", camera_name);
+  node->get_parameter("camera_info_url", camera_info_url);
+  node->get_parameter("autostart", run_flag_);
   // 相机参数获取并设置，配置文件中的值会覆盖默认值
   int data;
   constexpr int param_num = sizeof(kCamParamTypes) / sizeof(CamParamType);
@@ -87,34 +96,15 @@ CamServer::CamServer(
       node_->get_logger(), "fail to open camera: %s",
       cam_intercace_->error_message().c_str());
   }
-  std::string camera_name = "camera";
-  // declare parameters
-  node->declare_parameter("camera_name", "camera");
-  node->declare_parameter("autostart", run_flag_);
-  if (!node->has_parameter("camera_k")) {
-    node->declare_parameter("camera_k", camera_k_);
-  }
-  if (!node->has_parameter("camera_p")) {
-    node->declare_parameter("camera_p", camera_p_);
-  }
-  if (!node->has_parameter("camera_d")) {
-    node->declare_parameter("camera_d", camera_d_);
-  }
-  node->get_parameter("camera_name", camera_name);
-  node->get_parameter("autostart", run_flag_);
-  node->get_parameter("camera_k", camera_k_);
-  node->get_parameter("camera_p", camera_p_);
-  node->get_parameter("camera_d", camera_d_);
-  // check parameters
-  if (camera_k_.size() != 9) {
-    RCLCPP_ERROR(
-      node_->get_logger(),
-      "the size of camera intrinsic parameter(%ld) != 9", camera_k_.size());
-  }
-  if (camera_p_.size() != 12) {
-    RCLCPP_ERROR(
-      node_->get_logger(),
-      "the size of camera extrinsic parameter(%ld) != 12", camera_p_.size());
+  // create camera info manager
+  camera_info_manager_ = std::make_shared<camera_info_manager::CameraInfoManager>(
+    node_.get(), camera_name, camera_info_url);
+  if (camera_info_manager_->loadCameraInfo(camera_info_url)) {
+    RCLCPP_INFO(
+      node_->get_logger(), "Calibration calibrated from file '%s'", camera_info_url.c_str());
+  } else {
+    RCLCPP_INFO(
+      node_->get_logger(), "Calibration file '%s' is missing", camera_info_url.c_str());
   }
   // create image publisher
   img_pub_ = node_->create_publisher<sensor_msgs::msg::Image>(camera_name + "/image_raw", 1);
@@ -123,7 +113,7 @@ CamServer::CamServer(
   // create GetCameraInfo service
   using namespace std::placeholders;
   get_camera_info_srv_ = node->create_service<rmoss_interfaces::srv::GetCameraInfo>(
-    camera_name + "/get_camera_info",
+    camera_name + "get_camera_info",
     std::bind(&CamServer::get_camera_info_cb, this, _1, _2));
   // task manager
   auto get_task_status_cb = [&]() {
@@ -188,16 +178,8 @@ void CamServer::get_camera_info_cb(
   rmoss_interfaces::srv::GetCameraInfo::Response::SharedPtr response)
 {
   (void)request;
-  auto & camera_info = response->camera_info;
-  int data;
-  cam_intercace_->get_parameter(rmoss_cam::CamParamType::Height, data);
-  camera_info.height = data;
-  cam_intercace_->get_parameter(rmoss_cam::CamParamType::Width, data);
-  camera_info.width = data;
-  if (camera_k_.size() == 9 && camera_p_.size() == 12) {
-    std::copy_n(camera_k_.begin(), 9, camera_info.k.begin());
-    std::copy_n(camera_p_.begin(), 12, camera_info.p.begin());
-    camera_info.d = camera_d_;
+  if (camera_info_manager_->isCalibrated()) {
+    response->camera_info = camera_info_manager_->getCameraInfo();
     response->success = true;
   } else {
     response->success = false;

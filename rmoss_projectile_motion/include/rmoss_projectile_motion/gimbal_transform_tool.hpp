@@ -26,7 +26,6 @@ namespace rmoss_projectile_motion
 class GimbalTransformTool
 {
 public:
-  using SharedPtr = std::shared_ptr<GimbalTransformTool>;
   explicit GimbalTransformTool(std::shared_ptr<ProjectileSolverInterface> solver = nullptr)
   : solver_(solver) {}
 

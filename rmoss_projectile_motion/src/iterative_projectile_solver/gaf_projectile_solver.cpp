@@ -23,7 +23,7 @@ namespace rmoss_projectile_motion
 {
 
 GafProjectileSolver::GafProjectileSolver(double initial_vel, double friction_coeff)
-: velocity_(initial_vel), friction_coeff_(friction_coeff)
+: initial_vel_(initial_vel), friction_coeff_(friction_coeff)
 {
   set_max_iter(100);
 }
@@ -31,7 +31,7 @@ GafProjectileSolver::GafProjectileSolver(double initial_vel, double friction_coe
 // air friction of x-axis is considered（仅下降阶段考虑）
 void GafProjectileSolver::forward_motion(double given_angle, double given_x, double & h, double & t)
 {
-  double v = velocity_;
+  double v = initial_vel_;
   if (given_angle > 0.01) {      // 存在上升阶段
     double t0, x0, y0;      // 上升阶段（最高点）
     t0 = v * sin(given_angle) / GRAVITY;

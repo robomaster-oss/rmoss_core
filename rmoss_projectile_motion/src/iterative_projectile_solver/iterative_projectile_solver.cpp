@@ -21,7 +21,8 @@ namespace rmoss_projectile_motion
 
 bool IterativeProjectileSolver::solve(double target_x, double target_h, double & angle)
 {
-  double aimed_h, h, dh;
+  double aimed_h, h;
+  double dh = 0;
   double tmp_angle = 0;
   double t = 0;
   aimed_h = target_h;

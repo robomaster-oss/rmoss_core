@@ -25,12 +25,9 @@ class GravityProjectileSolver : public IterativeProjectileSolver
 {
 public:
   explicit GravityProjectileSolver(double initial_vel)
-  : initial_vel_(initial_vel) {}
+  : IterativeProjectileSolver(initial_vel) {}
 
   void forward_motion(double given_angle, double given_x, double & h, double & t);
-
-private:
-  double initial_vel_;
 };
 
 }  // namespace rmoss_projectile_motion

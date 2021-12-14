@@ -25,8 +25,8 @@ namespace rmoss_projectile_motion
 void GravityProjectileSolver::forward_motion(
   double given_angle, double given_x, double & h, double & t)
 {
-  t = given_x / (initial_vel_ * cos(given_angle));
-  h = initial_vel_ * sin(given_angle) * t - GRAVITY * t * t / 2;
+  t = given_x / (velocity_ * cos(given_angle));
+  h = velocity_ * sin(given_angle) * t - GRAVITY * t * t / 2;
 }
 
 }  // namespace rmoss_projectile_motion

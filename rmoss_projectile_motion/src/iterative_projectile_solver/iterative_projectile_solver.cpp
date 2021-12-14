@@ -29,12 +29,12 @@ bool IterativeProjectileSolver::solve(double target_x, double target_h, double &
   for (int i = 0; i < max_iter_; i++) {
     tmp_angle = atan2(aimed_h, target_x);
     if (tmp_angle > 80 * M_PI / 180 || tmp_angle < -80 * M_PI / 180) {
-      // cout << "[IterativeProjectileSolver]:当前迭代角度超过范围(-80d,80d)"<< endl;
+      error_message_ = "iterative angle is out of range(-80d,80d)";
       return false;
     }
     forward_motion(tmp_angle, target_x, h, t);
     if (t > 10) {
-      // cout << "[IterativeProjectileSolver]:当前迭代飞行时间过长："<< t << endl;
+      error_message_ = "motion time(" + std::to_string(t) + ") is too long";
       return false;
     }
     dh = target_h - h;
@@ -44,7 +44,7 @@ bool IterativeProjectileSolver::solve(double target_x, double target_h, double &
     }
   }
   if (fabs(dh) > 0.01) {
-    // cout << "[IterativeProjectileSolver]:误差距离过大："<<dh<<endl;
+    error_message_ = "height error(" + std::to_string(dh) + ") is too large";
     return false;
   }
   angle = tmp_angle;

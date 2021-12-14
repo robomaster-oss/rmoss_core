@@ -14,6 +14,8 @@
 #ifndef RMOSS_PROJECTILE_MOTION__ITERATIVE_PROJECTILE_SOLVER_HPP_
 #define RMOSS_PROJECTILE_MOTION__ITERATIVE_PROJECTILE_SOLVER_HPP_
 
+#include <string>
+
 #include "rmoss_projectile_motion/projectile_solver_interface.hpp"
 
 namespace rmoss_projectile_motion
@@ -26,7 +28,8 @@ public:
   IterativeProjectileSolver()
   : max_iter_(10) {}
   void set_max_iter(int max_iter) {max_iter_ = max_iter;}
-  virtual bool solve(double target_x, double target_h, double & angle);
+  bool solve(double target_x, double target_h, double & angle) override;
+  std::string error_message() override {return error_message_;}
   ///////// 在水平坐标系下
   // x: input,射击距离/m
   // launch_angle: input,出射角度/rad
@@ -36,6 +39,7 @@ public:
 
 private:
   int max_iter_;
+  std::string error_message_;
 };
 
 }  // namespace rmoss_projectile_motion

@@ -29,7 +29,7 @@ public:
 
 public:
   void forward_motion(double given_angle, double given_x, double & h, double & t);
-  void set_friction_coeff(const double & friction_coeff) { friction_coeff_ = friction_coeff; }
+  void set_friction_coeff(const double & friction_coeff) {friction_coeff_ = friction_coeff;}
 
 private:
   // 空气阻力系数

@@ -15,8 +15,8 @@
 #ifndef RMOSS_PROJECTILE_MOTION__GIMBAL_TRANSFORM_TOOL_HPP_
 #define RMOSS_PROJECTILE_MOTION__GIMBAL_TRANSFORM_TOOL_HPP_
 
-#include <memory>
 #include <geometry_msgs/msg/point.hpp>
+#include <memory>
 
 #include "Eigen/Geometry"
 #include "rmoss_projectile_motion/projectile_solver_interface.hpp"

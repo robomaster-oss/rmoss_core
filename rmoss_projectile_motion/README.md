@@ -2,14 +2,17 @@
 
 ## 简介
 
-rmoss_projectile_motion是rmoss_core中的一个基础功能包，对子弹在飞行弹道进行建模，根据目标位置，计算出云台所需要的转角。
+rmoss_projectile_motion是rmoss_core中的一个基础功能包，对子弹在飞行过程的弹道进行建模，根据目标位置，计算出云台所需要的转角。
 
-主要文件：
+* `GimbalTransformTool` : 云台转角计算工具，给定目标点，利用弹道模型计算射击所需要云台的pitch, yaw角度，需要传入弹道逆运动求解器。
 
-* `iterative_projectile_solver.hpp/cpp` : 基于数值迭代的弹道逆运动求解器，即给定子弹飞行正运动学方程，可根据给定目标位置，计算所需仰角。
-* `gravity_projectile_solver.hpp/cpp` : 考虑重力因素的弹道逆运动求解器
-* `gaf_projectile_solver.hpp/cpp` : 考虑重力和空气摩擦阻力因素的弹道逆运动求解器（不稳定）
-* `gimbal_transform_tool.hpp/cpp` : 云台转角计算工具，需要传入求解器，利用弹道模型计算pitch, yaw角度
+目前rmoss_projectile_motion提供了两种求解器：
+
+* `GravityProjectileSolver` : 考虑重力的弹道逆运动求解器 （抛物型模型）
+* `GafProjectileSolver` : 考虑重力和空气阻力的弹道逆运动求解器 （近似模型，不稳定）
+
+`GravityProjectileSolver`和`GafProjectileSolver`都是基于数值迭代实现的求解器，定义不同的弹道运动模型，然后通过使用`IterativeProjectileTool`实现求解过程。
+
 
 ## 使用方法
 

@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "rmoss_projectile_motion/iterative_projectile_solver.hpp"
+#include "rmoss_projectile_motion/iterative_projectile_tool.hpp"
 
 #include <cmath>
 
 namespace rmoss_projectile_motion
 {
 
-bool IterativeProjectileSolver::solve(double target_x, double target_h, double & angle)
+bool IterativeProjectileTool::solve(double target_x, double target_h, double & angle)
 {
   double aimed_h, h;
   double dh = 0;
@@ -32,7 +32,7 @@ bool IterativeProjectileSolver::solve(double target_x, double target_h, double &
       error_message_ = "iterative angle is out of range(-80d,80d)";
       return false;
     }
-    forward_motion(tmp_angle, target_x, h, t);
+    forward_motion_func_(tmp_angle, target_x, h, t);
     if (t > 10) {
       error_message_ = "motion time(" + std::to_string(t) + ") is too long";
       return false;
@@ -50,6 +50,5 @@ bool IterativeProjectileSolver::solve(double target_x, double target_h, double &
   angle = tmp_angle;
   return true;
 }
-
 
 }  // namespace rmoss_projectile_motion

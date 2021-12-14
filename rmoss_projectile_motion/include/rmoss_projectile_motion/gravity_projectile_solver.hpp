@@ -15,22 +15,26 @@
 #ifndef RMOSS_PROJECTILE_MOTION__GRAVITY_PROJECTILE_SOLVER_HPP_
 #define RMOSS_PROJECTILE_MOTION__GRAVITY_PROJECTILE_SOLVER_HPP_
 
-#include "rmoss_projectile_motion/iterative_projectile_solver.hpp"
+#include <string>
+
+#include "rmoss_projectile_motion/projectile_solver_interface.hpp"
+#include "rmoss_projectile_motion/iterative_projectile_tool.hpp"
 
 namespace rmoss_projectile_motion
 {
 
 // 考虑重力的弹道重力修正工具.
-class GravityProjectileSolver : public IterativeProjectileSolver
+class GravityProjectileSolver : public ProjectileSolverInterface
 {
 public:
-  explicit GravityProjectileSolver(double initial_vel)
-  : initial_vel_(initial_vel) {}
+  explicit GravityProjectileSolver(double initial_vel);
 
-  void forward_motion(double given_angle, double given_x, double & h, double & t);
   void set_initial_vel(double vel) {initial_vel_ = vel;}
+  bool solve(double target_x, double target_h, double & angle) override;
+  std::string error_message() override;
 
 private:
+  IterativeProjectileTool iterative_tool_;
   double initial_vel_;
 };
 

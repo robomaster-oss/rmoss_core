@@ -15,24 +15,27 @@
 #ifndef RMOSS_PROJECTILE_MOTION__GAF_PROJECTILE_SOLVER_HPP_
 #define RMOSS_PROJECTILE_MOTION__GAF_PROJECTILE_SOLVER_HPP_
 
-#include "rmoss_projectile_motion/iterative_projectile_solver.hpp"
+#include <string>
+
+#include "rmoss_projectile_motion/projectile_solver_interface.hpp"
+#include "rmoss_projectile_motion/iterative_projectile_tool.hpp"
 
 namespace rmoss_projectile_motion
 {
 
 // 考虑重力和空气阻力（gaf:Gravity and Air Frication）的弹道重力修正工具.
-class GafProjectileSolver : public IterativeProjectileSolver
+class GafProjectileSolver : public ProjectileSolverInterface
 {
 public:
   GafProjectileSolver(double initial_vel, double friction_coeff);
-  ~GafProjectileSolver() = default;
 
-public:
-  void forward_motion(double given_angle, double given_x, double & h, double & t);
   void set_initial_vel(double vel) {initial_vel_ = vel;}
   void set_friction_coeff(const double & friction_coeff) {friction_coeff_ = friction_coeff;}
+  bool solve(double target_x, double target_h, double & angle) override;
+  std::string error_message() override;
 
 private:
+  IterativeProjectileTool iterative_tool_;
   // 子弹射速
   double initial_vel_;
   // 空气阻力系数

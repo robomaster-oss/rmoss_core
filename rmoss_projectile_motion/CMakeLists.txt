@@ -21,9 +21,9 @@ include_directories(include)
 
 #create rmoss_projectile_motion lib
 add_library(${PROJECT_NAME} SHARED
-  src/iterative_projectile_solver/iterative_projectile_solver.cpp
-  src/iterative_projectile_solver/gravity_projectile_solver.cpp
-  src/iterative_projectile_solver/gaf_projectile_solver.cpp
+  src/iterative_projectile_tool.cpp
+  src/gravity_projectile_solver.cpp
+  src/gaf_projectile_solver.cpp
   src/gimbal_transform_tool.cpp
 )
 set(dependencies

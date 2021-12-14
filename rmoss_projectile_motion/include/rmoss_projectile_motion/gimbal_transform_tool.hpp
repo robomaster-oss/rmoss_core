@@ -16,6 +16,7 @@
 #define RMOSS_PROJECTILE_MOTION__GIMBAL_TRANSFORM_TOOL_HPP_
 
 #include <memory>
+#include <geometry_msgs/msg/point.hpp>
 
 #include "Eigen/Geometry"
 #include "rmoss_projectile_motion/projectile_solver_interface.hpp"
@@ -36,6 +37,11 @@ public:
   bool solve(Eigen::Vector3d position, double & pitch, double & yaw)
   {
     return solve(position(0), position(1), position(2), pitch, yaw);
+  }
+
+  bool solve(geometry_msgs::msg::Point position, double & pitch, double & yaw)
+  {
+    return solve(position.x, position.y, position.z, pitch, yaw);
   }
 
 private:

@@ -15,6 +15,7 @@
 #ifndef RMOSS_PROJECTILE_MOTION__GIMBAL_TRANSFORM_TOOL_HPP_
 #define RMOSS_PROJECTILE_MOTION__GIMBAL_TRANSFORM_TOOL_HPP_
 
+#include <geometry_msgs/msg/point.hpp>
 #include <memory>
 
 #include "Eigen/Geometry"
@@ -26,7 +27,6 @@ namespace rmoss_projectile_motion
 class GimbalTransformTool
 {
 public:
-  using SharedPtr = std::shared_ptr<GimbalTransformTool>;
   explicit GimbalTransformTool(std::shared_ptr<ProjectileSolverInterface> solver = nullptr)
   : solver_(solver) {}
 
@@ -37,6 +37,11 @@ public:
   bool solve(Eigen::Vector3d position, double & pitch, double & yaw)
   {
     return solve(position(0), position(1), position(2), pitch, yaw);
+  }
+
+  bool solve(geometry_msgs::msg::Point position, double & pitch, double & yaw)
+  {
+    return solve(position.x, position.y, position.z, pitch, yaw);
   }
 
 private:

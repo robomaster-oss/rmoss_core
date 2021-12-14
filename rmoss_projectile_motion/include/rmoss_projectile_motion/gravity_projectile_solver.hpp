@@ -28,6 +28,7 @@ public:
   : initial_vel_(initial_vel) {}
 
   void forward_motion(double given_angle, double given_x, double & h, double & t);
+  void set_initial_vel(double vel) {initial_vel_ = vel;}
 
 private:
   double initial_vel_;

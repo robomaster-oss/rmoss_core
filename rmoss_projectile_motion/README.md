@@ -35,8 +35,8 @@ projectile_tansformoss_tool->solve(position, pitch, yaw);
 projectile_tansformoss_tool->set_projectile_solver(gaf_solver);
 
 // 更改求解器的参数
-graviry_solver->set_velocity(15);
-gaf_solver->set_velocity(15);
+graviry_solver->set_initial_vel(15);
+gaf_solver->set_initial_vel(15);
 gaf_solver->set_friction_coeff(0.2);
 ```
 

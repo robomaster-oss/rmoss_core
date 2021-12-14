@@ -23,7 +23,7 @@ namespace rmoss_projectile_motion
 {
 
 GafProjectileSolver::GafProjectileSolver(double initial_vel, double friction_coeff)
-: IterativeProjectileSolver(initial_vel), friction_coeff_(friction_coeff)
+: velocity_(initial_vel), friction_coeff_(friction_coeff)
 {
   set_max_iter(100);
 }

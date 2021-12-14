@@ -23,10 +23,9 @@ namespace rmoss_projectile_motion
 class IterativeProjectileSolver : public ProjectileSolverInterface
 {
 public:
-  explicit IterativeProjectileSolver(double initial_vel)
-  : max_iter_(10), velocity_(initial_vel) {}
+  IterativeProjectileSolver()
+  : max_iter_(10) {}
   void set_max_iter(int max_iter) {max_iter_ = max_iter;}
-  void set_velocity(double vel) {velocity_ = vel;}
   virtual bool solve(double target_x, double target_h, double & angle);
   ///////// 在水平坐标系下
   // x: input,射击距离/m
@@ -37,9 +36,6 @@ public:
 
 private:
   int max_iter_;
-
-protected:
-  double velocity_;
 };
 
 }  // namespace rmoss_projectile_motion

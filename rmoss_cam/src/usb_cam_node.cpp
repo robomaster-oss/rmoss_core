@@ -27,12 +27,12 @@ namespace rmoss_cam
 UsbCamNode::UsbCamNode(const rclcpp::NodeOptions & options)
 {
   node_ = std::make_shared<rclcpp::Node>("usb_cam", options);
-  // declare parameters
-  node_->declare_parameter("usb_cam_path", "/dev/video0");
-  // get parameters
-  auto dev_name = node_->get_parameter("usb_cam_path").as_string();
+  std::string usb_cam_path = "/dev/video0";
+  // declare and get parameters
+  node_->declare_parameter("usb_cam_path", usb_cam_path);
+  node_->get_parameter("usb_cam_path", usb_cam_path);
   // create camera device
-  cam_dev_ = std::make_shared<UsbCam>(dev_name);
+  cam_dev_ = std::make_shared<UsbCam>(usb_cam_path);
   cam_server_ = std::make_shared<CamServer>(node_, cam_dev_);
 }
 

@@ -22,11 +22,13 @@ namespace rmoss_cam
 VirtualCamNode::VirtualCamNode(const rclcpp::NodeOptions & options)
 {
   node_ = std::make_shared<rclcpp::Node>("virtual_cam", options);
+  std::string image_path = "";
+  std::string video_path = "";
   // declare and get parameter
-  node_->declare_parameter("image_path", "");
-  node_->declare_parameter("video_path", "");
-  auto image_path = node_->get_parameter("image_path").as_string();
-  auto video_path = node_->get_parameter("video_path").as_string();
+  node_->declare_parameter("image_path", image_path);
+  node_->declare_parameter("video_path", video_path);
+  node_->get_parameter("image_path", image_path);
+  node_->get_parameter("video_path", video_path);
   // create device
   std::shared_ptr<CamInterface> cam_dev;
   if (!image_path.empty()) {

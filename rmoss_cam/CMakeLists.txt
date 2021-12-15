@@ -25,12 +25,12 @@ include_directories(include)
 
 # Create rmoss_cam lib
 add_library(${PROJECT_NAME} SHARED
-  src/cam_driver/usb_cam.cpp
-  src/cam_driver/virtual_cam.cpp
   src/cam_server.cpp
   src/cam_client.cpp
-  src/usb_cam_node.cpp
-  src/virtual_cam_node.cpp
+  src/usb_cam/usb_cam.cpp
+  src/usb_cam/usb_cam_node.cpp
+  src/virtual_cam/virtual_cam.cpp
+  src/virtual_cam/virtual_cam_node.cpp
 )
 
 set(dependencies
@@ -46,10 +46,10 @@ set(dependencies
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
 # Create executable nodes
-add_executable(usb_cam src/usb_cam_main.cpp)
+add_executable(usb_cam src/usb_cam/usb_cam_main.cpp)
 target_link_libraries(usb_cam ${PROJECT_NAME})
 
-add_executable(virtual_cam src/virtual_cam_main.cpp)
+add_executable(virtual_cam src/virtual_cam/virtual_cam_main.cpp)
 target_link_libraries(virtual_cam ${PROJECT_NAME})
 
 # register component nodes

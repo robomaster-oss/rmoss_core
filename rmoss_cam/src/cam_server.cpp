@@ -186,4 +186,9 @@ void CamServer::get_camera_info_cb(
   }
 }
 
+std::shared_ptr<camera_info_manager::CameraInfoManager> CamServer::get_camera_info_manager()
+{
+  return camera_info_manager_;
+}
+
 }  // namespace rmoss_cam

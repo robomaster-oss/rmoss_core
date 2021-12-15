@@ -39,6 +39,8 @@ public:
     rclcpp::Node::SharedPtr node,
     std::shared_ptr<CamInterface> cam_intercace);
 
+  std::shared_ptr<camera_info_manager::CameraInfoManager> get_camera_info_manager();
+
 private:
   void timer_callback();
   void get_camera_info_cb(

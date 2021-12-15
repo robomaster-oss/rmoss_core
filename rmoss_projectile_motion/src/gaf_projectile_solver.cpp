@@ -17,6 +17,7 @@
 
 #include <cmath>
 #include <string>
+#include <memory>
 
 const double GRAVITY = 9.7913;
 
@@ -54,18 +55,19 @@ GafProjectileSolver::GafProjectileSolver(double initial_vel, double friction_coe
       }
     };
   // configure iterative tool
-  iterative_tool_.set_forward_motion(forward_motion);
-  iterative_tool_.set_max_iter(100);
+  iterative_tool_ = std::make_shared<IterativeProjectileTool>();
+  iterative_tool_->set_forward_motion(forward_motion);
+  iterative_tool_->set_max_iter(100);
 }
 
 bool GafProjectileSolver::solve(double target_x, double target_h, double & angle)
 {
-  return iterative_tool_.solve(target_x, target_h, angle);
+  return iterative_tool_->solve(target_x, target_h, angle);
 }
 
 std::string GafProjectileSolver::error_message()
 {
-  return iterative_tool_.error_message();
+  return iterative_tool_->error_message();
 }
 
 }  // namespace rmoss_projectile_motion

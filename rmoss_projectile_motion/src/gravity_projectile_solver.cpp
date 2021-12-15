@@ -16,6 +16,7 @@
 
 #include <cmath>
 #include <string>
+#include <memory>
 
 const double GRAVITY = 9.7913;
 
@@ -31,18 +32,19 @@ GravityProjectileSolver::GravityProjectileSolver(double initial_vel)
       h = initial_vel_ * sin(given_angle) * t - GRAVITY * t * t / 2;
     };
   // configure iterative tool
-  iterative_tool_.set_forward_motion(forward_motion);
-  iterative_tool_.set_max_iter(20);
+  iterative_tool_ = std::make_shared<IterativeProjectileTool>();
+  iterative_tool_->set_forward_motion(forward_motion);
+  iterative_tool_->set_max_iter(20);
 }
 
 bool GravityProjectileSolver::solve(double target_x, double target_h, double & angle)
 {
-  return iterative_tool_.solve(target_x, target_h, angle);
+  return iterative_tool_->solve(target_x, target_h, angle);
 }
 
 std::string GravityProjectileSolver::error_message()
 {
-  return iterative_tool_.error_message();
+  return iterative_tool_->error_message();
 }
 
 }  // namespace rmoss_projectile_motion

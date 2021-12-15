@@ -16,6 +16,7 @@
 #define RMOSS_PROJECTILE_MOTION__GAF_PROJECTILE_SOLVER_HPP_
 
 #include <string>
+#include <memory>
 
 #include "rmoss_projectile_motion/projectile_solver_interface.hpp"
 #include "rmoss_projectile_motion/iterative_projectile_tool.hpp"
@@ -31,11 +32,12 @@ public:
 
   void set_initial_vel(double vel) {initial_vel_ = vel;}
   void set_friction_coeff(const double & friction_coeff) {friction_coeff_ = friction_coeff;}
+  std::shared_ptr<IterativeProjectileTool> get_iterative_tool() {return iterative_tool_;}
   bool solve(double target_x, double target_h, double & angle) override;
   std::string error_message() override;
 
 private:
-  IterativeProjectileTool iterative_tool_;
+  std::shared_ptr<IterativeProjectileTool> iterative_tool_;
   // 子弹射速
   double initial_vel_;
   // 空气阻力系数

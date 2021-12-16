@@ -18,6 +18,9 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <queue>
+#include <thread>
+#include <mutex>
 
 #include "rmoss_base/transporter_interface.hpp"
 #include "rmoss_base/fixed_packet.hpp"
@@ -38,12 +41,16 @@ public:
     }
   }
 
+  ~FixedPacketTool() {enable_realtime_send(false);}
+
   bool is_open() {return transporter_->is_open();}
+  void enable_realtime_send(bool enable);
   bool send_packet(const FixedPacket<capacity> & packet);
   bool recv_packet(FixedPacket<capacity> & packet);
 
 private:
   bool check_packet(uint8_t * tmp_buffer, int recv_len);
+  bool simple_send_packet(const FixedPacket<capacity> & packet);
 
 private:
   std::shared_ptr<TransporterInterface> transporter_;
@@ -51,9 +58,11 @@ private:
   uint8_t tmp_buffer_[capacity];  // NOLINT
   uint8_t recv_buffer_[capacity * 2];  // NOLINT
   int recv_buf_len_;
-  // TODO(gezp): 定义更加规范的错误码的枚举变量
-  int send_err_code_{0};
-  int recv_err_code_{0};
+  // for realtime sending
+  bool use_realtime_send_{false};
+  std::mutex realtime_send_mut_;
+  std::unique_ptr<std::thread> realtime_send_thread_;
+  std::queue<FixedPacket<capacity>> realtime_packets_;
 };
 
 template<int capacity>
@@ -72,7 +81,7 @@ bool FixedPacketTool<capacity>::check_packet(uint8_t * buffer, int recv_len)
 }
 
 template<int capacity>
-bool FixedPacketTool<capacity>::send_packet(const FixedPacket<capacity> & packet)
+bool FixedPacketTool<capacity>::simple_send_packet(const FixedPacket<capacity> & packet)
 {
   if (transporter_->write(packet.buffer(), capacity) == capacity) {
     return true;
@@ -81,6 +90,53 @@ bool FixedPacketTool<capacity>::send_packet(const FixedPacket<capacity> & packet
     transporter_->close();
     transporter_->open();
     return false;
+  }
+}
+
+template<int capacity>
+void FixedPacketTool<capacity>::enable_realtime_send(bool enable)
+{
+  if (enable == use_realtime_send_) {
+    return;
+  }
+  if (enable) {
+    use_realtime_send_ = true;
+    realtime_send_thread_ = std::make_unique<std::thread>(
+      [&]() {
+        FixedPacket<capacity> packet;
+        while (use_realtime_send_) {
+          bool empty = true;
+          {
+            std::lock_guard<std::mutex> lock(realtime_send_mut_);
+            empty = realtime_packets_.empty();
+            if (!empty) {
+              packet = realtime_packets_.front();
+              realtime_packets_.pop();
+            }
+          }
+          if (!empty) {
+            simple_send_packet(packet);
+          } else {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+          }
+        }
+      });
+  } else {
+    use_realtime_send_ = false;
+    realtime_send_thread_->join();
+    realtime_send_thread_.reset();
+  }
+}
+
+template<int capacity>
+bool FixedPacketTool<capacity>::send_packet(const FixedPacket<capacity> & packet)
+{
+  if (use_realtime_send_) {
+    std::lock_guard<std::mutex> lock(realtime_send_mut_);
+    realtime_packets_.push(packet);
+    return true;
+  } else {
+    return simple_send_packet(packet);
   }
 }
 
@@ -115,7 +171,6 @@ bool FixedPacketTool<capacity>::recv_packet(FixedPacket<capacity> & packet)
         }
       }
       // 表明断帧，或错误帧。
-      recv_err_code_ = -1;
       return false;
     }
   } else {
@@ -123,7 +178,6 @@ bool FixedPacketTool<capacity>::recv_packet(FixedPacket<capacity> & packet)
     transporter_->close();
     transporter_->open();
     // 串口错误
-    recv_err_code_ = -2;
     return false;
   }
 }

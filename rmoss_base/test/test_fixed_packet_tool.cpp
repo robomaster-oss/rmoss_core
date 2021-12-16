@@ -47,3 +47,32 @@ TEST(FixedPacketTool, send_and_recv)
   packet2.unload_data<int>(b, 10);
   EXPECT_EQ(a, b);
 }
+
+TEST(FixedPacketTool, realtime_send)
+{
+  auto factory = std::make_shared<TransporterFactory>();
+  auto transporter1 = factory->get_transporter1();
+  auto transporter2 = factory->get_transporter2();
+  auto packet_tool1 = std::make_shared<rmoss_base::FixedPacketTool<32>>(transporter1);
+  auto packet_tool2 = std::make_shared<rmoss_base::FixedPacketTool<32>>(transporter2);
+  packet_tool1->enable_realtime_send(true);
+  rmoss_base::FixedPacket<32> packet1, packet2;
+  // recv
+  auto t = std::thread(
+    [&]() {
+      int b;
+      for (int i = 0; i < 10; i++) {
+        bool recv_ret = packet_tool2->recv_packet(packet2);
+        ASSERT_TRUE(recv_ret);
+        packet2.unload_data<int>(b, 10);
+        EXPECT_EQ(i, b);
+      }
+    });
+  // send
+  for (int i = 0; i < 10; i++) {
+    packet1.load_data(i, 10);
+    bool send_ret = packet_tool1->send_packet(packet1);
+    ASSERT_TRUE(send_ret);
+  }
+  t.join();
+}

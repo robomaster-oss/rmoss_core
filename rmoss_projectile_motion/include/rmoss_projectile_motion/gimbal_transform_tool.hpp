@@ -31,6 +31,7 @@ public:
   : solver_(solver) {}
 
   void set_projectile_solver(std::shared_ptr<ProjectileSolverInterface> solver) {solver_ = solver;}
+  std::string error_message() {return error_message_;}
   // position :input, position of target object in gimbal frame
   // pitch,yaw : output, angle of gimbal
   bool solve(double x, double y, double z, double & pitch, double & yaw);
@@ -46,6 +47,7 @@ public:
 
 private:
   std::shared_ptr<ProjectileSolverInterface> solver_;
+  std::string error_message_;
 };
 
 }  // namespace rmoss_projectile_motion

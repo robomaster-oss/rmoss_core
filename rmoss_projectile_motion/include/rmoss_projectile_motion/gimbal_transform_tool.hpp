@@ -17,6 +17,7 @@
 
 #include <geometry_msgs/msg/point.hpp>
 #include <memory>
+#include <string>
 
 #include "Eigen/Geometry"
 #include "rmoss_projectile_motion/projectile_solver_interface.hpp"

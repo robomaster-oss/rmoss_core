@@ -45,16 +45,13 @@ set(dependencies
 )
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
-# Create executable nodes
-add_executable(usb_cam src/usb_cam/usb_cam_main.cpp)
-target_link_libraries(usb_cam ${PROJECT_NAME})
-
-add_executable(virtual_cam src/virtual_cam/virtual_cam_main.cpp)
-target_link_libraries(virtual_cam ${PROJECT_NAME})
-
-# register component nodes
-rclcpp_components_register_nodes(${PROJECT_NAME} "rmoss_cam::UsbCamNode")
-rclcpp_components_register_nodes(${PROJECT_NAME} "rmoss_cam::VirtualCamNode")
+# register component nodes and generate executable
+rclcpp_components_register_node(${PROJECT_NAME}
+  PLUGIN "rmoss_cam::UsbCamNode"
+  EXECUTABLE usb_cam)
+rclcpp_components_register_node(${PROJECT_NAME}
+  PLUGIN "rmoss_cam::VirtualCamNode"
+  EXECUTABLE virtual_cam)
 
 # Install include directories
 install(DIRECTORY include/
@@ -69,12 +66,7 @@ install(TARGETS ${PROJECT_NAME}
     INCLUDES DESTINATION include
 )
 
-# Install executable nodes
-install(TARGETS usb_cam virtual_cam
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-# Install launch res directories
+# Install  directories
 install(DIRECTORY launch resource config scripts
   DESTINATION share/${PROJECT_NAME}
 )

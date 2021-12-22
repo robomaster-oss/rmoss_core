@@ -27,11 +27,12 @@
 
 namespace rmoss_cam
 {
-typedef std::function<void (cv::Mat &, rclcpp::Time)> Callback;
+
 // camera client wrapper to subscribe image (used by auto aim task, power rune task..)
 class CamClient
 {
 public:
+  typedef std::function<void (const cv::Mat &, const rclcpp::Time &)> Callback;
   CamClient() = delete;
   CamClient(
     rclcpp::Node::SharedPtr node, std::string camera_name, Callback process_fn,
@@ -39,11 +40,6 @@ public:
   ~CamClient();
 
   bool get_camera_info(sensor_msgs::msg::CameraInfo & info);
-  void start();
-  void stop();
-
-private:
-  void img_cb(const sensor_msgs::msg::Image::ConstSharedPtr msg);
 
 private:
   rclcpp::Node::SharedPtr node_;
@@ -52,9 +48,7 @@ private:
   rclcpp::executors::SingleThreadedExecutor::SharedPtr executor_;
   std::unique_ptr<std::thread> executor_thread_;
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr img_sub_;  // 订阅图片数据
-  Callback process_fn_;
   bool spin_thread_;
-  bool run_flag_{false};  // 运行标志位
 };
 }  // namespace rmoss_cam
 

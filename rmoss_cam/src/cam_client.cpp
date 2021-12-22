@@ -26,23 +26,27 @@ namespace rmoss_cam
 {
 CamClient::CamClient(
   rclcpp::Node::SharedPtr node, std::string camera_name, Callback process_fn, bool spin_thread)
-: node_(node), camera_name_(camera_name), process_fn_(process_fn), spin_thread_(spin_thread)
+: node_(node), camera_name_(camera_name), spin_thread_(spin_thread)
 {
   // create image subscriber
-  using namespace std::placeholders;
+  auto img_cb = [process_fn](const sensor_msgs::msg::Image::ConstSharedPtr msg)
+    {
+      auto img = cv_bridge::toCvShare(msg, "bgr8")->image.clone();
+      process_fn(img, msg->header.stamp);
+    };
   if (spin_thread_) {
+    auto sub_opt = rclcpp::SubscriptionOptions();
     callback_group_ = node_->create_callback_group(
       rclcpp::CallbackGroupType::MutuallyExclusive, false);
-    auto sub_opt = rclcpp::SubscriptionOptions();
     sub_opt.callback_group = callback_group_;
     img_sub_ = node_->create_subscription<sensor_msgs::msg::Image>(
-      camera_name + "/image_raw", 1, std::bind(&CamClient::img_cb, this, _1), sub_opt);
+      camera_name + "/image_raw", 1, img_cb, sub_opt);
     executor_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
     executor_->add_callback_group(callback_group_, node->get_node_base_interface());
     executor_thread_ = std::make_unique<std::thread>([&]() {executor_->spin();});
   } else {
     img_sub_ = node_->create_subscription<sensor_msgs::msg::Image>(
-      camera_name + "/image_raw", 1, std::bind(&CamClient::img_cb, this, _1));
+      camera_name + "/image_raw", 1, img_cb);
   }
 }
 
@@ -51,16 +55,6 @@ CamClient::~CamClient()
   if (spin_thread_) {
     executor_->cancel();
     executor_thread_->join();
-  }
-}
-
-
-void CamClient::img_cb(const sensor_msgs::msg::Image::ConstSharedPtr msg)
-{
-  if (run_flag_) {
-    auto img = cv_bridge::toCvShare(msg, "bgr8")->image.clone();
-    // auto img_stamp = msg->header.stamp.sec + 0.000000001 * msg->header.stamp.nanosec;
-    process_fn_(img, msg->header.stamp);
   }
 }
 
@@ -98,9 +92,5 @@ bool CamClient::get_camera_info(sensor_msgs::msg::CameraInfo & info)
     return false;
   }
 }
-
-void CamClient::start() {run_flag_ = true;}
-
-void CamClient::stop() {run_flag_ = false;}
 
 }  // namespace rmoss_cam

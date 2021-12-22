@@ -151,12 +151,14 @@ void CamServer::timer_callback()
   }
   if (cam_intercace_->grab_image(img_)) {
     cam_status_ok_ = true;
-    auto header = std_msgs::msg::Header();
-    header.stamp = node_->now();
     // publish image msg
-    sensor_msgs::msg::Image::SharedPtr img_msg = cv_bridge::CvImage(
-      header, "bgr8", img_).toImageMsg();
-    img_pub_->publish(*img_msg);
+    if (img_pub_->get_subscription_count() > 0) {
+      auto header = std_msgs::msg::Header();
+      header.stamp = node_->now();
+      sensor_msgs::msg::Image::SharedPtr img_msg = cv_bridge::CvImage(
+        header, "bgr8", img_).toImageMsg();
+      img_pub_->publish(*img_msg);
+    }
   } else {
     // try to reopen camera
     cam_status_ok_ = false;

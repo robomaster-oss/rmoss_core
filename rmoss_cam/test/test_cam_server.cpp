@@ -28,12 +28,15 @@ TEST(CamServer, reopen)
 {
   rclcpp::init(0, nullptr);
   auto cam_dev = std::make_shared<DummyCam>();
-  auto node = std::make_shared<rclcpp::Node>("test_cam");
+  auto node_options = rclcpp::NodeOptions();
+  node_options.append_parameter_override("autostart", true);
+  auto node = std::make_shared<rclcpp::Node>("test_cam", node_options);
   auto cam_server = std::make_shared<rmoss_cam::CamServer>(node, cam_dev);
   auto spin_thread = std::thread([&]() {rclcpp::spin(node);});
   std::this_thread::sleep_for(500ms);
   cam_dev->set_falut();
   std::this_thread::sleep_for(1000ms);
+  EXPECT_EQ(cam_dev->is_open(), true);
   rclcpp::shutdown();
   spin_thread.join();
   SUCCEED();

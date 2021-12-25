@@ -33,22 +33,25 @@ class CamClient
 {
 public:
   typedef std::function<void (const cv::Mat &, const rclcpp::Time &)> Callback;
-  CamClient() = delete;
+  explicit CamClient(rclcpp::Node::SharedPtr node)
+  : node_(node) {}
+  [[deprecated("Use connect() instead of setting camera and callback in constructor")]]
   CamClient(
     rclcpp::Node::SharedPtr node, std::string camera_name, Callback process_fn,
     bool spin_thread = true);
   ~CamClient();
-
+  virtual bool connect(const std::string & camera_name, Callback cb);
+  virtual void disconnect();
   bool get_camera_info(sensor_msgs::msg::CameraInfo & info);
 
 private:
   rclcpp::Node::SharedPtr node_;
   std::string camera_name_;
+  // capture image by topic
   rclcpp::CallbackGroup::SharedPtr callback_group_{nullptr};
   rclcpp::executors::SingleThreadedExecutor::SharedPtr executor_;
   std::unique_ptr<std::thread> executor_thread_;
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr img_sub_;  // 订阅图片数据
-  bool spin_thread_;
 };
 }  // namespace rmoss_cam
 

@@ -26,40 +26,65 @@ namespace rmoss_cam
 {
 CamClient::CamClient(
   rclcpp::Node::SharedPtr node, std::string camera_name, Callback process_fn, bool spin_thread)
-: node_(node), camera_name_(camera_name), spin_thread_(spin_thread)
+: node_(node)
 {
-  // create image subscriber
-  auto img_cb = [process_fn](const sensor_msgs::msg::Image::ConstSharedPtr msg)
-    {
-      auto img = cv_bridge::toCvShare(msg, "bgr8")->image.clone();
-      process_fn(img, msg->header.stamp);
-    };
-  if (spin_thread_) {
-    auto sub_opt = rclcpp::SubscriptionOptions();
-    callback_group_ = node_->create_callback_group(
-      rclcpp::CallbackGroupType::MutuallyExclusive, false);
-    sub_opt.callback_group = callback_group_;
-    img_sub_ = node_->create_subscription<sensor_msgs::msg::Image>(
-      camera_name + "/image_raw", 1, img_cb, sub_opt);
-    executor_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
-    executor_->add_callback_group(callback_group_, node->get_node_base_interface());
-    executor_thread_ = std::make_unique<std::thread>([&]() {executor_->spin();});
-  } else {
-    img_sub_ = node_->create_subscription<sensor_msgs::msg::Image>(
-      camera_name + "/image_raw", 1, img_cb);
-  }
+  (void)spin_thread;
+  connect(camera_name, process_fn);
 }
 
 CamClient::~CamClient()
 {
-  if (spin_thread_) {
+  if (executor_) {
     executor_->cancel();
     executor_thread_->join();
   }
 }
 
+bool CamClient::connect(const std::string & camera_name, Callback cb)
+{
+  if (camera_name_ == camera_name) {
+    RCLCPP_ERROR(node_->get_logger(), "camera %s is already connected.", camera_name.c_str());
+    return false;
+  }
+  // try to cancel the prevoius camera
+  disconnect();
+  // set new camera
+  camera_name_ = camera_name;
+  auto img_cb = [cb](const sensor_msgs::msg::Image::ConstSharedPtr msg) {
+      auto img = cv_bridge::toCvShare(msg, "bgr8")->image.clone();
+      cb(img, msg->header.stamp);
+    };
+  auto sub_opt = rclcpp::SubscriptionOptions();
+  callback_group_ = node_->create_callback_group(
+    rclcpp::CallbackGroupType::MutuallyExclusive, false);
+  sub_opt.callback_group = callback_group_;
+  img_sub_ = node_->create_subscription<sensor_msgs::msg::Image>(
+    camera_name + "/image_raw", 1, img_cb, sub_opt);
+  executor_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+  executor_->add_callback_group(callback_group_, node_->get_node_base_interface());
+  executor_thread_ = std::make_unique<std::thread>([&]() {executor_->spin();});
+  return true;
+}
+
+void CamClient::disconnect()
+{
+  if (img_sub_) {
+    // cancel the prevoius camera
+    executor_->cancel();
+    executor_thread_->join();
+    executor_.reset();
+    executor_thread_.reset();
+    img_sub_.reset();
+    camera_name_ = "";
+  }
+}
+
 bool CamClient::get_camera_info(sensor_msgs::msg::CameraInfo & info)
 {
+  if (camera_name_ == "") {
+    RCLCPP_ERROR(node_->get_logger(), "[get_camera_info] camera should be connected!");
+    return false;
+  }
   auto callback_group = node_->create_callback_group(
     rclcpp::CallbackGroupType::MutuallyExclusive, false);
   auto exec = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();

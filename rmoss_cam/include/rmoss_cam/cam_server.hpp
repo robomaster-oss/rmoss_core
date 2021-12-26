@@ -19,6 +19,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <map>
 
 #include "rclcpp/rclcpp.hpp"
 #include "opencv2/opencv.hpp"
@@ -35,14 +36,19 @@ namespace rmoss_cam
 class CamServer
 {
 public:
+  typedef std::function<void (const cv::Mat &, const rclcpp::Time &)> Callback;
   CamServer(
     rclcpp::Node::SharedPtr node,
     std::shared_ptr<CamInterface> cam_intercace);
 
   std::shared_ptr<camera_info_manager::CameraInfoManager> get_camera_info_manager();
+  std::string get_camera_name() {return camera_name_;}
+  int add_callback(Callback cb);
+  void remove_callback(int cb_idx);
 
 private:
-  void timer_callback();
+  void init_timer();
+  void init_task_manager();
   void get_camera_info_cb(
     const rmoss_interfaces::srv::GetCameraInfo::Request::SharedPtr request,
     rmoss_interfaces::srv::GetCameraInfo::Response::SharedPtr response);
@@ -57,12 +63,19 @@ private:
   std::shared_ptr<camera_info_manager::CameraInfoManager> camera_info_manager_;
   // camera_device interface
   std::shared_ptr<CamInterface> cam_intercace_;
+  //
+  std::string camera_name_{"camera"};
   bool run_flag_{false};
   bool cam_status_ok_{false};
   // data
   cv::Mat img_;
   int fps_{30};
   int reopen_cnt{0};
+  // callback
+  int cb_idx_{0};
+  std::map<int, Callback> callbacks_;
+  std::mutex cb_mut_;
+  bool use_callback_{false};
 };
 
 }  // namespace rmoss_cam

@@ -22,7 +22,6 @@
 * `cam_server.hpp/cpp` :  `CamServer` 模块，负责将相机获取的图像发布成ROS topic，支持获取相机参数服务。
 * `cam_client.hpp/cpp` :  `CamClient` 模块，订阅图像ROS topic，并调用`callback`进行图像处理。
 * `usb_cam_node.hpp/cpp` ，`virtual_cam_node.hpp/cpp` :  ROS顶层模块（基于`UsbCam`,`VirtualCam`和`CamServer`），实现usb相机节点和虚拟相机节点。
-* `usb_cam_main.cpp` ，`virtual_cam_main.cpp` :  usb相机节点和虚拟相机节点main入口。
 
 ## 快速使用
 
@@ -62,13 +61,51 @@ ros2 run rmoss_cam virtual_cam --ros-args -p "video_path:=/home/ubuntu/test.avi"
 
 ### ROS Composition启动
 
-launch方式运行composition测试demo
+launch方式运行dynamic composition测试demo
 
 ```python
 ros2 launch rmoss_cam composition.launch.py
 ```
 
 * 先创建容器`rmoss_container` ，然后将相机节点`rmoss_cam::VirtualCamNode` 加载到容器中，支持继续加载多个节点。
+
+### C++使用
+
+C++源码方式运行Node，即manual composition，将`CamServer`和`CamClient`运行在一个进程中的不同Node中。
+```c++
+// camera node: generate image
+auto cam_node = std::make_shared<rmoss_cam::UsbCamNode>();
+spin_with_dedicated_thread(cam_node);
+// task node: process image
+auto task_node = std::make_shared<rclcpp::Node>("vision_task");
+auto cam_client = std::make_shared<rmoss_cam::CamClient>(task_node);
+cam_client->connect(
+    "camera_name",
+    [&](const cv::Mat & img, const rclcpp::Time & stamp) {
+        // do something;
+    });
+spin_with_dedicated_thread(task_node);
+```
+* `CamServer`和`CamClient`依然采用ROS topic进行通信，本质上和dynamic composition一样。
+
+基于直接传递图像模式的`IntraCamClient`使用方式
+```c++
+// camera node: generate image
+auto cam_node = std::make_shared<rmoss_cam::UsbCamNode>();
+spin_with_dedicated_thread(cam_node);
+// task node: process image
+auto task_node = std::make_shared<rclcpp::Node>("vision_task");
+auto cam_client = std::make_shared<rmoss_cam::IntraCamClient>(task_node);
+cam_client->add_cam_server(cam_node->get_cam_server()); // 需要预先添加可能使用的CamServer
+cam_client->connect(
+    "camera_name",
+    [&](const cv::Mat & img, const rclcpp::Time & stamp) {
+        // do something;
+    });
+spin_with_dedicated_thread(task_node);
+```
+* `IntraCamClient`继承`CamClient`, 使用接口保持一致。
+* `CamServer`和`IntraCamClient`之间的图像传输不经过ROS，使用线程间copy, 通过条件变量和锁实现。
 
 ## 二次开发
 

@@ -64,13 +64,12 @@ CamServer::CamServer(
   std::shared_ptr<CamInterface> cam_intercace)
 : node_(node), cam_intercace_(cam_intercace)
 {
-  std::string camera_name = "camera";
   std::string camera_info_url = "";
   // declare parameters
-  node->declare_parameter("camera_name", "camera");
+  node->declare_parameter("camera_name", camera_name_);
   node->declare_parameter("camera_info_url", camera_info_url);
   node->declare_parameter("autostart", run_flag_);
-  node->get_parameter("camera_name", camera_name);
+  node->get_parameter("camera_name", camera_name_);
   node->get_parameter("camera_info_url", camera_info_url);
   node->get_parameter("autostart", run_flag_);
   // 相机参数获取并设置，配置文件中的值会覆盖默认值
@@ -98,7 +97,7 @@ CamServer::CamServer(
   }
   // create camera info manager
   camera_info_manager_ = std::make_shared<camera_info_manager::CameraInfoManager>(
-    node_.get(), camera_name, camera_info_url);
+    node_.get(), camera_name_, camera_info_url);
   if (camera_info_manager_->loadCameraInfo(camera_info_url)) {
     RCLCPP_INFO(
       node_->get_logger(), "Calibration calibrated from file '%s'", camera_info_url.c_str());
@@ -107,14 +106,61 @@ CamServer::CamServer(
       node_->get_logger(), "Calibration file '%s' is missing", camera_info_url.c_str());
   }
   // create image publisher
-  img_pub_ = node_->create_publisher<sensor_msgs::msg::Image>(camera_name + "/image_raw", 1);
-  auto period_ms = std::chrono::milliseconds(static_cast<int64_t>(1000.0 / fps_));
-  timer_ = node->create_wall_timer(period_ms, std::bind(&CamServer::timer_callback, this));
+  img_pub_ = node_->create_publisher<sensor_msgs::msg::Image>(camera_name_ + "/image_raw", 1);
+  init_timer();
   // create GetCameraInfo service
   using namespace std::placeholders;
   get_camera_info_srv_ = node->create_service<rmoss_interfaces::srv::GetCameraInfo>(
-    camera_name + "get_camera_info",
+    camera_name_ + "get_camera_info",
     std::bind(&CamServer::get_camera_info_cb, this, _1, _2));
+  init_task_manager();
+  RCLCPP_INFO(node_->get_logger(), "init successfully!");
+}
+
+void CamServer::init_timer()
+{
+  auto timer_callback = [this]() {
+      if (!run_flag_) {
+        return;
+      }
+      if (cam_intercace_->grab_image(img_)) {
+        cam_status_ok_ = true;
+        rclcpp::Time stamp = node_->now();
+        if (use_callback_) {
+          std::lock_guard<std::mutex> lock(cb_mut_);
+          for (auto & cb : callbacks_) {
+            cb.second(img_, stamp);
+          }
+        }
+        // publish image msg
+        if (img_pub_->get_subscription_count() > 0) {
+          auto header = std_msgs::msg::Header();
+          header.stamp = stamp;
+          sensor_msgs::msg::Image::SharedPtr img_msg = cv_bridge::CvImage(
+            header, "bgr8", img_).toImageMsg();
+          img_pub_->publish(*img_msg);
+        }
+      } else {
+        // try to reopen camera
+        cam_status_ok_ = false;
+        if (reopen_cnt % fps_ == 0) {
+          cam_intercace_->close();
+          std::this_thread::sleep_for(100ms);
+          if (cam_intercace_->open()) {
+            RCLCPP_WARN(node_->get_logger(), "reopen camera successed!");
+          } else {
+            RCLCPP_WARN(node_->get_logger(), "reopen camera failed!");
+          }
+        }
+        reopen_cnt++;
+      }
+    };
+  auto period_ms = std::chrono::milliseconds(static_cast<int64_t>(1000.0 / fps_));
+  timer_ = node_->create_wall_timer(period_ms, timer_callback);
+}
+
+void CamServer::init_task_manager()
+{
   // task manager
   auto get_task_status_cb = [&]() {
       if (run_flag_) {
@@ -141,37 +187,29 @@ CamServer::CamServer(
     };
   task_manager_ = std::make_shared<rmoss_util::TaskManager>(
     node_, get_task_status_cb, control_task_cb);
-  RCLCPP_INFO(node_->get_logger(), "init successfully!");
 }
 
-void CamServer::timer_callback()
+int CamServer::add_callback(Callback cb)
 {
-  if (!run_flag_) {
+  std::lock_guard<std::mutex> lock(cb_mut_);
+  int idx = cb_idx_;
+  cb_idx_++;
+  callbacks_[idx] = cb;
+  use_callback_ = true;
+  return idx;
+}
+
+void CamServer::remove_callback(int cb_idx)
+{
+  std::lock_guard<std::mutex> lock(cb_mut_);
+  auto cb_it = callbacks_.find(cb_idx);
+  if (cb_it == callbacks_.end()) {
+    RCLCPP_INFO(node_->get_logger(), "callback idx%d is invalid", cb_idx);
     return;
   }
-  if (cam_intercace_->grab_image(img_)) {
-    cam_status_ok_ = true;
-    // publish image msg
-    if (img_pub_->get_subscription_count() > 0) {
-      auto header = std_msgs::msg::Header();
-      header.stamp = node_->now();
-      sensor_msgs::msg::Image::SharedPtr img_msg = cv_bridge::CvImage(
-        header, "bgr8", img_).toImageMsg();
-      img_pub_->publish(*img_msg);
-    }
-  } else {
-    // try to reopen camera
-    cam_status_ok_ = false;
-    if (reopen_cnt % fps_ == 0) {
-      cam_intercace_->close();
-      std::this_thread::sleep_for(100ms);
-      if (cam_intercace_->open()) {
-        RCLCPP_WARN(node_->get_logger(), "reopen camera successed!");
-      } else {
-        RCLCPP_WARN(node_->get_logger(), "reopen camera failed!");
-      }
-    }
-    reopen_cnt++;
+  callbacks_.erase(cb_it);
+  if (callbacks_.size() == 0) {
+    use_callback_ = false;
   }
 }
 

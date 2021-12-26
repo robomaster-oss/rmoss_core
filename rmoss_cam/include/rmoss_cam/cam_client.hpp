@@ -44,9 +44,11 @@ public:
   virtual void disconnect();
   bool get_camera_info(sensor_msgs::msg::CameraInfo & info);
 
-private:
+protected:
   rclcpp::Node::SharedPtr node_;
   std::string camera_name_;
+
+private:
   // capture image by topic
   rclcpp::CallbackGroup::SharedPtr callback_group_{nullptr};
   rclcpp::executors::SingleThreadedExecutor::SharedPtr executor_;

@@ -21,44 +21,35 @@
 #include "rclcpp/rclcpp.hpp"
 #include "dummy_cam.hpp"
 #include "rmoss_cam/cam_server.hpp"
+#include "rmoss_cam/intra_cam_client.hpp"
 
 using namespace std::chrono_literals;
 
-TEST(CamServer, reopen)
+TEST(IntraCamClient, callback)
 {
   rclcpp::init(0, nullptr);
   auto cam_dev = std::make_shared<DummyCam>();
   auto node_options = rclcpp::NodeOptions();
   node_options.append_parameter_override("autostart", true);
-  auto node = std::make_shared<rclcpp::Node>("test_cam", node_options);
+  node_options.append_parameter_override("camera_name", "test_camera");
+  auto node = std::make_shared<rclcpp::Node>("test_cam_server", node_options);
   auto cam_server = std::make_shared<rmoss_cam::CamServer>(node, cam_dev);
-  auto spin_thread = std::thread([&]() {rclcpp::spin(node);});
-  std::this_thread::sleep_for(500ms);
-  cam_dev->set_falut();
-  std::this_thread::sleep_for(1000ms);
-  EXPECT_EQ(cam_dev->is_open(), true);
-  rclcpp::shutdown();
-  spin_thread.join();
-  SUCCEED();
-}
-
-TEST(CamServer, add_callback)
-{
-  rclcpp::init(0, nullptr);
-  auto cam_dev = std::make_shared<DummyCam>();
-  auto node_options = rclcpp::NodeOptions();
-  node_options.append_parameter_override("autostart", true);
-  auto node = std::make_shared<rclcpp::Node>("test_cam", node_options);
-  auto cam_server = std::make_shared<rmoss_cam::CamServer>(node, cam_dev);
-  auto spin_thread = std::thread([&]() {rclcpp::spin(node);});
+  auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+  auto node2 = std::make_shared<rclcpp::Node>("test_cam_client");
+  auto cam_client = std::make_shared<rmoss_cam::IntraCamClient>(node2);
+  cam_client->add_cam_server(cam_server);
+  executor->add_node(node);
+  executor->add_node(node2);
   int num = 0;
-  int cb_idx = cam_server->add_callback(
+  cam_client->connect(
+    "test_camera",
     [&](const cv::Mat & /*img*/, const rclcpp::Time & /*stamp*/) {
       num++;
     });
-  std::this_thread::sleep_for(100ms);
-  cam_server->remove_callback(cb_idx);
-  rclcpp::shutdown();
-  spin_thread.join();
+  for (int i = 0; i < 10; i++) {
+    executor->spin_some();
+    std::this_thread::sleep_for(10ms);
+  }
   EXPECT_EQ(num > 1, true);
+  rclcpp::shutdown();
 }

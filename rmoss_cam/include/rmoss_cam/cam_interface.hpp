@@ -31,6 +31,9 @@ enum class CamParamType
   AutoWhiteBalance,
   WhiteBalance,
   Gain,
+  RGain,
+  GGain,
+  BGain,
   Gamma,
   Contrast,
   Saturation,
@@ -43,9 +46,10 @@ class CamInterface
 {
 public:
   virtual bool open() = 0;
-  virtual void close() = 0;
+  virtual bool close() = 0;
   virtual bool is_open() = 0;
   virtual bool grab_image(cv::Mat & imgae) = 0;
+  virtual bool grab_image(cv::Mat &image, double &timestamp_ms) = 0;
   // set and get parameter
   virtual bool set_parameter(CamParamType type, int value) = 0;
   virtual bool get_parameter(CamParamType type, int & value) = 0;

@@ -41,10 +41,11 @@ public:
     is_open_ = true;
     return true;
   }
-  void close() override
+  bool close() override
   {
     img_.release();
     is_open_ = false;
+    return true;
   }
   bool is_open() override
   {
@@ -58,6 +59,19 @@ public:
       }
       std::this_thread::sleep_for(std::chrono::milliseconds(grap_time_ms_));
       image = img_.clone();
+      return true;
+    }
+    return false;
+  }
+  bool grab_image(cv::Mat & image, double &timestamp_ms) override
+  {
+    if (is_open_) {
+      if (is_falut_) {
+        return false;
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(grap_time_ms_));
+      image = img_.clone();
+      timestamp_ms = 0.;
       return true;
     }
     return false;

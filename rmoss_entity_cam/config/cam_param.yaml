@@ -1,0 +1,19 @@
+/mindvision_camera:
+    ros__parameters:
+        camera_name: 'mv_camera'
+        sn: '048021610077'
+        config_path: './src/rmoss_entity_cam/config/048021610077.Config'
+        camera_k: [2032.263030, 0.000000, 625.248326, 0.000000, 2033.755589, 507.872755, 0.000000, 0.000000, 1.000000]
+        camera_d: [-0.065000, 0.116275, -0.000281, 0.001765, 0.000000]
+        fps: 200
+
+/daheng_camera:
+    ros__parameters:
+        camera_name: 'daheng_camera'
+        sn: 'KN0210040024'
+        config_path: './src/rmoss_entity_cam/config/daheng_config/KN0210040024.txt'
+        lut_config_path: ''
+        lut_detail: [60., 2., 0.] # (!必须使用小数形式)对比度调节参数[-50-100] 伽马调节参数[0.1-10] 亮度调节参数[-150-150]
+        camera_k: [1552.7, 0.0, 640.0, 0.0, 1537.9, 360.0, 0.0, 0.0, 1.0]
+        camera_d: [0.0, 0.0, 0.0, 0.0, 0.0]
+        fps: 100

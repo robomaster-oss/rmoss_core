@@ -1,0 +1,137 @@
+FileVersion: 1.0
+DeviceModelName: MER-039-860U3C
+
+</---------------------------------------------------Remote device features are as follows:--------------------------------------------------->
+# {05D8C294-F295-4dfb-9D01-096BD04049F4}
+# GenApi persistence file (version 3.0.2)
+# Device = DahengImavision::U3VCamera -- Daheng Imavision generic U3V camera interface -- Device version = 1.1.17 -- Product GUID = B68ED716-524C-4017-819F-2181AB8898F7 -- Product version GUID = EF5959C1-7D2F-4CC1-88B2-6DA08E24D10E
+DeviceLinkSelector	0
+DeviceLinkSelector	0
+DeviceLinkThroughputLimitMode	On
+DeviceLinkSelector	0
+DeviceLinkSelector	0
+DeviceLinkThroughputLimit	300000000
+DeviceLinkSelector	0
+PixelFormat	BayerRG8
+RegionSendMode	SingleROISendMode
+RegionSelector	Region0
+RegionMode	On
+RegionSelector	Region0
+RegionSelector	Region0
+Width	640
+RegionSelector	Region0
+RegionSelector	Region0
+Height	480
+RegionSelector	Region0
+ChunkModeActive	0
+ChunkEnable	0
+ExposureTime	2000
+AcquisitionFrameRateMode	Off
+AcquisitionFrameRate	860
+RegionSelector	Region0
+OffsetX	0
+RegionSelector	Region0
+RegionSelector	Region0
+OffsetY	0
+RegionSelector	Region0
+TestPattern	Off
+DecimationHorizontal	1
+DecimationVertical	1
+AcquisitionMode	Continuous
+TriggerSelector	FrameStart
+TriggerSelector	FrameStart
+TriggerMode	Off
+TriggerSelector	FrameStart
+TriggerSelector	FrameStart
+TriggerSource	Software
+TriggerSelector	FrameStart
+TriggerSelector	FrameStart
+TriggerActivation	RisingEdge
+TriggerSelector	FrameStart
+TriggerSelector	FrameStart
+TriggerDelay	0
+TriggerSelector	FrameStart
+TriggerSelector	FrameStart
+TriggerFilterRaisingEdge	0
+TriggerSelector	FrameStart
+TriggerSelector	FrameStart
+TriggerFilterFallingEdge	0
+TriggerSelector	FrameStart
+ExposureMode	Timed
+ExposureAuto	Off
+AutoExposureTimeMin	20
+AutoExposureTimeMax	1e+06
+AAROIWidth	640
+AAROIHeight	480
+AAROIOffsetX	0
+AAROIOffsetY	0
+ExpectedGrayValue	120
+LineSelector	Line0
+LineMode	Input
+LineSelector	Line1
+LineMode	Output
+LineSelector	Line2
+LineMode	Input
+LineSelector	Line3
+LineMode	Input
+LineSelector	Line0
+LineSelector	Line0
+LineInverter	0
+LineSelector	Line1
+LineInverter	0
+LineSelector	Line2
+LineInverter	0
+LineSelector	Line3
+LineInverter	0
+LineSelector	Line0
+LineSelector	Line1
+LineSource	UserOutput0
+LineSelector	Line2
+LineSource	UserOutput0
+LineSelector	Line3
+LineSource	UserOutput0
+LineSelector	Line0
+UserOutputSelector	UserOutput0
+UserOutputValue	0
+UserOutputSelector	UserOutput1
+UserOutputValue	0
+UserOutputSelector	UserOutput2
+UserOutputValue	0
+UserOutputSelector	UserOutput0
+GainSelector	AnalogAll
+Gain	0
+GainSelector	AnalogAll
+GainSelector	AnalogAll
+GainAuto	Off
+GainSelector	AnalogAll
+AutoGainMin	0
+AutoGainMax	16
+BalanceRatioSelector	Red
+BalanceRatio	1
+BalanceRatioSelector	Green
+BalanceRatio	1
+BalanceRatioSelector	Blue
+BalanceRatio	1
+BalanceRatioSelector	Red
+BalanceWhiteAuto	Off
+AWBLampHouse	Adaptive
+AWBROIWidth	640
+AWBROIHeight	480
+AWBROIOffsetX	0
+AWBROIOffsetY	0
+UserSetDefault	Default
+
+</---------------------------------------------------Local device features are as follows:--------------------------------------------------->
+# {05D8C294-F295-4dfb-9D01-096BD04049F4}
+# GenApi persistence file (version 3.0.2)
+# Device = DahengImavision::USB3VisionTL -- TL Device RegisterMap -- Device version = 1.0.3 -- Product GUID = 63F75E0D-0F93-4DDC-982A-C57AC2A219C4 -- Product version GUID = 0F3ED606-398D-46AC-BC72-7C82185AAEA0
+StreamSelector	0
+
+</---------------------------------------------------Stream features are as follows:--------------------------------------------------->
+# {05D8C294-F295-4dfb-9D01-096BD04049F4}
+# GenApi persistence file (version 3.0.2)
+# Device = DahengImavision::USB3VisionTL -- TLDataStream RegisterMap -- Device version = 1.0.2 -- Product GUID = 62468F13-89FE-499c-88D9-AF83888F71FB -- Product version GUID = 4F738550-9C42-477B-BB0D-407E7638DC09
+StreamBufferHandlingMode	OldestFirst
+StreamTransferSize	65536
+StreamTransferNumberUrb	200
+AcquisitionBufferCachePrec	40

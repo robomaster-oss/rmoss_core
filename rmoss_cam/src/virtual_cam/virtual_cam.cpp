@@ -59,11 +59,12 @@ bool VirtualCam::open()
   return true;
 }
 
-void VirtualCam::close()
+bool VirtualCam::close()
 {
   if (is_open_) {
     is_open_ = false;
   }
+  return true;
 }
 
 bool VirtualCam::is_open() {return is_open_;}
@@ -87,6 +88,32 @@ bool VirtualCam::grab_image(cv::Mat & image)
       current_frame = 0;
       cap_.set(cv::CAP_PROP_POS_FRAMES, 0);
     }
+    return true;
+  }
+  error_message_ = "unknow mode";
+  return false;
+}
+
+bool VirtualCam::grab_image(cv::Mat & image, double &timestamp_ms)
+{
+  if (!is_open_) {
+    error_message_ = "camera is not open";
+    return false;
+  }
+  if (current_mode_ == IMAGE_MODE) {
+    image = img_.clone();
+    return true;
+  } else if (current_mode_ == VIDEO_MODE) {
+    if (!cap_.read(image)) {
+      error_message_ = "cv::VideoCapture.read() error";
+      return false;
+    }
+    current_frame++;
+    if (current_frame > total_frames_ - 2) {
+      current_frame = 0;
+      cap_.set(cv::CAP_PROP_POS_FRAMES, 0);
+    }
+    timestamp_ms = 0.;
     return true;
   }
   error_message_ = "unknow mode";

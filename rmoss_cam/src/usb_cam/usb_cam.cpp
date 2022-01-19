@@ -57,12 +57,13 @@ bool UsbCam::open()
   return true;
 }
 
-void UsbCam::close()
+bool UsbCam::close()
 {
   if (is_open_) {
     cap_.release();
     is_open_ = false;
   }
+  return true;
 }
 
 bool UsbCam::is_open()
@@ -80,6 +81,20 @@ bool UsbCam::grab_image(cv::Mat & image)
     error_message_ = "cv::VideoCapture.read() error";
     return false;
   }
+  return true;
+}
+
+bool UsbCam::grab_image(cv::Mat & image, double &timestamp_ms)
+{
+  if (!is_open_) {
+    error_message_ = "camera is not open";
+    return false;
+  }
+  if (!cap_.read(image)) {
+    error_message_ = "cv::VideoCapture.read() error";
+    return false;
+  }
+  timestamp_ms = 0.;
   return true;
 }
 

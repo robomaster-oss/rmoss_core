@@ -53,7 +53,7 @@ public:
   // set and get parameter
   virtual bool set_parameter(CamParamType type, int value) = 0;
   virtual bool get_parameter(CamParamType type, int & value) = 0;
-  // error message when open(),grab_image(),set_parameter(),get_parameter() return false.
+  // get error message when above api return false.
   virtual std::string error_message() = 0;
 };
 }  // namespace rmoss_cam

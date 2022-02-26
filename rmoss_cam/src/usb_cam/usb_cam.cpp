@@ -57,12 +57,13 @@ bool UsbCam::open()
   return true;
 }
 
-void UsbCam::close()
+bool UsbCam::close()
 {
   if (is_open_) {
     cap_.release();
     is_open_ = false;
   }
+  return true;
 }
 
 bool UsbCam::is_open()

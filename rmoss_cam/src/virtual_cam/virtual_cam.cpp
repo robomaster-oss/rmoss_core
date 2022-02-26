@@ -59,11 +59,12 @@ bool VirtualCam::open()
   return true;
 }
 
-void VirtualCam::close()
+bool VirtualCam::close()
 {
   if (is_open_) {
     is_open_ = false;
   }
+  return true;
 }
 
 bool VirtualCam::is_open() {return is_open_;}

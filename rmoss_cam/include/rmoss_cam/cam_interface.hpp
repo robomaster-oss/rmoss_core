@@ -43,13 +43,13 @@ class CamInterface
 {
 public:
   virtual bool open() = 0;
-  virtual void close() = 0;
+  virtual bool close() = 0;
   virtual bool is_open() = 0;
   virtual bool grab_image(cv::Mat & imgae) = 0;
   // set and get parameter
   virtual bool set_parameter(CamParamType type, int value) = 0;
   virtual bool get_parameter(CamParamType type, int & value) = 0;
-  // error message when open(),grab_image(),set_parameter(),get_parameter() return false.
+  // get error message when above api return false.
   virtual std::string error_message() = 0;
 };
 }  // namespace rmoss_cam

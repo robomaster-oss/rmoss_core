@@ -41,10 +41,11 @@ public:
     is_open_ = true;
     return true;
   }
-  void close() override
+  bool close() override
   {
     img_.release();
     is_open_ = false;
+    return true;
   }
   bool is_open() override
   {

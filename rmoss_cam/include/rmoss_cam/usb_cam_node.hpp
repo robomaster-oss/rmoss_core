@@ -22,6 +22,7 @@
 
 #include "rmoss_cam/usb_cam.hpp"
 #include "rmoss_cam/cam_server.hpp"
+#include "rmoss_cam/cam_server_manager.hpp"
 
 namespace rmoss_cam
 {
@@ -29,12 +30,13 @@ namespace rmoss_cam
 class UsbCamNode
 {
 public:
-  explicit UsbCamNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  explicit UsbCamNode(
+    const rclcpp::NodeOptions & options = rclcpp::NodeOptions(),
+    std::shared_ptr<CamServerManager> manager = nullptr);
   rclcpp::node_interfaces::NodeBaseInterface::SharedPtr get_node_base_interface()
   {
     return node_->get_node_base_interface();
   }
-  std::shared_ptr<rmoss_cam::CamServer> get_cam_server() {return cam_server_;}
 
 private:
   rclcpp::Node::SharedPtr node_;

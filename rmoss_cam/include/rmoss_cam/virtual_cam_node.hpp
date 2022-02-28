@@ -22,7 +22,6 @@
 
 #include "rmoss_cam/virtual_cam.hpp"
 #include "rmoss_cam/cam_server.hpp"
-#include "rmoss_cam/cam_server_manager.hpp"
 
 namespace rmoss_cam
 {
@@ -30,9 +29,7 @@ namespace rmoss_cam
 class VirtualCamNode
 {
 public:
-  explicit VirtualCamNode(
-    const rclcpp::NodeOptions & options = rclcpp::NodeOptions(),
-    std::shared_ptr<CamServerManager> manager = nullptr);
+  explicit VirtualCamNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
   rclcpp::node_interfaces::NodeBaseInterface::SharedPtr get_node_base_interface()
   {
     return node_->get_node_base_interface();

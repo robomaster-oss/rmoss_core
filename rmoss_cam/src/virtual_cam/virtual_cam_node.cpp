@@ -19,9 +19,7 @@
 
 namespace rmoss_cam
 {
-VirtualCamNode::VirtualCamNode(
-  const rclcpp::NodeOptions & options,
-  std::shared_ptr<CamServerManager> manager)
+VirtualCamNode::VirtualCamNode(const rclcpp::NodeOptions & options)
 {
   node_ = std::make_shared<rclcpp::Node>("virtual_cam", options);
   std::string image_path = "";
@@ -43,12 +41,6 @@ VirtualCamNode::VirtualCamNode(
   }
   // create task server
   cam_server_ = std::make_shared<CamServer>(node_, cam_dev_);
-  // add camera server to manager
-  if (manager && manager->add_cam_server(cam_server_)) {
-    RCLCPP_WARN(
-      node_->get_logger(),
-      "camera %s add to camera server manager", cam_server_->get_camera_name().c_str());
-  }
 }
 
 }  // namespace rmoss_cam

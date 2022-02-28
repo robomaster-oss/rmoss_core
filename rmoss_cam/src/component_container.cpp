@@ -30,9 +30,9 @@
 class CamComponentManager : public rclcpp_components::ComponentManager
 {
 public:
-  explict CamComponentManager(
+  explicit CamComponentManager(
     std::weak_ptr<rclcpp::Executor> executor,
-    const std::string node_name = "ComponentManager",
+    const std::string & node_name = "ComponentManager",
     const rclcpp::NodeOptions & node_options = rclcpp::NodeOptions()
     .start_parameter_services(false)
     .start_parameter_event_publisher(false))

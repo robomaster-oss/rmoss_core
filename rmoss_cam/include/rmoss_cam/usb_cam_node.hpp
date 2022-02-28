@@ -22,6 +22,7 @@
 
 #include "rmoss_cam/usb_cam.hpp"
 #include "rmoss_cam/cam_server.hpp"
+#include "rmoss_cam/cam_server_manager.hpp"
 
 namespace rmoss_cam
 {
@@ -33,6 +34,15 @@ public:
   rclcpp::node_interfaces::NodeBaseInterface::SharedPtr get_node_base_interface()
   {
     return node_->get_node_base_interface();
+  }
+  void set_resource_manager(std::shared_ptr<CamServerManager> manager)
+  {
+    // add camera server to manager
+    if (manager && manager->add_cam_server(cam_server_)) {
+      RCLCPP_WARN(
+        node_->get_logger(),
+        "camera %s add to camera server manager", cam_server_->get_camera_name().c_str());
+    }
   }
 
 private:

@@ -16,11 +16,6 @@
 
 #include <memory>
 #include <string>
-#include <vector>
-#include <chrono>
-
-using namespace std::chrono_literals;
-
 
 namespace rmoss_cam
 {
@@ -39,9 +34,9 @@ UsbCamNode::UsbCamNode(const rclcpp::NodeOptions & options)
 
 }  // namespace rmoss_cam
 
-#include "rclcpp_components/register_node_macro.hpp"
+#include "rmoss_cam/register_node_macro.hpp"
 
 // Register the component with class_loader.
 // This acts as a sort of entry point, allowing the component to be discoverable when its library
 // is being loaded into a running process.
-RCLCPP_COMPONENTS_REGISTER_NODE(rmoss_cam::UsbCamNode)
+RMOSS_CAM_COMPONENTS_REGISTER_NODE(rmoss_cam::UsbCamNode)

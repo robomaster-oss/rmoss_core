@@ -28,17 +28,24 @@ using namespace std::chrono_literals;
 TEST(IntraCamClient, callback)
 {
   rclcpp::init(0, nullptr);
-  auto cam_dev = std::make_shared<DummyCam>();
+  // create camera server manager
+  auto node = std::make_shared<rclcpp::Node>("test_cam_server_manager");
+  auto cam_server_manager = std::make_shared<rmoss_cam::CamServerManager>(
+    node->get_node_logging_interface());
+  // create camera server
   auto node_options = rclcpp::NodeOptions();
   node_options.append_parameter_override("autostart", true);
   node_options.append_parameter_override("camera_name", "test_camera");
-  auto node = std::make_shared<rclcpp::Node>("test_cam_server", node_options);
-  auto cam_server = std::make_shared<rmoss_cam::CamServer>(node, cam_dev);
-  auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+  auto node1 = std::make_shared<rclcpp::Node>("test_cam_server", node_options);
+  auto cam_dev = std::make_shared<DummyCam>();
+  auto cam_server = std::make_shared<rmoss_cam::CamServer>(node1, cam_dev);
+  cam_server_manager->add_cam_server(cam_server);
+  // create camera client
   auto node2 = std::make_shared<rclcpp::Node>("test_cam_client");
-  auto cam_client = std::make_shared<rmoss_cam::IntraCamClient>(node2);
-  cam_client->add_cam_server(cam_server);
-  executor->add_node(node);
+  auto cam_client = std::make_shared<rmoss_cam::IntraCamClient>(node2, cam_server_manager);
+  // spin
+  auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+  executor->add_node(node1);
   executor->add_node(node2);
   int num = 0;
   cam_client->connect(

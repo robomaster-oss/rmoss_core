@@ -20,37 +20,21 @@
 namespace rmoss_cam
 {
 
-void IntraCamClient::add_cam_server(
-  std::shared_ptr<CamServer> cam_server)
-{
-  if (cam_server == nullptr) {
-    RCLCPP_ERROR(node_->get_logger(), "[add_cam_server] camera server is nullptr");
-    return;
-  }
-  auto camera_name = cam_server->get_camera_name();
-  if (cam_servers_.find(camera_name) != cam_servers_.end()) {
-    RCLCPP_ERROR(
-      node_->get_logger(), "[add_cam_server] camera %s is already existed.", camera_name.c_str());
-    return;
-  }
-  cam_servers_[camera_name] = cam_server;
-}
-
 bool IntraCamClient::connect(const std::string & camera_name, Callback cb)
 {
   if (camera_name_ == camera_name) {
     RCLCPP_ERROR(node_->get_logger(), "camera %s is already connected.", camera_name.c_str());
     return false;
   }
-  auto server = cam_servers_.find(camera_name);
-  if (server == cam_servers_.end()) {
+  auto server = cam_server_manager_->get_cam_server(camera_name);
+  if (!server) {
     RCLCPP_ERROR(node_->get_logger(), "failed to find camera server %s.", camera_name.c_str());
     return false;
   }
   // disconnect the previous camera
   disconnect();
   // set new camera
-  cur_server_ = server->second;
+  cur_server_ = server;
   camera_name_ = camera_name;
   ok_ = true;
   callback_thread_ = std::make_unique<std::thread>(

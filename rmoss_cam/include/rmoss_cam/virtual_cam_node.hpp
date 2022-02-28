@@ -34,7 +34,6 @@ public:
   {
     return node_->get_node_base_interface();
   }
-  std::shared_ptr<rmoss_cam::CamServer> get_cam_server() {return cam_server_;}
 
 private:
   rclcpp::Node::SharedPtr node_;

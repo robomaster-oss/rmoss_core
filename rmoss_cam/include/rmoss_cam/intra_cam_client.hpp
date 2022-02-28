@@ -17,13 +17,11 @@
 
 #include <string>
 #include <thread>
-#include <vector>
 #include <memory>
-#include <map>
 
 #include "rclcpp/rclcpp.hpp"
 #include "rmoss_cam/cam_client.hpp"
-#include "rmoss_cam/cam_server.hpp"
+#include "rmoss_cam/cam_server_manager.hpp"
 
 namespace rmoss_cam
 {
@@ -33,7 +31,10 @@ class IntraCamClient : public CamClient
 {
 public:
   typedef std::function<void (const cv::Mat &, const rclcpp::Time &)> Callback;
-  using CamClient::CamClient;
+  explicit IntraCamClient(
+    rclcpp::Node::SharedPtr node,
+    std::shared_ptr<CamServerManager> manager = nullptr)
+  : CamClient(node), cam_server_manager_(manager) {}
   ~IntraCamClient();
 
   bool connect(const std::string & camera_name, Callback cb) override;
@@ -42,7 +43,7 @@ public:
   void add_cam_server(std::shared_ptr<CamServer> cam_server);
 
 private:
-  std::map<std::string, std::shared_ptr<CamServer>> cam_servers_;
+  std::shared_ptr<CamServerManager> cam_server_manager_;
   // callback data
   std::mutex mut_;
   std::condition_variable cond_;

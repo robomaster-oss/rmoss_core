@@ -1,4 +1,4 @@
-// Copyright 2021 RoboMaster-OSS
+// Copyright 2022 RoboMaster-OSS
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,35 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef RMOSS_CAM__USB_CAM_NODE_HPP_
-#define RMOSS_CAM__USB_CAM_NODE_HPP_
+#ifndef RMOSS_CAM__CAM_SERVER_MANAGER_HPP_
+#define RMOSS_CAM__CAM_SERVER_MANAGER_HPP_
 
 #include <string>
 #include <memory>
+#include <unordered_map>
 
-#include "rclcpp/rclcpp.hpp"
-
-#include "rmoss_cam/usb_cam.hpp"
+#include "rclcpp/node.hpp"
 #include "rmoss_cam/cam_server.hpp"
 
 namespace rmoss_cam
 {
-// Node wrapper for UsbCam.
-class UsbCamNode
+class CamServerManager
 {
 public:
-  explicit UsbCamNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
-  rclcpp::node_interfaces::NodeBaseInterface::SharedPtr get_node_base_interface()
-  {
-    return node_->get_node_base_interface();
-  }
+  explicit CamServerManager(
+    rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr logging_interface)
+  : logging_interface_(logging_interface) {}
+
+  bool add_cam_server(std::shared_ptr<CamServer> cam_server);
+  std::shared_ptr<CamServer> get_cam_server(const std::string & camera_name);
 
 private:
-  rclcpp::Node::SharedPtr node_;
-  std::shared_ptr<rmoss_cam::CamInterface> cam_dev_;
-  std::shared_ptr<rmoss_cam::CamServer> cam_server_;
+  rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr logging_interface_;
+  std::unordered_map<std::string, std::shared_ptr<CamServer>> cam_servers_;
 };
 
 }  // namespace rmoss_cam
 
-#endif  // RMOSS_CAM__USB_CAM_NODE_HPP_
+#endif  // RMOSS_CAM__CAM_SERVER_MANAGER_HPP_

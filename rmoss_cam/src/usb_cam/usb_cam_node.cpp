@@ -33,6 +33,7 @@ UsbCamNode::UsbCamNode(const rclcpp::NodeOptions & options)
   node_->get_parameter("usb_cam_path", usb_cam_path);
   // create camera device
   cam_dev_ = std::make_shared<UsbCam>(usb_cam_path);
+  // create task server
   cam_server_ = std::make_shared<CamServer>(node_, cam_dev_);
 }
 

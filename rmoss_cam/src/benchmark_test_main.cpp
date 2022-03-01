@@ -97,10 +97,10 @@ int main(int argc, char * argv[])
   // cam2: composed node
   auto cam2_node = create_cam_node("virtual_cam2", "benchmark_cam2");
   threads.push_back(create_spin_thread(cam2_node));
-  // cam2: composed node with rclcpp intra-comms
+  // cam3: composed node with rclcpp intra-comms
   auto cam3_node = create_cam_node("virtual_cam3", "benchmark_cam3", true);
   threads.push_back(create_spin_thread(cam3_node));
-  // cam3: composed node with rmoss intra-comms
+  // cam4: composed node with rmoss intra-comms
   auto cam4_node = create_cam_node("virtual_cam4", "benchmark_cam4");
   cam4_node->set_resource_manager(cam_server_manager);
   threads.push_back(create_spin_thread(cam4_node));

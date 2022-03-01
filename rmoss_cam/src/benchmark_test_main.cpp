@@ -126,7 +126,7 @@ int main(int argc, char * argv[])
   std::cout << "start test for composition with rclcpp intra-comms" << std::endl;
   benchmark_test(client_node3, cam_client3, "benchmark_cam3");
   std::this_thread::sleep_for(1s);
-  std::cout << "start test for rmoss intra-comms" << std::endl;
+  std::cout << "start test for composition with rmoss intra-comms" << std::endl;
   benchmark_test(client_node4, cam_client4, "benchmark_cam4");
   // wait end
   std::this_thread::sleep_for(1s);

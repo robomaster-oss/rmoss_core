@@ -107,9 +107,7 @@ CamServer::CamServer(
       node_->get_logger(), "Calibration file '%s' is missing", camera_info_url.c_str());
   }
   // create image publisher
-  img_pub_ = node_->create_publisher<sensor_msgs::msg::Image>(
-    camera_name_ + "/image_raw",
-    rclcpp::SensorDataQoS());
+  img_pub_ = node_->create_publisher<sensor_msgs::msg::Image>(camera_name_ + "/image_raw", 1);
   init_timer();
   // create GetCameraInfo service
   using namespace std::placeholders;

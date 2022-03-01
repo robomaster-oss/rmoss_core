@@ -47,6 +47,12 @@ set(dependencies
 )
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
+add_executable(component_container src/component_container.cpp)
+target_link_libraries(component_container ${PROJECT_NAME})
+
+add_executable(benchmark_test src/benchmark_test_main.cpp)
+target_link_libraries(benchmark_test ${PROJECT_NAME})
+
 # register component nodes and generate executable
 rclcpp_components_register_node(${PROJECT_NAME}
   PLUGIN "rmoss_cam::UsbCamNode"
@@ -66,6 +72,11 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
     INCLUDES DESTINATION include
+)
+
+# Install executable nodes
+install(TARGETS component_container benchmark_test
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 # Install  directories

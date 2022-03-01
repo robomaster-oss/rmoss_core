@@ -36,8 +36,8 @@ std::shared_ptr<std::thread> create_spin_thread(NodeT & node)
 }
 
 std::shared_ptr<rmoss_cam::VirtualCamNode> create_cam_node(
-  std::string node_name,
-  std::string camera_name,
+  const std::string & node_name,
+  const std::string & camera_name,
   bool use_intra_process_comms = false)
 {
   auto node_options = rclcpp::NodeOptions().use_intra_process_comms(use_intra_process_comms);

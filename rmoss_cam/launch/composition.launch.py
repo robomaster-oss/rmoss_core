@@ -27,7 +27,7 @@ def generate_launch_description():
     # 创建容器
     rmoss_container = Node(
         name='rmoss_container',
-        package='rclcpp_components',
+        package='rmoss_cam',
         executable='component_container',
         output='screen'
     )
@@ -43,6 +43,15 @@ def generate_launch_description():
                              'camera_name': 'front_camera',
                              'camera_info_url': calibration_path,
                              'fps': 30,
+                             'autostart': True}]),
+            ComposableNode(
+                package='rmoss_cam',
+                plugin='rmoss_cam::VirtualCamNode',
+                name='virtual_image_cam2',
+                parameters=[{'image_path': image_path,
+                             'camera_name': 'front_camera2',
+                             'camera_info_url': calibration_path,
+                             'fps': 10,
                              'autostart': True}])
         ],
     )

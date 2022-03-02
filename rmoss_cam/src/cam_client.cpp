@@ -51,7 +51,9 @@ bool CamClient::connect(const std::string & camera_name, Callback cb)
   // set new camera
   camera_name_ = camera_name;
   auto img_cb = [cb](const sensor_msgs::msg::Image::ConstSharedPtr msg) {
-      auto img = cv_bridge::toCvShare(msg, "bgr8")->image.clone();
+      // only support encoding "bgr8"
+      auto img =
+        cv::Mat(msg->height, msg->width, CV_8UC3, const_cast<unsigned char *>(msg->data.data()));
       cb(img, msg->header.stamp);
     };
   auto sub_opt = rclcpp::SubscriptionOptions();
@@ -59,7 +61,7 @@ bool CamClient::connect(const std::string & camera_name, Callback cb)
     rclcpp::CallbackGroupType::MutuallyExclusive, false);
   sub_opt.callback_group = callback_group_;
   img_sub_ = node_->create_subscription<sensor_msgs::msg::Image>(
-    camera_name + "/image_raw", 1, img_cb, sub_opt);
+    camera_name + "/image_raw", rclcpp::SensorDataQoS(), img_cb, sub_opt);
   executor_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
   executor_->add_callback_group(callback_group_, node_->get_node_base_interface());
   executor_thread_ = std::make_unique<std::thread>([&]() {executor_->spin();});

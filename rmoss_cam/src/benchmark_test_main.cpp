@@ -35,6 +35,17 @@ std::shared_ptr<std::thread> create_spin_thread(NodeT & node)
     });
 }
 
+std::shared_ptr<rmoss_cam::VirtualCamNode> create_cam_node(
+  const std::string & node_name,
+  const std::string & camera_name,
+  bool use_intra_process_comms = false)
+{
+  auto node_options = rclcpp::NodeOptions().use_intra_process_comms(use_intra_process_comms);
+  node_options.arguments({"--ros-args", "-r", std::string("__node:=") + node_name, "--"});
+  node_options.append_parameter_override("camera_name", camera_name);
+  return std::make_shared<rmoss_cam::VirtualCamNode>(node_options);
+}
+
 void benchmark_test(
   rclcpp::Node::SharedPtr node,
   std::shared_ptr<rmoss_cam::CamClient> cam_client,
@@ -84,39 +95,44 @@ int main(int argc, char * argv[])
     node->get_node_logging_interface());
   // cam1: normal node (run by launch file)
   // cam2: composed node
-  auto node_options2 = rclcpp::NodeOptions();
-  node_options2.arguments({"--ros-args", "-r", std::string("__node:=") + "virtual_cam2", "--"});
-  node_options2.append_parameter_override("camera_name", "benchmark_cam2");
-  auto cam2_node = std::make_shared<rmoss_cam::VirtualCamNode>(node_options2);
+  auto cam2_node = create_cam_node("virtual_cam2", "benchmark_cam2");
   threads.push_back(create_spin_thread(cam2_node));
-  // cam3: composed node (intra-comunication)
-  auto node_options3 = rclcpp::NodeOptions();
-  node_options3.arguments({"--ros-args", "-r", std::string("__node:=") + "virtual_cam3", "--"});
-  node_options3.append_parameter_override("camera_name", "benchmark_cam3");
-  auto cam3_node = std::make_shared<rmoss_cam::VirtualCamNode>(node_options3);
-  cam3_node->set_resource_manager(cam_server_manager);
+  // cam3: composed node with rclcpp intra-comms
+  auto cam3_node = create_cam_node("virtual_cam3", "benchmark_cam3", true);
   threads.push_back(create_spin_thread(cam3_node));
+  // cam4: composed node with rmoss intra-comms
+  auto cam4_node = create_cam_node("virtual_cam4", "benchmark_cam4");
+  cam4_node->set_resource_manager(cam_server_manager);
+  threads.push_back(create_spin_thread(cam4_node));
   // create camera clients
   auto client_node1 = std::make_shared<rclcpp::Node>("client_node1");
   auto cam_client1 = std::make_shared<rmoss_cam::CamClient>(client_node1);
   auto client_node2 = std::make_shared<rclcpp::Node>("client_node2");
   auto cam_client2 = std::make_shared<rmoss_cam::CamClient>(client_node2);
-  auto client_node3 = std::make_shared<rclcpp::Node>("client_node3");
-  auto cam_client3 = std::make_shared<rmoss_cam::IntraCamClient>(client_node3, cam_server_manager);
+  auto client_node3 = std::make_shared<rclcpp::Node>(
+    "client_node3",
+    rclcpp::NodeOptions().use_intra_process_comms(true));
+  auto cam_client3 = std::make_shared<rmoss_cam::CamClient>(client_node3);
+  auto client_node4 = std::make_shared<rclcpp::Node>("client_node4");
+  auto cam_client4 = std::make_shared<rmoss_cam::IntraCamClient>(client_node4, cam_server_manager);
   // benchmark test
-  std::this_thread::sleep_for(2s);
-  std::cout << "start test for normal process" << std::endl;
+  std::this_thread::sleep_for(1s);
+  std::cout << "start test for normal multi-process" << std::endl;
   benchmark_test(client_node1, cam_client1, "benchmark_cam1");
-  std::this_thread::sleep_for(2s);
-  std::cout << "start test for normal component" << std::endl;
+  std::this_thread::sleep_for(1s);
+  std::cout << "start test for normal composition" << std::endl;
   benchmark_test(client_node2, cam_client2, "benchmark_cam2");
-  std::this_thread::sleep_for(2s);
-  std::cout << "start test for intra-component" << std::endl;
+  std::this_thread::sleep_for(1s);
+  std::cout << "start test for composition with rclcpp intra-comms" << std::endl;
   benchmark_test(client_node3, cam_client3, "benchmark_cam3");
+  std::this_thread::sleep_for(1s);
+  std::cout << "start test for composition with rmoss intra-comms" << std::endl;
+  benchmark_test(client_node4, cam_client4, "benchmark_cam4");
   // wait end
+  std::this_thread::sleep_for(1s);
+  rclcpp::shutdown();
   for (auto t : threads) {
     t->join();
   }
-  rclcpp::shutdown();
   return 0;
 }

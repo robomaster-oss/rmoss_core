@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <utility>
 
 #include "cv_bridge/cv_bridge.h"
 #include "sensor_msgs/msg/image.hpp"
@@ -134,11 +135,15 @@ void CamServer::init_timer()
         }
         // publish image msg
         if (img_pub_->get_subscription_count() > 0) {
-          auto header = std_msgs::msg::Header();
-          header.stamp = stamp;
-          sensor_msgs::msg::Image::SharedPtr img_msg = cv_bridge::CvImage(
-            header, "bgr8", img_).toImageMsg();
-          img_pub_->publish(*img_msg);
+          sensor_msgs::msg::Image::UniquePtr msg = std::make_unique<sensor_msgs::msg::Image>();
+          msg->header.stamp = stamp;
+          msg->encoding = "bgr8";
+          msg->width = img_.cols;
+          msg->height = img_.rows;
+          msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(img_.step);
+          msg->is_bigendian = false;
+          msg->data.assign(img_.datastart, img_.dataend);
+          img_pub_->publish(std::move(msg));
         }
       } else {
         // try to reopen camera

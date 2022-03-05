@@ -19,7 +19,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "rmoss_cam/virtual_cam_node.hpp"
-#include "rmoss_cam/intra_cam_client.hpp"
+#include "rmoss_cam/cam_client.hpp"
 
 using namespace std::chrono_literals;
 
@@ -114,7 +114,8 @@ int main(int argc, char * argv[])
     rclcpp::NodeOptions().use_intra_process_comms(true));
   auto cam_client3 = std::make_shared<rmoss_cam::CamClient>(client_node3);
   auto client_node4 = std::make_shared<rclcpp::Node>("client_node4");
-  auto cam_client4 = std::make_shared<rmoss_cam::IntraCamClient>(client_node4, cam_server_manager);
+  auto cam_client4 = std::make_shared<rmoss_cam::CamClient>(client_node4);
+  cam_client4->set_cam_server_manager(cam_server_manager);
   // benchmark test
   std::this_thread::sleep_for(1s);
   std::cout << "start test for normal multi-process" << std::endl;

@@ -34,50 +34,95 @@ CamClient::CamClient(
 
 CamClient::~CamClient()
 {
-  if (executor_) {
-    executor_->cancel();
-    executor_thread_->join();
+  if (is_connected_) {
+    disconnect();
+  }
+}
+
+void CamClient::set_cam_server_manager(std::shared_ptr<CamServerManager> manager)
+{
+  if (!is_connected_) {
+    cam_server_manager_ = manager;
+    use_intra_comms_ = (manager != nullptr);
   }
 }
 
 bool CamClient::connect(const std::string & camera_name, Callback cb)
 {
-  if (camera_name_ == camera_name) {
-    RCLCPP_ERROR(node_->get_logger(), "camera %s is already connected.", camera_name.c_str());
+  if (is_connected_) {
+    RCLCPP_ERROR(
+      node_->get_logger(),
+      "[connect] camera %s is already connected, please use disconnect().",
+      camera_name.c_str());
     return false;
   }
-  // try to cancel the prevoius camera
-  disconnect();
-  // set new camera
   camera_name_ = camera_name;
-  auto img_cb = [cb](const sensor_msgs::msg::Image::ConstSharedPtr msg) {
-      // only support encoding "bgr8"
-      auto img =
-        cv::Mat(msg->height, msg->width, CV_8UC3, const_cast<unsigned char *>(msg->data.data()));
-      cb(img, msg->header.stamp);
-    };
-  auto sub_opt = rclcpp::SubscriptionOptions();
-  callback_group_ = node_->create_callback_group(
-    rclcpp::CallbackGroupType::MutuallyExclusive, false);
-  sub_opt.callback_group = callback_group_;
-  img_sub_ = node_->create_subscription<sensor_msgs::msg::Image>(
-    camera_name + "/image_raw", rclcpp::SensorDataQoS(), img_cb, sub_opt);
-  executor_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
-  executor_->add_callback_group(callback_group_, node_->get_node_base_interface());
-  executor_thread_ = std::make_unique<std::thread>([&]() {executor_->spin();});
+  // set new camera
+  if (!use_intra_comms_) {
+    auto img_cb = [cb](const sensor_msgs::msg::Image::ConstSharedPtr msg) {
+        auto img =
+          cv::Mat(msg->height, msg->width, CV_8UC3, const_cast<unsigned char *>(msg->data.data()));
+        cb(img, msg->header.stamp);
+      };
+    auto sub_opt = rclcpp::SubscriptionOptions();
+    callback_group_ = node_->create_callback_group(
+      rclcpp::CallbackGroupType::MutuallyExclusive, false);
+    sub_opt.callback_group = callback_group_;
+    img_sub_ = node_->create_subscription<sensor_msgs::msg::Image>(
+      camera_name + "/image_raw", 1, img_cb, sub_opt);
+    executor_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+    executor_->add_callback_group(callback_group_, node_->get_node_base_interface());
+    executor_thread_ = std::make_unique<std::thread>([&]() {executor_->spin();});
+    is_connected_ = true;
+  } else {
+    auto server = cam_server_manager_->get_cam_server(camera_name);
+    if (!server) {
+      RCLCPP_ERROR(node_->get_logger(), "failed to find camera server %s.", camera_name.c_str());
+      return false;
+    }
+    // set new camera
+    cur_server_ = server;
+    is_connected_ = true;
+    callback_thread_ = std::make_unique<std::thread>(
+      [this, cb]() {
+        while (is_connected_) {
+          std::unique_lock<std::mutex> lock(mut_);
+          cond_.wait(lock);
+          if (is_connected_) {
+            cb(img_, stamp_);
+          }
+        }
+      });
+    cur_server_cb_idx_ = cur_server_->add_callback(
+      [this](const cv::Mat & img, const rclcpp::Time & stamp) {
+        if (mut_.try_lock()) {
+          img.copyTo(img_);
+          stamp_ = stamp;
+          mut_.unlock();
+          cond_.notify_one();
+        }
+      });
+  }
   return true;
 }
 
 void CamClient::disconnect()
 {
-  if (img_sub_) {
-    // cancel the prevoius camera
-    executor_->cancel();
-    executor_thread_->join();
-    executor_.reset();
-    executor_thread_.reset();
-    img_sub_.reset();
+  if (is_connected_) {
     camera_name_ = "";
+    is_connected_ = false;
+    if (!use_intra_comms_) {
+      // cancel the prevoius camera
+      executor_->cancel();
+      executor_thread_->join();
+      executor_.reset();
+      executor_thread_.reset();
+      img_sub_.reset();
+    } else {
+      cur_server_->remove_callback(cur_server_cb_idx_);
+      cond_.notify_one();
+      callback_thread_->join();
+    }
   }
 }
 

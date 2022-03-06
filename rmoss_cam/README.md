@@ -69,43 +69,44 @@ ros2 launch rmoss_cam composition.launch.py
 
 * 先创建容器`rmoss_container` ，然后将相机节点`rmoss_cam::VirtualCamNode` 加载到容器中，支持继续加载多个节点。
 
-### C++使用
+> Tip: 容器内一般加载多个节点，需要采用多线程模型，因此容器类型一般使用`component_container_mt`或者 `component_container_isolated`( 目前支持ROS Rolling版本)，`component_container_isolated`性能目前表现最好.
 
-C++源码方式运行Node，即manual composition，将`CamServer`和`CamClient`运行在一个进程中的不同Node中。
-```c++
-// camera node: generate image
-auto cam_node = std::make_shared<rmoss_cam::UsbCamNode>();
-spin_with_dedicated_thread(cam_node);
-// task node: process image
-auto task_node = std::make_shared<rclcpp::Node>("vision_task");
-auto cam_client = std::make_shared<rmoss_cam::CamClient>(task_node);
-cam_client->connect(
-    "camera_name",
-    [&](const cv::Mat & img, const rclcpp::Time & stamp) {
-        // do something;
-    });
-spin_with_dedicated_thread(task_node);
-```
-* `CamServer`和`CamClient`依然采用ROS topic进行通信，本质上和dynamic composition一样。
+rmoss_cam intra-comms定制化容器
 
-基于直接传递图像模式的`IntraCamClient`使用方式
+* `CamServer`和`CamClient`之间的图像传输不经过ROS，使用线程间copy, 通过条件变量和锁实现。
+
+如果需要使用rmoss intra-comms方式，需要将图像处理节点注册为`rmoss_cam component`，即在一般`rclcpp component`基础上，还需要额外实现`set_resource_manager()`方法，然后使用`RMOSS_CAM_COMPONENTS_REGISTER_NODE()`（`rmoss_cam/register_node_macro.hpp`）注册`component`，使用例子如下:
+
 ```c++
-// camera node: generate image
-auto cam_node = std::make_shared<rmoss_cam::UsbCamNode>();
-spin_with_dedicated_thread(cam_node);
-// task node: process image
-auto task_node = std::make_shared<rclcpp::Node>("vision_task");
-auto cam_client = std::make_shared<rmoss_cam::IntraCamClient>(task_node);
-cam_client->add_cam_server(cam_node->get_cam_server()); // 需要预先添加可能使用的CamServer
-cam_client->connect(
-    "camera_name",
-    [&](const cv::Mat & img, const rclcpp::Time & stamp) {
-        // do something;
-    });
-spin_with_dedicated_thread(task_node);
+class TaskNode
+{
+public:
+  explicit TaskNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  rclcpp::node_interfaces::NodeBaseInterface::SharedPtr get_node_base_interface()
+  {
+    return node_->get_node_base_interface();
+  }
+  void set_resource_manager(std::shared_ptr<rmoss_cam::CamServerManager> manager)
+  {
+    cam_client_->set_cam_server_manager(manager);
+  }
+  // 该函数不能再TaskNode构造函数内调用，必须TaskNode构造完成后才调用。
+  void init()
+  {
+    cam_client_->connect("camera_name", callback);
+  }
+};
+
+#include "rmoss_cam/register_node_macro.hpp"
+
+// Register the component with class_loader.
+// This acts as a sort of entry point, allowing the component to be discoverable when its library
+// is being loaded into a running process.
+RMOSS_CAM_COMPONENTS_REGISTER_NODE(TaskNode)
 ```
-* `IntraCamClient`继承`CamClient`, 使用接口保持一致。
-* `CamServer`和`IntraCamClient`之间的图像传输不经过ROS，使用线程间copy, 通过条件变量和锁实现。
+注册完`rmoss_cam component`之后，必须使用`rmoss_cam`中提供的容器加载节点, 否则`set_resource_manager` 将不会调用，也就是说采用默认ROS通信机制。
+
+> Tip: `rmoss_cam`中的`component_container`类型容器为定制型容器，同时支持`rmoss_cam components`节点加载和普通`rclcpp components`节点加载。
 
 ## 二次开发
 

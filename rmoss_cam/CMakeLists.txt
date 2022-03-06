@@ -28,7 +28,6 @@ add_library(${PROJECT_NAME} SHARED
   src/cam_server.cpp
   src/cam_client.cpp
   src/cam_server_manager.cpp
-  src/intra_cam_client.cpp
   src/usb_cam/usb_cam.cpp
   src/usb_cam/usb_cam_node.cpp
   src/virtual_cam/virtual_cam.cpp

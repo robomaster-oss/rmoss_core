@@ -28,10 +28,6 @@ add_library(${PROJECT_NAME} SHARED
   src/cam_server.cpp
   src/cam_client.cpp
   src/cam_server_manager.cpp
-  src/usb_cam/usb_cam.cpp
-  src/usb_cam/usb_cam_node.cpp
-  src/virtual_cam/virtual_cam.cpp
-  src/virtual_cam/virtual_cam_node.cpp
 )
 
 set(dependencies
@@ -46,27 +42,41 @@ set(dependencies
 )
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
+# usb_cam component
+add_library(usb_cam_component SHARED
+  src/usb_cam/usb_cam.cpp
+  src/usb_cam/usb_cam_node.cpp
+)
+target_link_libraries(usb_cam_component ${PROJECT_NAME})
+rclcpp_components_register_node(usb_cam_component
+  PLUGIN "rmoss_cam::UsbCamNode"
+  EXECUTABLE usb_cam)
+
+# virtual_cam component
+add_library(virtual_cam_component SHARED
+  src/virtual_cam/virtual_cam.cpp
+  src/virtual_cam/virtual_cam_node.cpp
+)
+target_link_libraries(virtual_cam_component ${PROJECT_NAME})
+rclcpp_components_register_node(virtual_cam_component
+  PLUGIN "rmoss_cam::VirtualCamNode"
+  EXECUTABLE virtual_cam)
+
+# executable
 add_executable(component_container src/component_container.cpp)
 target_link_libraries(component_container ${PROJECT_NAME})
 
 add_executable(benchmark_test src/benchmark_test_main.cpp)
-target_link_libraries(benchmark_test ${PROJECT_NAME})
-
-# register component nodes and generate executable
-rclcpp_components_register_node(${PROJECT_NAME}
-  PLUGIN "rmoss_cam::UsbCamNode"
-  EXECUTABLE usb_cam)
-rclcpp_components_register_node(${PROJECT_NAME}
-  PLUGIN "rmoss_cam::VirtualCamNode"
-  EXECUTABLE virtual_cam)
+target_link_libraries(benchmark_test ${PROJECT_NAME} virtual_cam_component)
 
 # Install include directories
 install(DIRECTORY include/
   DESTINATION include
 )
+
 # Install libraries
-install(TARGETS ${PROJECT_NAME}
-    EXPORT ${PROJECT_NAME}
+install(TARGETS ${PROJECT_NAME} usb_cam_component virtual_cam_component
+    EXPORT export_${PROJECT_NAME}
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
@@ -83,7 +93,7 @@ install(DIRECTORY launch resource config scripts
   DESTINATION share/${PROJECT_NAME}
 )
 
-#test
+# Test
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
@@ -91,7 +101,7 @@ if(BUILD_TESTING)
 endif()
 
 # specific order: dependents before dependencies
-ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_targets(export_${PROJECT_NAME})
 ament_export_dependencies(${dependencies})
 
 ament_package()

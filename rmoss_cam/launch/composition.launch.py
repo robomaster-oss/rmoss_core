@@ -42,17 +42,15 @@ def generate_launch_description():
                 parameters=[{'image_path': image_path,
                              'camera_name': 'front_camera',
                              'camera_info_url': calibration_path,
-                             'fps': 30,
+                             'fps': 60,
                              'autostart': True}]),
             ComposableNode(
                 package='rmoss_cam',
-                plugin='rmoss_cam::VirtualCamNode',
-                name='virtual_image_cam2',
-                parameters=[{'image_path': image_path,
-                             'camera_name': 'front_camera2',
-                             'camera_info_url': calibration_path,
-                             'fps': 10,
-                             'autostart': True}])
+                plugin='rmoss_cam::ImageTaskDemoNode',
+                name='image_task_demo',
+                parameters=[{'camera_name': 'front_camera',
+                             'process_time_ms': 0,
+                             'info_fps': 200}])
         ],
     )
     ld = LaunchDescription()

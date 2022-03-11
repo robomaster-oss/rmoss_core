@@ -68,11 +68,16 @@ CamServer::CamServer(
   std::string camera_info_url = "";
   // declare parameters
   node->declare_parameter("camera_name", camera_name_);
+  node->declare_parameter("frame_id", camera_frame_id_);
   node->declare_parameter("camera_info_url", camera_info_url);
   node->declare_parameter("autostart", run_flag_);
   node->get_parameter("camera_name", camera_name_);
+  node->get_parameter("frame_id", camera_frame_id_);
   node->get_parameter("camera_info_url", camera_info_url);
   node->get_parameter("autostart", run_flag_);
+  if (camera_frame_id_ = "") {
+    camera_frame_id_ = camera_name_ + "_optical";
+  }
   // 相机参数获取并设置，配置文件中的值会覆盖默认值
   int data;
   constexpr int param_num = sizeof(kCamParamTypes) / sizeof(CamParamType);
@@ -137,7 +142,7 @@ void CamServer::init_timer()
         if (img_pub_->get_subscription_count() > 0) {
           sensor_msgs::msg::Image::UniquePtr msg = std::make_unique<sensor_msgs::msg::Image>();
           msg->header.stamp = stamp;
-          msg->header.frame_id = camera_name_;
+          msg->header.frame_id = camera_frame_id_;
           msg->encoding = "bgr8";
           msg->width = img_.cols;
           msg->height = img_.rows;

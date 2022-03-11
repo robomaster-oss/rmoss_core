@@ -52,7 +52,6 @@ void ImageTaskDemoNode::init()
   bool ret = false;
   while (!ret) {
     ret = cam_client_->connect(
-      camera_name_,
       [this](const cv::Mat & img, const rclcpp::Time & stamp)
       {
         this->process(img, stamp);

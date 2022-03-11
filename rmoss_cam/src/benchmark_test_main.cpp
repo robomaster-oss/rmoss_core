@@ -56,8 +56,8 @@ void benchmark_test(
   double last_time;
   double delay_sum = 0;
   bool ok{false};
+  cam_client->set_camera_name(camera_name);
   cam_client->connect(
-    camera_name,
     [&](const cv::Mat & /*img*/, const rclcpp::Time & stamp) {
       if (num >= 500) {
         return;

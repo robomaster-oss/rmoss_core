@@ -36,14 +36,12 @@ public:
   typedef std::function<void (const cv::Mat &, const rclcpp::Time &)> Callback;
   explicit CamClient(rclcpp::Node::SharedPtr node)
   : node_(node) {}
-  [[deprecated("Use connect() instead of setting camera and callback in constructor")]]
-  CamClient(
-    rclcpp::Node::SharedPtr node, std::string camera_name, Callback process_fn,
-    bool spin_thread = true);
   ~CamClient();
 
+  void set_camera_name(const std::string & camera_name);
   void set_cam_server_manager(std::shared_ptr<CamServerManager> manager);
-  virtual bool connect(const std::string & camera_name, Callback cb);
+
+  virtual bool connect(Callback cb);
   virtual void disconnect();
   bool is_connect() {return is_connected_;}
   bool get_camera_info(sensor_msgs::msg::CameraInfo & info);

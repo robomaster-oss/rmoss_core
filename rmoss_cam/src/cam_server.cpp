@@ -112,7 +112,7 @@ CamServer::CamServer(
   // create GetCameraInfo service
   using namespace std::placeholders;
   get_camera_info_srv_ = node->create_service<rmoss_interfaces::srv::GetCameraInfo>(
-    camera_name_ + "get_camera_info",
+    camera_name_ + "/get_camera_info",
     std::bind(&CamServer::get_camera_info_cb, this, _1, _2));
   init_task_manager();
   RCLCPP_INFO(node_->get_logger(), "init successfully!");
@@ -137,6 +137,7 @@ void CamServer::init_timer()
         if (img_pub_->get_subscription_count() > 0) {
           sensor_msgs::msg::Image::UniquePtr msg = std::make_unique<sensor_msgs::msg::Image>();
           msg->header.stamp = stamp;
+          msg->header.frame_id = camera_name_;
           msg->encoding = "bgr8";
           msg->width = img_.cols;
           msg->height = img_.rows;

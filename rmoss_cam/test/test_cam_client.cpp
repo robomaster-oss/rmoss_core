@@ -40,8 +40,8 @@ TEST(CamClient, callback)
   executor->add_node(node);
   executor->add_node(node2);
   int num = 0;
+  cam_client->set_camera_name("test_camera");
   cam_client->connect(
-    "test_camera",
     [&](const cv::Mat & /*img*/, const rclcpp::Time & /*stamp*/) {
       num++;
     });
@@ -78,8 +78,8 @@ TEST(CamClient, intra_comms)
   executor->add_node(node1);
   executor->add_node(node2);
   int num = 0;
+  cam_client->set_camera_name("test_camera");
   cam_client->connect(
-    "test_camera",
     [&](const cv::Mat & /*img*/, const rclcpp::Time & /*stamp*/) {
       num++;
     });

@@ -39,17 +39,23 @@ public:
   ~CamClient();
 
   void set_camera_name(const std::string & camera_name);
+  void set_camera_callback(Callback cb);
   void set_cam_server_manager(std::shared_ptr<CamServerManager> manager);
 
-  virtual bool connect(Callback cb);
-  virtual void disconnect();
+  bool connect();
+  void disconnect();
   bool is_connect() {return is_connected_;}
   bool get_camera_info(sensor_msgs::msg::CameraInfo & info);
+
+private:
+  bool connect_intra();
+  void disconnect_intra();
 
 protected:
   rclcpp::Node::SharedPtr node_;
   std::string camera_name_;
   // capture image by topic
+  Callback cb_;
   rclcpp::CallbackGroup::SharedPtr callback_group_{nullptr};
   rclcpp::executors::SingleThreadedExecutor::SharedPtr executor_;
   std::unique_ptr<std::thread> executor_thread_;

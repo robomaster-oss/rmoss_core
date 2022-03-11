@@ -41,10 +41,11 @@ TEST(CamClient, callback)
   executor->add_node(node2);
   int num = 0;
   cam_client->set_camera_name("test_camera");
-  cam_client->connect(
+  cam_client->set_camera_callback(
     [&](const cv::Mat & /*img*/, const rclcpp::Time & /*stamp*/) {
       num++;
     });
+  cam_client->connect();
   for (int i = 0; i < 10; i++) {
     executor->spin_some();
     std::this_thread::sleep_for(10ms);
@@ -79,10 +80,11 @@ TEST(CamClient, intra_comms)
   executor->add_node(node2);
   int num = 0;
   cam_client->set_camera_name("test_camera");
-  cam_client->connect(
+  cam_client->set_camera_callback(
     [&](const cv::Mat & /*img*/, const rclcpp::Time & /*stamp*/) {
       num++;
     });
+  cam_client->connect();
   for (int i = 0; i < 10; i++) {
     executor->spin_some();
     std::this_thread::sleep_for(10ms);

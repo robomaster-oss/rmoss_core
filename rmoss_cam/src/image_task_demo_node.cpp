@@ -48,6 +48,7 @@ void ImageTaskDemoNode::init()
   if (cam_server_manager_) {
     cam_client_->set_cam_server_manager(cam_server_manager_);
   }
+  cam_client_->set_camera_name(camera_name_);
   // wait to connect camera
   bool ret = false;
   while (!ret) {

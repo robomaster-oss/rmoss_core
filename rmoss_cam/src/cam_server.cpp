@@ -75,7 +75,7 @@ CamServer::CamServer(
   node->get_parameter("frame_id", camera_frame_id_);
   node->get_parameter("camera_info_url", camera_info_url);
   node->get_parameter("autostart", run_flag_);
-  if (camera_frame_id_ = "") {
+  if (camera_frame_id_ == "") {
     camera_frame_id_ = camera_name_ + "_optical";
   }
   // 相机参数获取并设置，配置文件中的值会覆盖默认值

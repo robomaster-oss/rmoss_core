@@ -62,6 +62,15 @@ rclcpp_components_register_node(virtual_cam_component
   PLUGIN "rmoss_cam::VirtualCamNode"
   EXECUTABLE virtual_cam)
 
+# library for demo
+add_library(image_task_demo_component SHARED
+  src/image_task_demo_node.cpp
+)
+target_link_libraries(image_task_demo_component ${PROJECT_NAME})
+rclcpp_components_register_node(image_task_demo_component
+  PLUGIN "rmoss_cam::ImageTaskDemoNode"
+  EXECUTABLE image_task_demo)
+
 # executable
 add_executable(component_container src/component_container.cpp)
 target_link_libraries(component_container ${PROJECT_NAME})
@@ -75,7 +84,7 @@ install(DIRECTORY include/
 )
 
 # Install libraries
-install(TARGETS ${PROJECT_NAME} usb_cam_component virtual_cam_component
+install(TARGETS ${PROJECT_NAME} usb_cam_component virtual_cam_component image_task_demo_component
     EXPORT export_${PROJECT_NAME}
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib

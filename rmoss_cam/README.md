@@ -67,46 +67,22 @@ launch方式运行dynamic composition测试demo
 ros2 launch rmoss_cam composition.launch.py
 ```
 
-* 先创建容器`rmoss_container` ，然后将相机节点`rmoss_cam::VirtualCamNode` 加载到容器中，支持继续加载多个节点。
+* 先创建容器`rmoss_container` ，然后将相机节点`rmoss_cam::VirtualCamNode`以及图像任务节点`ImageTaskDemoNode`加载到容器中，支持继续加载多个节点。
 
-> Tip: 容器内一般加载多个节点，需要采用多线程模型，因此容器类型一般使用`component_container_mt`或者 `component_container_isolated`( 目前支持ROS Rolling版本)，`component_container_isolated`性能目前表现最好.
+目前`rmoss_container`采用的是`rmoss_cam`定制化容器，实现了`CamServer`和`CamClient`之间的图像传输不经过ROS，使用线程间copy, 通过条件变量和锁实现。
+同时也支持`rclcpp component`中的默认容器加载节点。
+> Tip: 容器内一般加载多个节点，需要采用多线程模型，因此容器类型一般使用`component_container_mt`或者 `component_container_isolated`(目前仅支持ROS Rolling版本)，`component_container_isolated`性能目前表现最好。
 
-rmoss_cam intra-comms定制化容器
+rmoss_cam 定制化容器使用
 
-* `CamServer`和`CamClient`之间的图像传输不经过ROS，使用线程间copy, 通过条件变量和锁实现。
+* 图像处理节点在一般`rclcpp component`基础上，还需要额外实现`set_resource_manager()`方法。
+* 使用`RMOSS_CAM_COMPONENTS_REGISTER_NODE()`（`rmoss_cam/register_node_macro.hpp`）将图像处理节点注册为`rmoss_cam component`。
 
-如果需要使用rmoss intra-comms方式，需要将图像处理节点注册为`rmoss_cam component`，即在一般`rclcpp component`基础上，还需要额外实现`set_resource_manager()`方法，然后使用`RMOSS_CAM_COMPONENTS_REGISTER_NODE()`（`rmoss_cam/register_node_macro.hpp`）注册`component`，使用例子如下:
+使用例子可参考`image_task_demo_node.hpp/cpp`。
 
-```c++
-class TaskNode
-{
-public:
-  explicit TaskNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
-  rclcpp::node_interfaces::NodeBaseInterface::SharedPtr get_node_base_interface()
-  {
-    return node_->get_node_base_interface();
-  }
-  void set_resource_manager(std::shared_ptr<rmoss_cam::CamServerManager> manager)
-  {
-    cam_client_->set_cam_server_manager(manager);
-  }
-  // 该函数不能再TaskNode构造函数内调用，必须TaskNode构造完成后才调用。
-  void init()
-  {
-    cam_client_->connect("camera_name", callback);
-  }
-};
-
-#include "rmoss_cam/register_node_macro.hpp"
-
-// Register the component with class_loader.
-// This acts as a sort of entry point, allowing the component to be discoverable when its library
-// is being loaded into a running process.
-RMOSS_CAM_COMPONENTS_REGISTER_NODE(TaskNode)
-```
-注册完`rmoss_cam component`之后，必须使用`rmoss_cam`中提供的容器加载节点, 否则`set_resource_manager` 将不会调用，也就是说采用默认ROS通信机制。
-
-> Tip: `rmoss_cam`中的`component_container`类型容器为定制型容器，同时支持`rmoss_cam components`节点加载和普通`rclcpp components`节点加载。
+> Tip: 
+> * 注册为`rmoss_cam component`之后，必须使用`rmoss_cam`中提供的容器加载节点, 否则`set_resource_manager` 将不会调用，也就是说采用默认ROS机制。
+> * `rmoss_cam`中的`component_container`类型容器同时支持`rmoss_cam components`节点加载和普通`rclcpp components`节点加载。
 
 ## 二次开发
 

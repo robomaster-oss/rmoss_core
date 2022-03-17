@@ -84,6 +84,20 @@ bool UsbCam::grab_image(cv::Mat & image)
   return true;
 }
 
+bool UsbCam::grab_image(cv::Mat & image, double &timestamp_ms)
+{
+  if (!is_open_) {
+    error_message_ = "camera is not open";
+    return false;
+  }
+  if (!cap_.read(image)) {
+    error_message_ = "cv::VideoCapture.read() error";
+    return false;
+  }
+  timestamp_ms = 0.;
+  return true;
+}
+
 // set and get parameter
 bool UsbCam::set_parameter(CamParamType type, int value)
 {

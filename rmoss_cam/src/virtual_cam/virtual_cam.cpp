@@ -94,6 +94,32 @@ bool VirtualCam::grab_image(cv::Mat & image)
   return false;
 }
 
+bool VirtualCam::grab_image(cv::Mat & image, double &timestamp_ms)
+{
+  if (!is_open_) {
+    error_message_ = "camera is not open";
+    return false;
+  }
+  if (current_mode_ == IMAGE_MODE) {
+    image = img_.clone();
+    return true;
+  } else if (current_mode_ == VIDEO_MODE) {
+    if (!cap_.read(image)) {
+      error_message_ = "cv::VideoCapture.read() error";
+      return false;
+    }
+    current_frame++;
+    if (current_frame > total_frames_ - 2) {
+      current_frame = 0;
+      cap_.set(cv::CAP_PROP_POS_FRAMES, 0);
+    }
+    timestamp_ms = 0.;
+    return true;
+  }
+  error_message_ = "unknow mode";
+  return false;
+}
+
 // set and get parameter
 bool VirtualCam::set_parameter(CamParamType type, int value)
 {

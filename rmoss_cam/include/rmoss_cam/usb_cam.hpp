@@ -34,6 +34,7 @@ public:
   bool close() override;
   bool is_open() override;
   bool grab_image(cv::Mat & image) override;
+  bool grab_image(cv::Mat & image, double &timestamp_ms);
   bool set_parameter(CamParamType type, int value) override;
   bool get_parameter(CamParamType type, int & value) override;
   std::string error_message() override {return error_message_;}

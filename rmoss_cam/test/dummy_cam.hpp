@@ -63,6 +63,19 @@ public:
     }
     return false;
   }
+  bool grab_image(cv::Mat & image, double &timestamp_ms) override
+  {
+    if (is_open_) {
+      if (is_falut_) {
+        return false;
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(grap_time_ms_));
+      image = img_.clone();
+      timestamp_ms = 0.;
+      return true;
+    }
+    return false;
+  }
   bool set_parameter(rmoss_cam::CamParamType type, int value) override
   {
     if (params_.find(type) != params_.end()) {

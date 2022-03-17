@@ -162,7 +162,7 @@ bool UartTransporter::open()
     return false;
   }
   // 设置串口数据帧格式
-  if (set_param(speed_, flow_ctrl_, databits_, stopbits_, parity_)) {
+  if (!set_param(speed_, flow_ctrl_, databits_, stopbits_, parity_)) {
     return false;
   }
   is_open_ = true;

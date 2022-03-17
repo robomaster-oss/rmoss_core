@@ -51,8 +51,8 @@ void ImageTaskDemoNode::init()
   cam_client_->set_camera_name(camera_name_);
   cam_client_->set_camera_callback(
     [this](const cv::Mat & img, const rclcpp::Time & stamp) {
-        this->process(img, stamp);
-      });
+      this->process(img, stamp);
+    });
   // wait to connect camera
   bool ret = false;
   while (!ret) {

@@ -57,7 +57,8 @@ void CamClient::set_camera_name(const std::string & camera_name)
   camera_name_ = camera_name;
 }
 
-void CamClient::set_camera_callback(Callback cb){
+void CamClient::set_camera_callback(Callback cb)
+{
   if (is_connected_) {
     RCLCPP_ERROR(
       node_->get_logger(),
@@ -84,11 +85,13 @@ bool CamClient::connect()
   }
   if (!cb_) {
     RCLCPP_ERROR(node_->get_logger(), "[connect] callback is invaild!");
-    return false; 
+    return false;
   }
   // connect
   if (use_intra_comms_) {
-    return connect_intra(); 
+    if (!create_intra_callback()) {
+      return false;
+    }
   } else {
     // default by ros topic
     auto img_cb = [this](const sensor_msgs::msg::Image::ConstSharedPtr msg) {
@@ -105,54 +108,16 @@ bool CamClient::connect()
     executor_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
     executor_->add_callback_group(callback_group_, node_->get_node_base_interface());
     executor_thread_ = std::make_unique<std::thread>([&]() {executor_->spin();});
-    is_connected_ = true;
   }
-  return true;
-}
-
-bool CamClient::connect_intra(){
-  auto server = cam_server_manager_->get_cam_server(camera_name_);
-  if (!server) {
-    RCLCPP_ERROR(node_->get_logger(), "failed to find camera server %s.", camera_name_.c_str());
-    return false;
-  }
-  // set new camera
-  cur_server_ = server;
   is_connected_ = true;
-  callback_thread_ = std::make_unique<std::thread>(
-    [this]() {
-      while (is_connected_) {
-        std::unique_lock<std::mutex> lock(mut_);
-        cond_.wait(lock);
-        if (is_connected_) {
-          cb_(img_, stamp_);
-        }
-      }
-    });
-  cur_server_cb_idx_ = cur_server_->add_callback(
-    [this](const cv::Mat & img, const rclcpp::Time & stamp) {
-      if (mut_.try_lock()) {
-        img.copyTo(img_);
-        stamp_ = stamp;
-        mut_.unlock();
-        cond_.notify_one();
-      }
-    });
   return true;
-}
-void CamClient::disconnect_intra(){
-  cur_server_->remove_callback(cur_server_cb_idx_);
-  cond_.notify_one();
-  callback_thread_->join();
 }
 
 void CamClient::disconnect()
 {
   if (is_connected_) {
-    camera_name_ = "";
-    is_connected_ = false;
     if (use_intra_comms_) {
-      disconnect_intra();
+      remove_intra_callback();
     } else {
       // cancel the prevoius camera
       executor_->cancel();
@@ -161,6 +126,8 @@ void CamClient::disconnect()
       executor_thread_.reset();
       img_sub_.reset();
     }
+    camera_name_ = "";
+    is_connected_ = false;
   }
 }
 
@@ -201,6 +168,48 @@ bool CamClient::get_camera_info(sensor_msgs::msg::CameraInfo & info)
     RCLCPP_ERROR(node_->get_logger(), "[get_camera_info] service call failed.");
     return false;
   }
+}
+
+
+bool CamClient::create_intra_callback()
+{
+  auto server = cam_server_manager_->get_cam_server(camera_name_);
+  if (!server) {
+    RCLCPP_ERROR(node_->get_logger(), "failed to find camera server %s.", camera_name_.c_str());
+    return false;
+  }
+  // set new camera
+  cur_server_ = server;
+  intra_ok_ = true;
+  callback_thread_ = std::make_unique<std::thread>(
+    [this]() {
+      while (intra_ok_) {
+        std::unique_lock<std::mutex> lock(mut_);
+        cond_.wait(lock);
+        if (intra_ok_) {
+          cb_(img_, stamp_);
+        }
+      }
+    });
+  cur_server_cb_idx_ = cur_server_->add_callback(
+    [this](const cv::Mat & img, const rclcpp::Time & stamp) {
+      if (mut_.try_lock()) {
+        img.copyTo(img_);
+        stamp_ = stamp;
+        mut_.unlock();
+        cond_.notify_one();
+      }
+    });
+  return true;
+}
+
+void CamClient::remove_intra_callback()
+{
+  intra_ok_ = false;
+  cur_server_->remove_callback(cur_server_cb_idx_);
+  cond_.notify_one();
+  callback_thread_->join();
+  callback_thread_.reset();
 }
 
 }  // namespace rmoss_cam

@@ -48,8 +48,8 @@ public:
   bool get_camera_info(sensor_msgs::msg::CameraInfo & info);
 
 private:
-  bool connect_intra();
-  void disconnect_intra();
+  bool create_intra_callback();
+  void remove_intra_callback();
 
 protected:
   rclcpp::Node::SharedPtr node_;
@@ -71,6 +71,7 @@ protected:
   std::unique_ptr<std::thread> callback_thread_;
   std::shared_ptr<CamServer> cur_server_;
   int cur_server_cb_idx_{-1};
+  bool intra_ok_{false};
 };
 }  // namespace rmoss_cam
 

@@ -65,6 +65,7 @@ private:
   std::shared_ptr<CamInterface> cam_intercace_;
   //
   std::string camera_name_{"camera"};
+  std::string camera_frame_id_{""};
   bool run_flag_{false};
   bool cam_status_ok_{false};
   // data

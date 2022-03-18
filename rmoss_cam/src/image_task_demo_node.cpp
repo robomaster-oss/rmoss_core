@@ -48,15 +48,15 @@ void ImageTaskDemoNode::init()
   if (cam_server_manager_) {
     cam_client_->set_cam_server_manager(cam_server_manager_);
   }
+  cam_client_->set_camera_name(camera_name_);
+  cam_client_->set_camera_callback(
+    [this](const cv::Mat & img, const rclcpp::Time & stamp) {
+      this->process(img, stamp);
+    });
   // wait to connect camera
   bool ret = false;
   while (!ret) {
-    ret = cam_client_->connect(
-      camera_name_,
-      [this](const cv::Mat & img, const rclcpp::Time & stamp)
-      {
-        this->process(img, stamp);
-      });
+    ret = cam_client_->connect();
     if (!ret) {
       RCLCPP_WARN(node_->get_logger(), "wait 1s to open camera.");
       std::this_thread::sleep_for(1s);

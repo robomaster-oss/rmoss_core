@@ -36,22 +36,26 @@ public:
   typedef std::function<void (const cv::Mat &, const rclcpp::Time &)> Callback;
   explicit CamClient(rclcpp::Node::SharedPtr node)
   : node_(node) {}
-  [[deprecated("Use connect() instead of setting camera and callback in constructor")]]
-  CamClient(
-    rclcpp::Node::SharedPtr node, std::string camera_name, Callback process_fn,
-    bool spin_thread = true);
   ~CamClient();
 
+  void set_camera_name(const std::string & camera_name);
+  void set_camera_callback(Callback cb);
   void set_cam_server_manager(std::shared_ptr<CamServerManager> manager);
-  virtual bool connect(const std::string & camera_name, Callback cb);
-  virtual void disconnect();
+
+  bool connect();
+  void disconnect();
   bool is_connect() {return is_connected_;}
   bool get_camera_info(sensor_msgs::msg::CameraInfo & info);
+
+private:
+  bool create_intra_callback();
+  void remove_intra_callback();
 
 protected:
   rclcpp::Node::SharedPtr node_;
   std::string camera_name_;
   // capture image by topic
+  Callback cb_;
   rclcpp::CallbackGroup::SharedPtr callback_group_{nullptr};
   rclcpp::executors::SingleThreadedExecutor::SharedPtr executor_;
   std::unique_ptr<std::thread> executor_thread_;
@@ -67,6 +71,7 @@ protected:
   std::unique_ptr<std::thread> callback_thread_;
   std::shared_ptr<CamServer> cur_server_;
   int cur_server_cb_idx_{-1};
+  bool intra_ok_{false};
 };
 }  // namespace rmoss_cam
 

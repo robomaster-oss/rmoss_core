@@ -56,8 +56,8 @@ void benchmark_test(
   double last_time;
   double delay_sum = 0;
   bool ok{false};
-  cam_client->connect(
-    camera_name,
+  cam_client->set_camera_name(camera_name);
+  cam_client->set_camera_callback(
     [&](const cv::Mat & /*img*/, const rclcpp::Time & stamp) {
       if (num >= 500) {
         return;
@@ -72,6 +72,7 @@ void benchmark_test(
       auto delay = (node->get_clock()->now().seconds() - stamp.seconds());
       delay_sum = delay_sum + delay;
     });
+  cam_client->connect();
   // wait and disconnect
   while (!ok) {
     std::this_thread::sleep_for(100ms);

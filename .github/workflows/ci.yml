@@ -1,9 +1,9 @@
-name: Build and Test (Galactic)
+name: Build and Test
 on:
   push:
-    branches: [ main ]
+    branches: [ galactic ]
   pull_request:
-    branches: [ main ]
+    branches: [ galactic ]
   schedule:
     - cron: '0 21 * * *'
 jobs:

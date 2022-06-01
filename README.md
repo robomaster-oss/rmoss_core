@@ -30,14 +30,14 @@ rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础�
 
 ## 使用说明
 
-* 目前仅支持`ROS2 Galactic`版本 (追踪最新ROS版本)
+* ROS依赖版本：`Galactic`
 
 环境配置
 
 ```bash
 # cd src directory of ros2 workspaces 
-git clone https://github.com/robomaster-oss/rmoss_interfaces.git
-git clone https://github.com/robomaster-oss/rmoss_core.git
+git clone https://github.com/robomaster-oss/rmoss_interfaces.git -b galactic
+git clone https://github.com/robomaster-oss/rmoss_core.git -b galactic
 rosdep install -y -r -q --from-paths src --ignore-src --rosdistro galactic
 # cd ros2 workspaces
 colcon build

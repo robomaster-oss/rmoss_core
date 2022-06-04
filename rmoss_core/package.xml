@@ -11,12 +11,10 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <exec_depend>rmoss_util</exec_depend>
   <exec_depend>rmoss_base</exec_depend>
-  <exec_depend>rmoss_common</exec_depend>
   <exec_depend>rmoss_cam</exec_depend>
-  <exec_depend>rmoss_interfaces</exec_depend>
   <exec_depend>rmoss_projectile_motion</exec_depend>
-  <exec_depend>rmoss_task</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

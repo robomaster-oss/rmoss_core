@@ -30,15 +30,16 @@ rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础�
 
 ## 使用说明
 
-* 目前仅支持`ROS2 Galactic`版本 (追踪最新ROS版本)
+* ROS依赖版本：`Galactic`
 
 环境配置
 
 ```bash
-#cd ros2 workspaces src
-git clone https://github.com/robomaster-oss/rmoss_interfaces.git
-git clone https://github.com/robomaster-oss/rmoss_core.git
-#cd ros2 workspaces
+# cd src directory of ros2 workspaces 
+git clone https://github.com/robomaster-oss/rmoss_interfaces.git -b galactic
+git clone https://github.com/robomaster-oss/rmoss_core.git -b galactic
+# cd ros2 workspaces
+rosdep install -y -r -q --from-paths src --ignore-src --rosdistro galactic
 colcon build
 ```
 
@@ -50,8 +51,6 @@ colcon build
 * [RMOSS项目规范](https://robomaster-oss.github.io/rmoss_tutorials/#/developer_guides/rmoss_project_spec): 包括代码风格，单位标准，机器人坐标系方向约定等项目规范。
 
 `rmoss_core`后续的工作方向为规范化，遵守ROS2代码规范, 增加代码单元测试, 集成CI自动测试, 目标成为一个标准的ROS2项目, 更多开发计划详见[Roadmap](https://robomaster-oss.github.io/rmoss_tutorials/#/roadmap)
-
-* 如果你对RMOSS开源项目感兴趣，欢迎加入QQ群（729117957）进行交流讨论.
 
 ## 维护者及开源许可证
 

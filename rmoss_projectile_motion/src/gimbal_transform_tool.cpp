@@ -24,7 +24,7 @@ bool GimbalTransformTool::solve(double x, double y, double z, double & pitch, do
     pitch = -atan2(z, x);
   } else {
     double angle;
-    if (solver_->solve(z, x, angle)) {
+    if (solver_->solve(x, z, angle)) {
       pitch = -angle;
     } else {
       error_message_ = solver_->error_message();

@@ -9,18 +9,13 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    container:
+      image: rostooling/setup-ros-docker:ubuntu-focal-ros-galactic-desktop-latest
     steps:
       - name: Check out
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Check Changed files
-        id: check_changed_files
-        uses: tj-actions/changed-files@v9.2
-      - name: Setup ROS 2
-        uses: ros-tooling/setup-ros@v0.2
-        with:
-          required-ros-distributions: galactic
       - name: Build rmoss_core
         uses: ros-tooling/action-ros-ci@v0.2
         with:
@@ -29,21 +24,13 @@ jobs:
           skip-tests: true
       - name: Test rmoss_util
         run: |
-          source /opt/ros/galactic/setup.sh
-          cd ros_ws
-          colcon test --packages-select rmoss_util --event-handlers console_cohesion+ --return-code-on-test-failure
+          /usr/bin/bash .github/workflows/colcon_test.sh rmoss_util
       - name: Test rmoss_base
         run: |
-          source /opt/ros/galactic/setup.sh
-          cd ros_ws
-          colcon test --packages-select rmoss_base --event-handlers console_cohesion+ --return-code-on-test-failure
+          /usr/bin/bash .github/workflows/colcon_test.sh rmoss_base
       - name: Test rmoss_cam
         run: |
-          source /opt/ros/galactic/setup.sh
-          cd ros_ws
-          colcon test --packages-select rmoss_cam --event-handlers console_cohesion+ --return-code-on-test-failure
+          /usr/bin/bash .github/workflows/colcon_test.sh rmoss_cam
       - name: Test rmoss_projectile_motion
         run: |
-          source /opt/ros/galactic/setup.sh
-          cd ros_ws
-          colcon test --packages-select rmoss_projectile_motion --event-handlers console_cohesion+ --return-code-on-test-failure
+          /usr/bin/bash .github/workflows/colcon_test.sh rmoss_projectile_motion

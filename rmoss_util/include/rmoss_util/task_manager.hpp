@@ -24,8 +24,8 @@
 namespace rmoss_util
 {
 
-enum class TaskStatus:uint8_t {Running = 1, Idle, Error};
-enum class TaskCmd:uint8_t {Start = 1, Stop};
+enum class TaskStatus : uint8_t {Running = 1, Idle, Error};
+enum class TaskCmd : uint8_t {Start = 1, Stop};
 
 class TaskManager
 {

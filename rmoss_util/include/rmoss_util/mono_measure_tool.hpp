@@ -15,8 +15,8 @@
 #ifndef RMOSS_UTIL__MONO_MEASURE_TOOL_HPP_
 #define RMOSS_UTIL__MONO_MEASURE_TOOL_HPP_
 
-#include <opencv2/opencv.hpp>
 #include <vector>
+#include <opencv2/opencv.hpp>
 
 namespace rmoss_util
 {

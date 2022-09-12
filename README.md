@@ -1,7 +1,7 @@
 # rmoss_core
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Build and Test](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci.yml/badge.svg?branch=galactic)](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci.yml)
+[![Build and Test](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci.yml/badge.svg?branch=humble)](https://github.com/robomaster-oss/rmoss_core/actions/workflows/ci.yml)
 [![Codacy grade](https://img.shields.io/codacy/grade/1a5495d4fddf48e4baede6e2351d7d7d)](https://app.codacy.com/gh/robomaster-oss/rmoss_core?utm_source=github.com&utm_medium=referral&utm_content=robomaster-oss/rmoss_core&utm_campaign=Badge_Grade_Settings)
 
 ![](rmoss_bg.png)
@@ -30,16 +30,16 @@ rmoss_core是RoboMaster OSS中的基础项目，为RoboMaster提供通用基础�
 
 ## 使用说明
 
-* ROS依赖版本：`Galactic`
+* ROS依赖版本：`humble`
 
 环境配置
 
 ```bash
 # cd src directory of ros2 workspaces 
-git clone https://github.com/robomaster-oss/rmoss_interfaces.git -b galactic
-git clone https://github.com/robomaster-oss/rmoss_core.git -b galactic
+git clone https://github.com/robomaster-oss/rmoss_interfaces.git -b humble
+git clone https://github.com/robomaster-oss/rmoss_core.git -b humble
 # cd ros2 workspaces
-rosdep install -y -r -q --from-paths src --ignore-src --rosdistro galactic
+rosdep install -y -r -q --from-paths src --ignore-src --rosdistro humble
 colcon build
 ```
 

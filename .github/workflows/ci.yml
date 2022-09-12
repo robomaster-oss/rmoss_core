@@ -1,16 +1,16 @@
 name: Build and Test
 on:
   push:
-    branches: [ galactic ]
+    branches: [ humble ]
   pull_request:
-    branches: [ galactic ]
+    branches: [ humble ]
   schedule:
     - cron: '0 21 * * *'
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     container:
-      image: rostooling/setup-ros-docker:ubuntu-focal-ros-galactic-desktop-latest
+      image: rostooling/setup-ros-docker:ubuntu-jammy-ros-humble-desktop-latest
     steps:
       - name: Check out
         uses: actions/checkout@v3
@@ -19,7 +19,7 @@ jobs:
       - name: Build rmoss_core
         uses: ros-tooling/action-ros-ci@v0.2
         with:
-          target-ros2-distro: galactic
+          target-ros2-distro: humble
           vcs-repo-file-url: "${{ github.workspace }}/tools/dependency.repos"
           skip-tests: true
       - name: Test rmoss_util

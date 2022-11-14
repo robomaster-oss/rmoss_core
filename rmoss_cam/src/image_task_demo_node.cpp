@@ -45,9 +45,6 @@ ImageTaskDemoNode::ImageTaskDemoNode(const rclcpp::NodeOptions & options)
 
 void ImageTaskDemoNode::init()
 {
-  if (cam_server_manager_) {
-    cam_client_->set_cam_server_manager(cam_server_manager_);
-  }
   cam_client_->set_camera_name(camera_name_);
   cam_client_->set_camera_callback(
     [this](const cv::Mat & img, const rclcpp::Time & stamp) {
@@ -90,9 +87,9 @@ void ImageTaskDemoNode::process(const cv::Mat & /*img*/, const rclcpp::Time & st
 
 }  // namespace rmoss_cam
 
-#include "rmoss_cam/register_node_macro.hpp"
+#include "rclcpp_components/register_node_macro.hpp"
 
 // Register the component with class_loader.
 // This acts as a sort of entry point, allowing the component to be discoverable when its library
 // is being loaded into a running process.
-RMOSS_CAM_COMPONENTS_REGISTER_NODE(rmoss_cam::ImageTaskDemoNode)
+RCLCPP_COMPONENTS_REGISTER_NODE(rmoss_cam::ImageTaskDemoNode)

@@ -138,12 +138,6 @@ void CamServer::init_timer()
       if (cam_intercace_->grab_image(img_)) {
         cam_status_ok_ = true;
         rclcpp::Time stamp = node_->now();
-        if (use_callback_) {
-          std::lock_guard<std::mutex> lock(cb_mut_);
-          for (auto & cb : callbacks_) {
-            cb.second(img_, stamp);
-          }
-        }
         // publish image msg
         if (img_pub_->get_subscription_count() > 0) {
           sensor_msgs::msg::Image::UniquePtr msg = std::make_unique<sensor_msgs::msg::Image>();
@@ -206,30 +200,6 @@ void CamServer::init_task_manager()
     node_, get_task_status_cb, control_task_cb);
 }
 
-int CamServer::add_callback(Callback cb)
-{
-  std::lock_guard<std::mutex> lock(cb_mut_);
-  int idx = cb_idx_;
-  cb_idx_++;
-  callbacks_[idx] = cb;
-  use_callback_ = true;
-  return idx;
-}
-
-void CamServer::remove_callback(int cb_idx)
-{
-  std::lock_guard<std::mutex> lock(cb_mut_);
-  auto cb_it = callbacks_.find(cb_idx);
-  if (cb_it == callbacks_.end()) {
-    RCLCPP_INFO(node_->get_logger(), "callback idx%d is invalid", cb_idx);
-    return;
-  }
-  callbacks_.erase(cb_it);
-  if (callbacks_.size() == 0) {
-    use_callback_ = false;
-  }
-}
-
 void CamServer::get_camera_info_cb(
   const rmoss_interfaces::srv::GetCameraInfo::Request::SharedPtr request,
   rmoss_interfaces::srv::GetCameraInfo::Response::SharedPtr response)
@@ -241,11 +211,6 @@ void CamServer::get_camera_info_cb(
   } else {
     response->success = false;
   }
-}
-
-std::shared_ptr<camera_info_manager::CameraInfoManager> CamServer::get_camera_info_manager()
-{
-  return camera_info_manager_;
 }
 
 }  // namespace rmoss_cam

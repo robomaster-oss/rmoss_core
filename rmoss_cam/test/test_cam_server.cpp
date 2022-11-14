@@ -41,24 +41,3 @@ TEST(CamServer, reopen)
   spin_thread.join();
   SUCCEED();
 }
-
-TEST(CamServer, add_callback)
-{
-  rclcpp::init(0, nullptr);
-  auto cam_dev = std::make_shared<DummyCam>();
-  auto node_options = rclcpp::NodeOptions();
-  node_options.append_parameter_override("autostart", true);
-  auto node = std::make_shared<rclcpp::Node>("test_cam", node_options);
-  auto cam_server = std::make_shared<rmoss_cam::CamServer>(node, cam_dev);
-  auto spin_thread = std::thread([&]() {rclcpp::spin(node);});
-  int num = 0;
-  int cb_idx = cam_server->add_callback(
-    [&](const cv::Mat & /*img*/, const rclcpp::Time & /*stamp*/) {
-      num++;
-    });
-  std::this_thread::sleep_for(100ms);
-  cam_server->remove_callback(cb_idx);
-  rclcpp::shutdown();
-  spin_thread.join();
-  EXPECT_EQ(num > 1, true);
-}

@@ -24,7 +24,6 @@
 #include "sensor_msgs/msg/image.hpp"
 #include "sensor_msgs/msg/camera_info.hpp"
 #include "opencv2/opencv.hpp"
-#include "rmoss_cam/cam_server_manager.hpp"
 
 namespace rmoss_cam
 {
@@ -40,16 +39,11 @@ public:
 
   void set_camera_name(const std::string & camera_name);
   void set_camera_callback(Callback cb);
-  void set_cam_server_manager(std::shared_ptr<CamServerManager> manager);
 
   bool connect();
   void disconnect();
   bool is_connect() {return is_connected_;}
   bool get_camera_info(sensor_msgs::msg::CameraInfo & info);
-
-private:
-  bool create_intra_callback();
-  void remove_intra_callback();
 
 protected:
   rclcpp::Node::SharedPtr node_;
@@ -62,16 +56,16 @@ protected:
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr img_sub_;  // 订阅图片数据
   bool is_connected_{false};
   // for intra-comms
-  bool use_intra_comms_{false};
-  std::shared_ptr<CamServerManager> cam_server_manager_;
-  std::mutex mut_;
-  std::condition_variable cond_;
-  cv::Mat img_;
-  rclcpp::Time stamp_;
-  std::unique_ptr<std::thread> callback_thread_;
-  std::shared_ptr<CamServer> cur_server_;
-  int cur_server_cb_idx_{-1};
-  bool intra_ok_{false};
+  // bool use_intra_comms_{false};
+  // std::shared_ptr<CamServerManager> cam_server_manager_;
+  // std::mutex mut_;
+  // std::condition_variable cond_;
+  // cv::Mat img_;
+  // rclcpp::Time stamp_;
+  // std::unique_ptr<std::thread> callback_thread_;
+  // std::shared_ptr<CamServer> cur_server_;
+  // int cur_server_cb_idx_{-1};
+  // bool intra_ok_{false};
 };
 }  // namespace rmoss_cam
 

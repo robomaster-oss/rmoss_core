@@ -27,8 +27,8 @@ def generate_launch_description():
     # 创建容器
     rmoss_container = Node(
         name='rmoss_container',
-        package='rmoss_cam',
-        executable='component_container',
+        package='rclcpp_components',
+        executable='component_container_isolated',
         output='screen'
     )
     # 加载虚拟图片相机节点到容器中

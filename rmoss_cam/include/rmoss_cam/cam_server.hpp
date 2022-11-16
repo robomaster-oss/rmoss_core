@@ -41,10 +41,7 @@ public:
     rclcpp::Node::SharedPtr node,
     std::shared_ptr<CamInterface> cam_intercace);
 
-  std::shared_ptr<camera_info_manager::CameraInfoManager> get_camera_info_manager();
   std::string get_camera_name() {return camera_name_;}
-  int add_callback(Callback cb);
-  void remove_callback(int cb_idx);
 
 private:
   void init_timer();
@@ -72,11 +69,6 @@ private:
   cv::Mat img_;
   int fps_{30};
   int reopen_cnt{0};
-  // callback
-  int cb_idx_{0};
-  std::map<int, Callback> callbacks_;
-  std::mutex cb_mut_;
-  bool use_callback_{false};
 };
 
 }  // namespace rmoss_cam

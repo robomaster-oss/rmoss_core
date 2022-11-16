@@ -20,7 +20,6 @@
 
 #include "rclcpp/rclcpp.hpp"
 
-#include "rmoss_cam/cam_server_manager.hpp"
 #include "rmoss_cam/cam_client.hpp"
 
 namespace rmoss_cam
@@ -33,10 +32,6 @@ public:
   {
     return node_->get_node_base_interface();
   }
-  void set_resource_manager(std::shared_ptr<CamServerManager> manager)
-  {
-    cam_server_manager_ = manager;
-  }
 
 private:
   void init();
@@ -46,7 +41,6 @@ private:
   rclcpp::Node::SharedPtr node_;
   rclcpp::TimerBase::SharedPtr init_timer_;
   std::shared_ptr<rmoss_cam::CamClient> cam_client_;
-  std::shared_ptr<rmoss_cam::CamServerManager> cam_server_manager_;
   std::string camera_name_;
   int cnt_{0};
   int info_fps_{200};

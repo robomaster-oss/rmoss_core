@@ -92,8 +92,6 @@ int main(int argc, char * argv[])
   std::vector<std::shared_ptr<std::thread>> threads;
   // benchmark node
   auto node = std::make_shared<rclcpp::Node>("benchmark");
-  auto cam_server_manager = std::make_shared<rmoss_cam::CamServerManager>(
-    node->get_node_logging_interface());
   // cam1: normal node (run by launch file)
   // cam2: composed node
   auto cam2_node = create_cam_node("virtual_cam2", "benchmark_cam2");
@@ -101,10 +99,6 @@ int main(int argc, char * argv[])
   // cam3: composed node with rclcpp intra-comms
   auto cam3_node = create_cam_node("virtual_cam3", "benchmark_cam3", true);
   threads.push_back(create_spin_thread(cam3_node));
-  // cam4: composed node with rmoss intra-comms
-  auto cam4_node = create_cam_node("virtual_cam4", "benchmark_cam4");
-  cam4_node->set_resource_manager(cam_server_manager);
-  threads.push_back(create_spin_thread(cam4_node));
   // create camera clients
   auto client_node1 = std::make_shared<rclcpp::Node>("client_node1");
   auto cam_client1 = std::make_shared<rmoss_cam::CamClient>(client_node1);
@@ -114,9 +108,6 @@ int main(int argc, char * argv[])
     "client_node3",
     rclcpp::NodeOptions().use_intra_process_comms(true));
   auto cam_client3 = std::make_shared<rmoss_cam::CamClient>(client_node3);
-  auto client_node4 = std::make_shared<rclcpp::Node>("client_node4");
-  auto cam_client4 = std::make_shared<rmoss_cam::CamClient>(client_node4);
-  cam_client4->set_cam_server_manager(cam_server_manager);
   // benchmark test
   std::this_thread::sleep_for(1s);
   std::cout << "start test for normal multi-process" << std::endl;
@@ -127,9 +118,6 @@ int main(int argc, char * argv[])
   std::this_thread::sleep_for(1s);
   std::cout << "start test for composition with rclcpp intra-comms" << std::endl;
   benchmark_test(client_node3, cam_client3, "benchmark_cam3");
-  std::this_thread::sleep_for(1s);
-  std::cout << "start test for composition with rmoss intra-comms" << std::endl;
-  benchmark_test(client_node4, cam_client4, "benchmark_cam4");
   // wait end
   std::this_thread::sleep_for(1s);
   rclcpp::shutdown();

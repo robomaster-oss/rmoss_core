@@ -27,7 +27,6 @@ include_directories(include)
 add_library(${PROJECT_NAME} SHARED
   src/cam_server.cpp
   src/cam_client.cpp
-  src/cam_server_manager.cpp
 )
 
 set(dependencies
@@ -72,9 +71,6 @@ rclcpp_components_register_node(image_task_demo_component
   EXECUTABLE image_task_demo)
 
 # executable
-add_executable(component_container src/component_container.cpp)
-target_link_libraries(component_container ${PROJECT_NAME})
-
 add_executable(benchmark_test src/benchmark_test_main.cpp)
 target_link_libraries(benchmark_test ${PROJECT_NAME} virtual_cam_component)
 
@@ -93,7 +89,7 @@ install(TARGETS ${PROJECT_NAME} usb_cam_component virtual_cam_component image_ta
 )
 
 # Install executable nodes
-install(TARGETS component_container benchmark_test
+install(TARGETS benchmark_test
   DESTINATION lib/${PROJECT_NAME}
 )
 

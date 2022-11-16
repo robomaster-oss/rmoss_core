@@ -69,20 +69,9 @@ ros2 launch rmoss_cam composition.launch.py
 
 * 先创建容器`rmoss_container` ，然后将相机节点`rmoss_cam::VirtualCamNode`以及图像任务节点`ImageTaskDemoNode`加载到容器中，支持继续加载多个节点。
 
-目前`rmoss_container`采用的是`rmoss_cam`定制化容器，实现了`CamServer`和`CamClient`之间的图像传输不经过ROS，使用线程间copy, 通过条件变量和锁实现。
-同时也支持`rclcpp component`中的默认容器加载节点。
-> Tip: 容器内一般加载多个节点，需要采用多线程模型，因此容器类型一般使用`component_container_mt`或者 `component_container_isolated`(目前仅支持ROS Rolling版本)，`component_container_isolated`性能目前表现最好。
-
-rmoss_cam 定制化容器使用
-
-* 图像处理节点在一般`rclcpp component`基础上，还需要额外实现`set_resource_manager()`方法。
-* 使用`RMOSS_CAM_COMPONENTS_REGISTER_NODE()`（`rmoss_cam/register_node_macro.hpp`）将图像处理节点注册为`rmoss_cam component`。
+> Tip: 容器内一般加载多个节点，需要采用多线程模型，因此容器类型一般使用`component_container_mt`或者 `component_container_isolated`，`component_container_isolated`性能目前表现最好。
 
 使用例子可参考`image_task_demo_node.hpp/cpp`。
-
-> Tip: 
-> * 注册为`rmoss_cam component`之后，必须使用`rmoss_cam`中提供的容器加载节点, 否则`set_resource_manager` 将不会调用，也就是说采用默认ROS机制。
-> * `rmoss_cam`中的`component_container`类型容器同时支持`rmoss_cam components`节点加载和普通`rclcpp components`节点加载。
 
 ## 二次开发
 

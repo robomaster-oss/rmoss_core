@@ -35,7 +35,7 @@ public:
   typedef std::function<void (const cv::Mat &, const rclcpp::Time &)> Callback;
   /**
    * @brief Construct a new Cam Client object
-   * 
+   *
    * @param node node interface for rclcpp
    */
   explicit CamClient(rclcpp::Node::SharedPtr node)
@@ -44,40 +44,40 @@ public:
 
   /**
    * @brief Set the camera name
-   * 
-   * @param camera_name 
+   *
+   * @param camera_name
    */
   void set_camera_name(const std::string & camera_name);
   /**
    * @brief Set the camera callback
-   * 
-   * @param cb 
+   *
+   * @param cb
    */
   void set_camera_callback(Callback cb);
 
   /**
    * @brief Connect to image topic
-   * 
-   * @return true 
-   * @return false 
+   *
+   * @return true
+   * @return false
    */
   bool connect();
   /**
    * @brief Disconnct from image topic
-   * 
+   *
    */
   void disconnect();
   /**
    * @brief Test if current client is connected
-   * 
-   * @return true 
-   * @return false 
+   *
+   * @return true
+   * @return false
    */
   bool is_connect() {return is_connected_;}
   /**
    * @brief Get the camera info
-   * 
-   * @param info 
+   *
+   * @param info
    * @return true: fail to get info
    * @return false: success
    */

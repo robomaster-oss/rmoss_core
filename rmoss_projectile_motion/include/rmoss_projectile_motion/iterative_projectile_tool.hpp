@@ -35,7 +35,7 @@ public:
   IterativeProjectileTool() {}
   /**
    * @brief Set the max iteration number
-   * 
+   *
    * @param max_iter max iteration number
    */
   void set_max_iter(int max_iter) {max_iter_ = max_iter;}
@@ -53,18 +53,18 @@ public:
   void set_forward_motion(ForwardMotionFunc forward_motion) {forward_motion_func_ = forward_motion;}
   /**
    * @brief Solve projectile motion
-   * 
+   *
    * @param target_x horizontal distance of target (m)
    * @param target_h vertical distance of target (m)
    * @param angle ouput angle (rad)
-   * @return true 
-   * @return false 
+   * @return true
+   * @return false
    */
   bool solve(double target_x, double target_h, double & angle);
   /**
    * @brief Get error message for the tool
-   * 
-   * @return std::string 
+   *
+   * @return std::string
    */
   std::string error_message() {return error_message_;}
 

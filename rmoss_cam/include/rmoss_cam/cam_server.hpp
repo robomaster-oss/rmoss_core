@@ -40,18 +40,18 @@ public:
   typedef std::function<void (const cv::Mat &, const rclcpp::Time &)> Callback;
   /**
    * @brief Construct a new Cam Server object
-   * 
+   *
    * @param node node interface for rclcpp
    * @param cam_intercace camera interface
    */
   CamServer(
     rclcpp::Node::SharedPtr node,
     std::shared_ptr<CamInterface> cam_intercace);
-  
+
   /**
    * @brief Get the camera name
-   * 
-   * @return std::string 
+   *
+   * @return std::string
    */
   std::string get_camera_name() {return camera_name_;}
 

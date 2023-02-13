@@ -35,7 +35,7 @@ public:
   FixedPacketTool() = delete;
   /**
    * @brief Construct a new Fixed Packet Tool object
-   * 
+   *
    * @param transporter transport interface
    */
   explicit FixedPacketTool(std::shared_ptr<TransporterInterface> transporter)
@@ -50,31 +50,31 @@ public:
 
   /**
    * @brief Test interface is open or not
-   * 
-   * @return true 
-   * @return false 
+   *
+   * @return true
+   * @return false
    */
   bool is_open() {return transporter_->is_open();}
   /**
    * @brief enable realtime send
-   * 
-   * @param enable 
+   *
+   * @param enable
    */
   void enable_realtime_send(bool enable);
   /**
    * @brief Send a packet
-   * 
-   * @param packet 
-   * @return true 
-   * @return false 
+   *
+   * @param packet
+   * @return true
+   * @return false
    */
   bool send_packet(const FixedPacket<capacity> & packet);
   /**
    * @brief Recieve a packet
-   * 
-   * @param packet 
-   * @return true 
-   * @return false 
+   *
+   * @param packet
+   * @return true
+   * @return false
    */
   bool recv_packet(FixedPacket<capacity> & packet);
 

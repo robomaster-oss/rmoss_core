@@ -119,7 +119,11 @@ CamServer::CamServer(
   }
   // create image_transport
   img_it_ = std::make_shared<image_transport::ImageTransport>(node_);
-  img_it_pub_ = std::make_shared<image_transport::Publisher>(img_it_->advertise(camera_name_ + "/image_raw", 1));
+  img_it_pub_ =
+    std::make_shared<image_transport::Publisher>(
+    img_it_->advertise(
+      camera_name_ + "/image_raw",
+      1));
   init_timer();
   // create GetCameraInfo service
   using namespace std::placeholders;

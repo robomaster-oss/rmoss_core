@@ -26,11 +26,11 @@ class MonoMeasureTool
 public:
   /**
    * @brief Set the camera intrinsic parameter
-   * 
+   *
    * @param camera_intrinsic camera intrinsic in 3x3 matrix flat in line stretch
    * @param camera_distortion camera distortion parameter in plumb_bob distortion model
-   * @return true 
-   * @return false 
+   * @return true
+   * @return false
    */
   bool set_camera_info(std::vector<double> camera_intrinsic, std::vector<double> camera_distortion);
   /**
@@ -39,15 +39,15 @@ public:
    * @param points2d a list of points in image frame
    * @param points3d a list of points correspondend to points2d
    * @param position output position of the origin point of 3d coordinate system
-   * @return true 
-   * @return false 
+   * @return true
+   * @return false
    */
   bool solve_pnp(
     std::vector<cv::Point2f> & points2d, std::vector<cv::Point3f> & points3d,
     cv::Point3f & position);
   /**
    * @brief 逆投影，已知深度，2d->3d点求解
-   * 
+   *
    * @param p 图像上点坐标
    * @param distance 已知的真实距离
    * @return cv::Point3f 对应的真实3d点坐标
@@ -55,7 +55,7 @@ public:
   cv::Point3f unproject(cv::Point2f p, double distance);
   /**
    * @brief 视角求解
-   * 
+   *
    * @param p 图像上点坐标
    * @param pitch 视角pitch
    * @param yaw 视角yaw

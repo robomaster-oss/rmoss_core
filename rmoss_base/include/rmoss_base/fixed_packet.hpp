@@ -44,19 +44,19 @@ public:
   /**
    * @brief Set the check byte
    * 设置flag
-   * @param check_byte 
+   * @param check_byte
    */
   void set_check_byte(uint8_t check_byte) {buffer_[capacity - 2] = check_byte;}
   /**
    * @brief Copy data to buffer
    * copy数据到缓存buffer
-   * @param src 
+   * @param src
    */
   void copy_from(const void * src) {memcpy(buffer_, src, capacity);}
   /**
    * @brief Get buffer
    * 获取缓存buffer
-   * @return const uint8_t* 
+   * @return const uint8_t*
    */
   const uint8_t * buffer() const {return buffer_;}
 
@@ -65,10 +65,10 @@ public:
    * 自定义装载数据
    * @tparam T: Data type
    * @tparam data_len: Data length
-   * @param data 
-   * @param index 
-   * @return true 
-   * @return false 
+   * @param data
+   * @param index
+   * @return true
+   * @return false
    */
   template<typename T, int data_len = sizeof(T)>
   bool load_data(T const & data, int index)
@@ -84,12 +84,12 @@ public:
   /**
    * @brief Self-define data reader
    * 自定义解析数据
-   * @tparam T 
-   * @tparam data_len 
-   * @param data 
-   * @param index 
-   * @return true 
-   * @return false 
+   * @tparam T
+   * @tparam data_len
+   * @param data
+   * @param index
+   * @return true
+   * @return false
    */
   template<typename T, int data_len = sizeof(T)>
   bool unload_data(T & data, int index)

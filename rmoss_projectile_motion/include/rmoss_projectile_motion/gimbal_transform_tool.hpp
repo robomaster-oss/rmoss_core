@@ -30,7 +30,7 @@ class GimbalTransformTool
 public:
   /**
    * @brief Construct a new Gimbal Transform Tool
-   * 
+   *
    * @param solver Projectile solver for transform tool
    */
   explicit GimbalTransformTool(std::shared_ptr<ProjectileSolverInterface> solver = nullptr)
@@ -38,14 +38,14 @@ public:
 
   /**
    * @brief Set the projectile solver
-   * 
+   *
    * @param solver Projectile solver for transform tool
    */
   void set_projectile_solver(std::shared_ptr<ProjectileSolverInterface> solver) {solver_ = solver;}
   /**
    * @brief Get error message
-   * 
-   * @return std::string 
+   *
+   * @return std::string
    */
   std::string error_message() {return error_message_;}
   /**
@@ -57,8 +57,8 @@ public:
    * @param z (m)
    * @param pitch (rad)
    * @param yaw (rad)
-   * @return true 
-   * @return false 
+   * @return true
+   * @return false
    */
   bool solve(double x, double y, double z, double & pitch, double & yaw);
   bool solve(Eigen::Vector3d position, double & pitch, double & yaw)

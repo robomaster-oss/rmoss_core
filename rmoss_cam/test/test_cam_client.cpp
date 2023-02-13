@@ -31,7 +31,7 @@ TEST(CamClient, callback)
   auto cam_dev = std::make_shared<DummyCam>();
   auto node_options = rclcpp::NodeOptions();
   node_options.append_parameter_override("autostart", true);
-  node_options.append_parameter_override("camera_name", "test_camera");
+  node_options.append_parameter_override("camera_name", "front_camera");
   auto node = std::make_shared<rclcpp::Node>("test_cam_server", node_options);
   auto cam_server = std::make_shared<rmoss_cam::CamServer>(node, cam_dev);
   auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
@@ -40,7 +40,7 @@ TEST(CamClient, callback)
   executor->add_node(node);
   executor->add_node(node2);
   int num = 0;
-  cam_client->set_camera_name("test_camera");
+  cam_client->set_camera_name("front_camera");
   cam_client->set_camera_callback(
     [&](const cv::Mat & /*img*/, const rclcpp::Time & /*stamp*/) {
       num++;

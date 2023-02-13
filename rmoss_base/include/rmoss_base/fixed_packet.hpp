@@ -47,7 +47,6 @@ public:
    * @param check_byte 
    */
   void set_check_byte(uint8_t check_byte) {buffer_[capacity - 2] = check_byte;}
-  // 
   /**
    * @brief Copy data to buffer
    * copy数据到缓存buffer

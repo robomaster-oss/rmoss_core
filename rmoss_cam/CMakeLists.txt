@@ -18,6 +18,7 @@ find_package(rmoss_interfaces REQUIRED)
 find_package(rmoss_util REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(camera_info_manager REQUIRED)
+find_package(image_transport REQUIRED)
 find_package(OpenCV REQUIRED)
 
 # Include
@@ -37,6 +38,7 @@ set(dependencies
   rmoss_util
   cv_bridge
   camera_info_manager
+  image_transport
   OpenCV
 )
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})

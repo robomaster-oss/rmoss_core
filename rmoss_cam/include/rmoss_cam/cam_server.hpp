@@ -29,6 +29,7 @@
 #include "rmoss_cam/cam_interface.hpp"
 #include "rmoss_util/task_manager.hpp"
 #include "camera_info_manager/camera_info_manager.hpp"
+#include "image_transport/image_transport.hpp"
 
 namespace rmoss_cam
 {
@@ -63,7 +64,8 @@ private:
 
 private:
   rclcpp::Node::SharedPtr node_;
-  rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr img_pub_;
+  std::shared_ptr<image_transport::ImageTransport> img_it_;
+  std::shared_ptr<image_transport::Publisher> img_it_pub_;
   rclcpp::Service<rmoss_interfaces::srv::GetCameraInfo>::SharedPtr get_camera_info_srv_;
   rmoss_util::TaskManager::SharedPtr task_manager_;
   rclcpp::TimerBase::SharedPtr timer_;

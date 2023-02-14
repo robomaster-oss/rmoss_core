@@ -5,6 +5,7 @@ project(rmoss_cam)
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
 endif()
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -18,6 +19,7 @@ find_package(rmoss_interfaces REQUIRED)
 find_package(rmoss_util REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(camera_info_manager REQUIRED)
+find_package(image_transport REQUIRED)
 find_package(OpenCV REQUIRED)
 
 # Include
@@ -37,6 +39,7 @@ set(dependencies
   rmoss_util
   cv_bridge
   camera_info_manager
+  image_transport
   OpenCV
 )
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
@@ -81,11 +84,11 @@ install(DIRECTORY include/
 
 # Install libraries
 install(TARGETS ${PROJECT_NAME} usb_cam_component virtual_cam_component image_task_demo_component
-    EXPORT export_${PROJECT_NAME}
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
-    RUNTIME DESTINATION bin
-    INCLUDES DESTINATION include
+  EXPORT export_${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
 )
 
 # Install executable nodes

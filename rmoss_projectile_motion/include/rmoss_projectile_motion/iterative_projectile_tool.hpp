@@ -33,9 +33,39 @@ class IterativeProjectileTool
 
 public:
   IterativeProjectileTool() {}
+  /**
+   * @brief Set the max iteration number
+   *
+   * @param max_iter max iteration number
+   */
   void set_max_iter(int max_iter) {max_iter_ = max_iter;}
+  /**
+   * @brief Set the forward motion fuction for the tool
+   * 设置弹道前向运动解算函数
+   * 函数的类型为: void f(ouble given_angle, double given_x, double & h, double & t)
+   * 在水平坐标系下
+   * given_x: input,射击距离/m
+   * given_angle: input,出射角度/rad
+   * h: output,射击的落点高度/m
+   * t: output,射击飞行时间/s
+   * @param forward_motion forward_motion function for the tool
+   */
   void set_forward_motion(ForwardMotionFunc forward_motion) {forward_motion_func_ = forward_motion;}
+  /**
+   * @brief Solve projectile motion
+   *
+   * @param target_x horizontal distance of target (m)
+   * @param target_h vertical distance of target (m)
+   * @param angle ouput angle (rad)
+   * @return true
+   * @return false
+   */
   bool solve(double target_x, double target_h, double & angle);
+  /**
+   * @brief Get error message for the tool
+   *
+   * @return std::string
+   */
   std::string error_message() {return error_message_;}
 
 private:

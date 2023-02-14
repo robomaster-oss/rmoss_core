@@ -28,13 +28,38 @@ namespace rmoss_projectile_motion
 class GimbalTransformTool
 {
 public:
+  /**
+   * @brief Construct a new Gimbal Transform Tool
+   *
+   * @param solver Projectile solver for transform tool
+   */
   explicit GimbalTransformTool(std::shared_ptr<ProjectileSolverInterface> solver = nullptr)
   : solver_(solver) {}
 
+  /**
+   * @brief Set the projectile solver
+   *
+   * @param solver Projectile solver for transform tool
+   */
   void set_projectile_solver(std::shared_ptr<ProjectileSolverInterface> solver) {solver_ = solver;}
+  /**
+   * @brief Get error message
+   *
+   * @return std::string
+   */
   std::string error_message() {return error_message_;}
-  // position :input, position of target object in gimbal frame
-  // pitch,yaw : output, angle of gimbal
+  /**
+   * @brief Solve gimbal angle
+   * input, position of target object in *gimbal frame*
+   * output, angle of gimbal(pitch, yaw)
+   * @param x (m)
+   * @param y (m)
+   * @param z (m)
+   * @param pitch (rad)
+   * @param yaw (rad)
+   * @return true
+   * @return false
+   */
   bool solve(double x, double y, double z, double & pitch, double & yaw);
   bool solve(Eigen::Vector3d position, double & pitch, double & yaw)
   {

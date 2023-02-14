@@ -36,16 +36,40 @@ public:
   }
 
 public:
-  // 清除缓存, date_bytes和check_byte都用0填充
+  /**
+   * @brief Flush buffer
+   * 清除缓存, date_bytes和check_byte都用0填充
+   */
   void clear() {memset(buffer_ + 1, 0, capacity - 2);}
-  // 设置flag
+  /**
+   * @brief Set the check byte
+   * 设置flag
+   * @param check_byte
+   */
   void set_check_byte(uint8_t check_byte) {buffer_[capacity - 2] = check_byte;}
-  // copy数据到缓存buffer
+  /**
+   * @brief Copy data to buffer
+   * copy数据到缓存buffer
+   * @param src
+   */
   void copy_from(const void * src) {memcpy(buffer_, src, capacity);}
-  // 获取缓存buffer
+  /**
+   * @brief Get buffer
+   * 获取缓存buffer
+   * @return const uint8_t*
+   */
   const uint8_t * buffer() const {return buffer_;}
 
-  // 自定义装载数据
+  /**
+   * @brief Self-define data loader
+   * 自定义装载数据
+   * @tparam T: Data type
+   * @tparam data_len: Data length
+   * @param data
+   * @param index
+   * @return true
+   * @return false
+   */
   template<typename T, int data_len = sizeof(T)>
   bool load_data(T const & data, int index)
   {
@@ -57,7 +81,16 @@ public:
     return false;
   }
 
-  // 自定义解析数据
+  /**
+   * @brief Self-define data reader
+   * 自定义解析数据
+   * @tparam T
+   * @tparam data_len
+   * @param data
+   * @param index
+   * @return true
+   * @return false
+   */
   template<typename T, int data_len = sizeof(T)>
   bool unload_data(T & data, int index)
   {

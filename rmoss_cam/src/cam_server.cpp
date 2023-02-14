@@ -117,8 +117,13 @@ CamServer::CamServer(
     RCLCPP_INFO(
       node_->get_logger(), "Calibration file '%s' is missing", camera_info_url.c_str());
   }
-  // create image publisher
-  img_pub_ = node_->create_publisher<sensor_msgs::msg::Image>(camera_name_ + "/image_raw", 1);
+  // create image_transport
+  img_it_ = std::make_shared<image_transport::ImageTransport>(node_);
+  img_it_pub_ =
+    std::make_shared<image_transport::Publisher>(
+    img_it_->advertise(
+      camera_name_ + "/image_raw",
+      1));
   init_timer();
   // create GetCameraInfo service
   using namespace std::placeholders;
@@ -139,7 +144,7 @@ void CamServer::init_timer()
         cam_status_ok_ = true;
         rclcpp::Time stamp = node_->now();
         // publish image msg
-        if (img_pub_->get_subscription_count() > 0) {
+        if (img_it_pub_->getNumSubscribers() > 0) {
           sensor_msgs::msg::Image::UniquePtr msg = std::make_unique<sensor_msgs::msg::Image>();
           msg->header.stamp = stamp;
           msg->header.frame_id = camera_frame_id_;
@@ -149,7 +154,7 @@ void CamServer::init_timer()
           msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(img_.step);
           msg->is_bigendian = false;
           msg->data.assign(img_.datastart, img_.dataend);
-          img_pub_->publish(std::move(msg));
+          img_it_pub_->publish(std::move(msg));
         }
       } else {
         // try to reopen camera

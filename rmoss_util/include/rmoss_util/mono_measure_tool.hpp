@@ -24,25 +24,42 @@ namespace rmoss_util
 class MonoMeasureTool
 {
 public:
+  /**
+   * @brief Set the camera intrinsic parameter
+   *
+   * @param camera_intrinsic camera intrinsic in 3x3 matrix flat in line stretch
+   * @param camera_distortion camera distortion parameter in plumb_bob distortion model
+   * @return true
+   * @return false
+   */
   bool set_camera_info(std::vector<double> camera_intrinsic, std::vector<double> camera_distortion);
-  ////////// 3d点坐标求解（use solve pnp）
-  // points2d: input,一组图像上的2d点（4个点）
-  // points3d: input,一组3d点（世界坐标系），对应图像上的点（4个点）
-  // position: output,世界坐标系原点在相机坐标系下的位置。
-  // return :state
+  /**
+   * @brief Solve Perspective-n-Point problem in camera
+   * 3d点坐标求解（use solve pnp）
+   * @param points2d a list of points in image frame
+   * @param points3d a list of points correspondend to points2d
+   * @param position output position of the origin point of 3d coordinate system
+   * @return true
+   * @return false
+   */
   bool solve_pnp(
     std::vector<cv::Point2f> & points2d, std::vector<cv::Point3f> & points3d,
     cv::Point3f & position);
-  ////// 逆投影，已知深度，2d->3d点求解
-  // p: intput,图像上点坐标
-  // distance: input,已知的真实距离
-  // return :对应的真实3d点坐标
+  /**
+   * @brief 逆投影，已知深度，2d->3d点求解
+   *
+   * @param p 图像上点坐标
+   * @param distance 已知的真实距离
+   * @return cv::Point3f 对应的真实3d点坐标
+   */
   cv::Point3f unproject(cv::Point2f p, double distance);
-  ////// 视角求解
-  // p: intput,图像上点坐标
-  // pitch: output,视角pitch
-  // yaw: output,视角yaw
-  // return :state
+  /**
+   * @brief 视角求解
+   *
+   * @param p 图像上点坐标
+   * @param pitch 视角pitch
+   * @param yaw 视角yaw
+   */
   void calc_view_angle(cv::Point2f p, float & pitch, float & yaw);
 
 private:

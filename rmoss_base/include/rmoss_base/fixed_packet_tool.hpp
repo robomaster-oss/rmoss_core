@@ -33,6 +33,11 @@ class FixedPacketTool
 public:
   using SharedPtr = std::shared_ptr<FixedPacketTool>;
   FixedPacketTool() = delete;
+  /**
+   * @brief Construct a new Fixed Packet Tool object
+   *
+   * @param transporter transport interface
+   */
   explicit FixedPacketTool(std::shared_ptr<TransporterInterface> transporter)
   : transporter_(transporter)
   {
@@ -43,9 +48,34 @@ public:
 
   ~FixedPacketTool() {enable_realtime_send(false);}
 
+  /**
+   * @brief Test interface is open or not
+   *
+   * @return true
+   * @return false
+   */
   bool is_open() {return transporter_->is_open();}
+  /**
+   * @brief enable realtime send
+   *
+   * @param enable
+   */
   void enable_realtime_send(bool enable);
+  /**
+   * @brief Send a packet
+   *
+   * @param packet
+   * @return true
+   * @return false
+   */
   bool send_packet(const FixedPacket<capacity> & packet);
+  /**
+   * @brief Recieve a packet
+   *
+   * @param packet
+   * @return true
+   * @return false
+   */
   bool recv_packet(FixedPacket<capacity> & packet);
 
 private:

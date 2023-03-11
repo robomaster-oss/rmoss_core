@@ -13,6 +13,7 @@ rmoss_util是rmoss_core 中的一个公共基础包，提供一些公共基础�
 * `image_utils.hpp/cpp`（不建议使用，开发中） : 图像工具，提供一些图像处理或计算相关工具。
 * `time_utils.hpp/cpp`（不建议使用，开发中） : 时间工具，用于测量运行时间。
 * `mono_measure_tool.hpp/cpp`（不建议使用，开发中） : 单目测量工具类，单目算法封装（PNP解算，相似三角形反投影等）
+* `url_resolver.hpp/cpp` : URL 解析器，用于解析类似 camera_info_manager 的 URL，便于灵活路径管理
 
 ## 快速使用
 
@@ -91,4 +92,13 @@ float calc_inner_angle(cv::Point2f vertex_point, cv::Point2f point1, cv::Point2f
 rmoss_util::MonoMeasureTool mono_location_tool_;
 mono_location_tool_.set_camera_info(camera_intrinsic, camera_distortion);
 mono_location_tool_.solve_pnp(detected_points, small_armor_points, target_postion);
+```
+
+### URL 解析器
+
+用于解析类似 camera_info_manager 的 URL
+
+```c++
+std::string url = "package://rmoss_util/test";
+std::result = rmoss_util::URLResolver::getResolvedPath(url);  // result = <rmoss_util的share路径>/test
 ```

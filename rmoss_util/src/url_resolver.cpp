@@ -25,10 +25,10 @@
 namespace rmoss_util
 {
 
-std::string URLResolver::getResolvedPath(const std::string & url)
+std::string URLResolver::get_resolved_path(const std::string & url)
 {
-  const std::string resURL(resolveURL(url));
-  url_type_t url_type = parseURL(url);
+  const std::string resURL(resolve_url(url));
+  url_type_t url_type = parse_url(url);
 
   std::string res = "";
 
@@ -42,13 +42,9 @@ std::string URLResolver::getResolvedPath(const std::string & url)
         res = resURL.substr(7);
         break;
       }
-    case URL_flash:
-      {
-        break;
-      }
     case URL_package:
       {
-        res = getPackageFileName(resURL);
+        res = get_package_fileName(resURL);
         break;
       }
     default:
@@ -60,7 +56,7 @@ std::string URLResolver::getResolvedPath(const std::string & url)
   return res;
 }
 
-std::string URLResolver::resolveURL(const std::string & url)
+std::string URLResolver::resolve_url(const std::string & url)
 {
   std::string resolved;
   size_t rest = 0;
@@ -108,7 +104,7 @@ std::string URLResolver::resolveURL(const std::string & url)
   return resolved;
 }
 
-URLResolver::url_type_t URLResolver::parseURL(const std::string & url)
+URLResolver::url_type_t URLResolver::parse_url(const std::string & url)
 {
   if (url == "") {
     return URL_empty;
@@ -128,9 +124,6 @@ URLResolver::url_type_t URLResolver::parseURL(const std::string & url)
   if (iequals(url.substr(0, 8), "file:///")) {
     return URL_file;
   }
-  if (iequals(url.substr(0, 9), "flash:///")) {
-    return URL_flash;
-  }
   if (iequals(url.substr(0, 10), "package://")) {
     // look for a '/' following the package name, make sure it is
     // there, the name is not empty, and something follows it
@@ -142,7 +135,7 @@ URLResolver::url_type_t URLResolver::parseURL(const std::string & url)
   return URL_invalid;
 }
 
-std::string URLResolver::getPackageFileName(const std::string & url)
+std::string URLResolver::get_package_fileName(const std::string & url)
 {
   // Scan URL from after "package://" until next '/' and extract
   // package name.  The parseURL() already checked that it's present.

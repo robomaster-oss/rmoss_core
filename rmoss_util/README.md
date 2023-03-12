@@ -100,5 +100,8 @@ mono_location_tool_.solve_pnp(detected_points, small_armor_points, target_postio
 
 ```c++
 std::string url = "package://rmoss_util/test";
-std::result = rmoss_util::URLResolver::getResolvedPath(url);  // result = <rmoss_util的share路径>/test
+std::result = rmoss_util::URLResolver::getResolvedPath(url);  // result = "<rmoss_util的share路径>/test"
+
+std::string url = "file:///test_dir/test_file";
+std::result = rmoss_util::URLResolver::getResolvedPath(url);  // result = "/test_dir/test_file"
 ```

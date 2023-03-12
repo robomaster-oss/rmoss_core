@@ -27,12 +27,12 @@ class URLResolver
 {
 public:
   /**
-   * @brief
+   * @brief Seperate url
    *
    * @param url
    * @return std::string
    */
-  static std::string resolveURL(const std::string & url);
+  static std::string resolve_url(const std::string & url);
 
   /**
    * @brief Get the Resolved file path
@@ -40,7 +40,7 @@ public:
    * @param url
    * @return std::string Return empty string if resolve failed
    */
-  static std::string getResolvedPath(const std::string & url);
+  static std::string get_resolved_path(const std::string & url);
 
 private:
   typedef enum
@@ -51,12 +51,11 @@ private:
     URL_package,    // package:
                     // URLs not supported
     URL_invalid,    // anything >= is invalid
-    URL_flash,      // flash:
   } url_type_t;
 
-  static url_type_t parseURL(const std::string & url);
+  static url_type_t parse_url(const std::string & url);
 
-  static std::string getPackageFileName(const std::string & url);
+  static std::string get_package_fileName(const std::string & url);
 };
 }  // namespace rmoss_util
 

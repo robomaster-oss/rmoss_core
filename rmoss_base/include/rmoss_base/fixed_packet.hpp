@@ -74,7 +74,7 @@ public:
   bool load_data(T const & data, int index)
   {
     // 越界检测
-    if (index > 0 && ((index + data_len) < (capacity - 2))) {
+    if (index > 0 && ((index + data_len) < (capacity - 1))) {
       memcpy(buffer_ + index, &data, data_len);
       return true;
     }
@@ -95,7 +95,7 @@ public:
   bool unload_data(T & data, int index)
   {
     // 越界检测
-    if (index > 0 && ((index + data_len) < (capacity - 2))) {
+    if (index > 0 && ((index + data_len) < (capacity - 1))) {
       memcpy(&data, buffer_ + index, data_len);
       return true;
     }

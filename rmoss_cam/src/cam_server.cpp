@@ -77,6 +77,7 @@ CamServer::CamServer(
   node->declare_parameter("frame_id", camera_frame_id_);
   node->declare_parameter("camera_info_url", camera_info_url);
   node->declare_parameter("autostart", run_flag_);
+  node->declare_parameter("use_sensor_data_qos", use_qos_profile_sensor_data_);
   node->get_parameter("camera_name", camera_name_);
   node->get_parameter("frame_id", camera_frame_id_);
   node->get_parameter("camera_info_url", camera_info_url);
@@ -118,12 +119,11 @@ CamServer::CamServer(
       node_->get_logger(), "Calibration file '%s' is missing", camera_info_url.c_str());
   }
   // create image_transport
-  img_it_ = std::make_shared<image_transport::ImageTransport>(node_);
-  img_it_pub_ =
-    std::make_shared<image_transport::Publisher>(
-    img_it_->advertise(
+  cam_img_it_pub_ = std::make_shared<image_transport::CameraPublisher>(
+    image_transport::create_camera_publisher(
+      node_.get(),
       camera_name_ + "/image_raw",
-      1));
+      use_qos_profile_sensor_data_ ? rmw_qos_profile_sensor_data : rmw_qos_profile_default));
   init_timer();
   // create GetCameraInfo service
   using namespace std::placeholders;
@@ -144,8 +144,8 @@ void CamServer::init_timer()
         cam_status_ok_ = true;
         rclcpp::Time stamp = node_->now();
         // publish image msg
-        if (img_it_pub_->getNumSubscribers() > 0) {
-          sensor_msgs::msg::Image::UniquePtr msg = std::make_unique<sensor_msgs::msg::Image>();
+        if (this->cam_img_it_pub_->getNumSubscribers() > 0) {
+          sensor_msgs::msg::Image::SharedPtr msg = std::make_shared<sensor_msgs::msg::Image>();
           msg->header.stamp = stamp;
           msg->header.frame_id = camera_frame_id_;
           msg->encoding = "bgr8";
@@ -154,7 +154,7 @@ void CamServer::init_timer()
           msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(img_.step);
           msg->is_bigendian = false;
           msg->data.assign(img_.datastart, img_.dataend);
-          img_it_pub_->publish(std::move(msg));
+          cam_img_it_pub_->publish(*msg, camera_info_manager_->getCameraInfo());
         }
       } else {
         // try to reopen camera

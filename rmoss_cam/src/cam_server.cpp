@@ -118,6 +118,7 @@ CamServer::CamServer(
     RCLCPP_INFO(
       node_->get_logger(), "Calibration file '%s' is missing", camera_info_url.c_str());
   }
+  cam_info_ = std::make_shared<sensor_msgs::msg::CameraInfo>(camera_info_manager_->getCameraInfo());
   // create image_transport
   cam_img_it_pub_ = std::make_shared<image_transport::CameraPublisher>(
     image_transport::create_camera_publisher(
@@ -145,16 +146,18 @@ void CamServer::init_timer()
         rclcpp::Time stamp = node_->now();
         // publish image msg
         if (this->cam_img_it_pub_->getNumSubscribers() > 0) {
-          sensor_msgs::msg::Image::SharedPtr msg = std::make_shared<sensor_msgs::msg::Image>();
-          msg->header.stamp = stamp;
-          msg->header.frame_id = camera_frame_id_;
-          msg->encoding = "bgr8";
-          msg->width = img_.cols;
-          msg->height = img_.rows;
-          msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(img_.step);
-          msg->is_bigendian = false;
-          msg->data.assign(img_.datastart, img_.dataend);
-          cam_img_it_pub_->publish(*msg, camera_info_manager_->getCameraInfo());
+          if (msg_ == nullptr) {
+            msg_ = std::make_shared<sensor_msgs::msg::Image>();
+          }
+          msg_->header.stamp = stamp;
+          msg_->header.frame_id = camera_frame_id_;
+          msg_->encoding = "bgr8";
+          msg_->width = img_.cols;
+          msg_->height = img_.rows;
+          msg_->step = static_cast<sensor_msgs::msg::Image::_step_type>(img_.step);
+          msg_->is_bigendian = false;
+          msg_->data.assign(img_.datastart, img_.dataend);
+          cam_img_it_pub_->publish(*this->msg_, *this->cam_info_);
         }
       } else {
         // try to reopen camera

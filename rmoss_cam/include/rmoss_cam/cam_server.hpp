@@ -72,13 +72,15 @@ private:
   std::shared_ptr<camera_info_manager::CameraInfoManager> camera_info_manager_;
   // camera_device interface
   std::shared_ptr<CamInterface> cam_intercace_;
-  //
+  // params
   std::string camera_name_{"camera"};
   std::string camera_frame_id_{""};
   bool use_qos_profile_sensor_data_{false};
   bool run_flag_{false};
   bool cam_status_ok_{false};
   // data
+  sensor_msgs::msg::Image::SharedPtr msg_;
+  sensor_msgs::msg::CameraInfo::SharedPtr cam_info_;
   cv::Mat img_;
   int fps_{30};
   int reopen_cnt{0};

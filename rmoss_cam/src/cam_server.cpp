@@ -120,11 +120,13 @@ CamServer::CamServer(
   }
   cam_info_ = std::make_shared<sensor_msgs::msg::CameraInfo>(camera_info_manager_->getCameraInfo());
   // create image_transport
-  cam_img_it_pub_ = std::make_shared<image_transport::CameraPublisher>(
-    image_transport::create_camera_publisher(
+  img_pub_ = std::make_shared<image_transport::Publisher>(
+    image_transport::create_publisher(
       node_.get(),
       camera_name_ + "/image_raw",
       use_qos_profile_sensor_data_ ? rmw_qos_profile_sensor_data : rmw_qos_profile_default));
+  cam_info_pub_ = node_->create_publisher<sensor_msgs::msg::CameraInfo>(
+    camera_name_ + "/camera_info", 10);
   init_timer();
   // create GetCameraInfo service
   using namespace std::placeholders;
@@ -145,19 +147,17 @@ void CamServer::init_timer()
         cam_status_ok_ = true;
         rclcpp::Time stamp = node_->now();
         // publish image msg
-        if (this->cam_img_it_pub_->getNumSubscribers() > 0) {
-          if (msg_ == nullptr) {
-            msg_ = std::make_shared<sensor_msgs::msg::Image>();
-          }
-          msg_->header.stamp = stamp;
-          msg_->header.frame_id = camera_frame_id_;
-          msg_->encoding = "bgr8";
-          msg_->width = img_.cols;
-          msg_->height = img_.rows;
-          msg_->step = static_cast<sensor_msgs::msg::Image::_step_type>(img_.step);
-          msg_->is_bigendian = false;
-          msg_->data.assign(img_.datastart, img_.dataend);
-          cam_img_it_pub_->publish(*this->msg_, *this->cam_info_);
+        if (this->img_pub_->getNumSubscribers() > 0) {
+          sensor_msgs::msg::Image::UniquePtr msg = std::make_unique<sensor_msgs::msg::Image>();
+          msg->header.stamp = stamp;
+          msg->header.frame_id = camera_frame_id_;
+          msg->encoding = "bgr8";
+          msg->width = img_.cols;
+          msg->height = img_.rows;
+          msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(img_.step);
+          msg->is_bigendian = false;
+          msg->data.assign(img_.datastart, img_.dataend);
+          img_pub_->publish(std::move(msg));
         }
       } else {
         // try to reopen camera
@@ -174,8 +174,17 @@ void CamServer::init_timer()
         reopen_cnt++;
       }
     };
+  auto cam_info_callback = [this]() {
+      if (cam_info_pub_->get_subscription_count() > 0) {
+        cam_info_->header.stamp = node_->now();
+        cam_info_->header.frame_id = camera_frame_id_;
+        cam_info_pub_->publish(*cam_info_);
+      }
+    };
   auto period_ms = std::chrono::milliseconds(static_cast<int64_t>(1000.0 / fps_));
   timer_ = node_->create_wall_timer(period_ms, timer_callback);
+  auto cam_info_period_ms = std::chrono::milliseconds(static_cast<int64_t>(1000.0 / 10));
+  cam_info_timer_ = node_->create_wall_timer(cam_info_period_ms, cam_info_callback);
 }
 
 void CamServer::init_task_manager()

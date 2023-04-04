@@ -19,6 +19,7 @@
 #include "gtest/gtest.h"
 
 #include "rclcpp/rclcpp.hpp"
+#include "ament_index_cpp/get_package_share_directory.hpp"
 #include "dummy_cam.hpp"
 #include "rmoss_cam/cam_server.hpp"
 #include "rmoss_cam/cam_client.hpp"
@@ -32,6 +33,9 @@ TEST(CamClient, callback)
   auto node_options = rclcpp::NodeOptions();
   node_options.append_parameter_override("autostart", true);
   node_options.append_parameter_override("camera_name", "front_camera");
+  node_options.append_parameter_override(
+    "camera_info_url", "file://" + ament_index_cpp::get_package_share_directory(
+      "rmoss_cam") + "/resource/image_cam_calibration.yaml");
   auto node = std::make_shared<rclcpp::Node>("test_cam_server", node_options);
   auto cam_server = std::make_shared<rmoss_cam::CamServer>(node, cam_dev);
   auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();

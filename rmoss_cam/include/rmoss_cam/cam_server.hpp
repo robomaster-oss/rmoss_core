@@ -64,9 +64,13 @@ private:
 
 private:
   rclcpp::Node::SharedPtr node_;
-  // std::shared_ptr<image_transport::CameraPublisher> cam_img_it_pub_;
+
+  // default image transport
   std::shared_ptr<image_transport::Publisher> img_pub_;
   rclcpp::Publisher<sensor_msgs::msg::CameraInfo>::SharedPtr cam_info_pub_;
+  // image_transporter for camera publisher
+  std::shared_ptr<image_transport::CameraPublisher> cam_pub_;
+
   rclcpp::Service<rmoss_interfaces::srv::GetCameraInfo>::SharedPtr get_camera_info_srv_;
   rmoss_util::TaskManager::SharedPtr task_manager_;
   rclcpp::TimerBase::SharedPtr timer_;
@@ -79,6 +83,7 @@ private:
   std::string camera_name_{"camera"};
   std::string camera_frame_id_{""};
   bool use_qos_profile_sensor_data_{false};
+  bool use_image_transport_camera_publisher_{false};
   bool run_flag_{false};
   bool cam_status_ok_{false};
   // data

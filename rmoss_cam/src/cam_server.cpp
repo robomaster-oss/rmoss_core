@@ -134,8 +134,6 @@ CamServer::CamServer(
         node_.get(),
         camera_name_ + "/image_raw",
         use_qos_profile_sensor_data_ ? rmw_qos_profile_sensor_data : rmw_qos_profile_default));
-    cam_info_pub_ = node_->create_publisher<sensor_msgs::msg::CameraInfo>(
-      camera_name_ + "/camera_info", 10);
   } else {
     cam_pub_ = std::make_shared<image_transport::CameraPublisher>(
       image_transport::create_camera_publisher(
@@ -195,17 +193,8 @@ void CamServer::init_timer()
           reopen_cnt++;
         }
       };
-    cam_info_callback = [this]() {
-        if (cam_info_pub_->get_subscription_count() > 0) {
-          cam_info_->header.stamp = node_->now();
-          cam_info_->header.frame_id = camera_frame_id_;
-          cam_info_pub_->publish(*cam_info_);
-        }
-      };
     // create camera info timer
     auto cam_info_period_ms = std::chrono::milliseconds(static_cast<int64_t>(1000.0 / 10));
-    cam_info_timer_ = node_->create_wall_timer(cam_info_period_ms, cam_info_callback);
-
   } else {
     timer_callback = [this]() {
         if (!run_flag_) {

@@ -67,14 +67,12 @@ private:
 
   // default image transport
   std::shared_ptr<image_transport::Publisher> img_pub_;
-  rclcpp::Publisher<sensor_msgs::msg::CameraInfo>::SharedPtr cam_info_pub_;
   // image_transporter for camera publisher
   std::shared_ptr<image_transport::CameraPublisher> cam_pub_;
 
   rclcpp::Service<rmoss_interfaces::srv::GetCameraInfo>::SharedPtr get_camera_info_srv_;
   rmoss_util::TaskManager::SharedPtr task_manager_;
   rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::TimerBase::SharedPtr cam_info_timer_;
   // camera info manager
   std::shared_ptr<camera_info_manager::CameraInfoManager> camera_info_manager_;
   // camera_device interface

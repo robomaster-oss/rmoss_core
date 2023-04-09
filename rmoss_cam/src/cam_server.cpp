@@ -156,7 +156,6 @@ CamServer::CamServer(
 void CamServer::init_timer()
 {
   std::function<void()> timer_callback;
-  std::function<void()> cam_info_callback;
   if (!use_image_transport_camera_publisher_) {
     timer_callback = [this]() {
         if (!run_flag_) {
@@ -193,8 +192,6 @@ void CamServer::init_timer()
           reopen_cnt++;
         }
       };
-    // create camera info timer
-    auto cam_info_period_ms = std::chrono::milliseconds(static_cast<int64_t>(1000.0 / 10));
   } else {
     timer_callback = [this]() {
         if (!run_flag_) {

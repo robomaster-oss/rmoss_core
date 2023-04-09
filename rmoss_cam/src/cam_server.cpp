@@ -77,10 +77,18 @@ CamServer::CamServer(
   node->declare_parameter("frame_id", camera_frame_id_);
   node->declare_parameter("camera_info_url", camera_info_url);
   node->declare_parameter("autostart", run_flag_);
+  node->declare_parameter("use_sensor_data_qos", use_qos_profile_sensor_data_);
+  node->declare_parameter(
+    "use_image_transport_camera_publisher",
+    use_image_transport_camera_publisher_);
   node->get_parameter("camera_name", camera_name_);
   node->get_parameter("frame_id", camera_frame_id_);
   node->get_parameter("camera_info_url", camera_info_url);
   node->get_parameter("autostart", run_flag_);
+  node->get_parameter("use_sensor_data_qos", use_qos_profile_sensor_data_);
+  node->get_parameter(
+    "use_image_transport_camera_publisher",
+    use_image_transport_camera_publisher_);
   if (camera_frame_id_ == "") {
     camera_frame_id_ = camera_name_ + "_optical";
   }
@@ -117,14 +125,25 @@ CamServer::CamServer(
     RCLCPP_INFO(
       node_->get_logger(), "Calibration file '%s' is missing", camera_info_url.c_str());
   }
+  cam_info_ = std::make_shared<sensor_msgs::msg::CameraInfo>(camera_info_manager_->getCameraInfo());
+
   // create image_transport
-  img_it_ = std::make_shared<image_transport::ImageTransport>(node_);
-  img_it_pub_ =
-    std::make_shared<image_transport::Publisher>(
-    img_it_->advertise(
-      camera_name_ + "/image_raw",
-      1));
+  if (!use_image_transport_camera_publisher_) {
+    img_pub_ = std::make_shared<image_transport::Publisher>(
+      image_transport::create_publisher(
+        node_.get(),
+        camera_name_ + "/image_raw",
+        use_qos_profile_sensor_data_ ? rmw_qos_profile_sensor_data : rmw_qos_profile_default));
+  } else {
+    cam_pub_ = std::make_shared<image_transport::CameraPublisher>(
+      image_transport::create_camera_publisher(
+        node_.get(),
+        camera_name_ + "/image_raw",
+        use_qos_profile_sensor_data_ ? rmw_qos_profile_sensor_data : rmw_qos_profile_default));
+  }
+  // init grab image timer
   init_timer();
+
   // create GetCameraInfo service
   using namespace std::placeholders;
   get_camera_info_srv_ = node->create_service<rmoss_interfaces::srv::GetCameraInfo>(
@@ -136,41 +155,82 @@ CamServer::CamServer(
 
 void CamServer::init_timer()
 {
-  auto timer_callback = [this]() {
-      if (!run_flag_) {
-        return;
-      }
-      if (cam_intercace_->grab_image(img_)) {
-        cam_status_ok_ = true;
-        rclcpp::Time stamp = node_->now();
-        // publish image msg
-        if (img_it_pub_->getNumSubscribers() > 0) {
-          sensor_msgs::msg::Image::UniquePtr msg = std::make_unique<sensor_msgs::msg::Image>();
-          msg->header.stamp = stamp;
-          msg->header.frame_id = camera_frame_id_;
-          msg->encoding = "bgr8";
-          msg->width = img_.cols;
-          msg->height = img_.rows;
-          msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(img_.step);
-          msg->is_bigendian = false;
-          msg->data.assign(img_.datastart, img_.dataend);
-          img_it_pub_->publish(std::move(msg));
+  std::function<void()> timer_callback;
+  if (!use_image_transport_camera_publisher_) {
+    timer_callback = [this]() {
+        if (!run_flag_) {
+          return;
         }
-      } else {
-        // try to reopen camera
-        cam_status_ok_ = false;
-        if (reopen_cnt % fps_ == 0) {
-          cam_intercace_->close();
-          std::this_thread::sleep_for(100ms);
-          if (cam_intercace_->open()) {
-            RCLCPP_WARN(node_->get_logger(), "reopen camera successed!");
-          } else {
-            RCLCPP_WARN(node_->get_logger(), "reopen camera failed!");
+        if (cam_intercace_->grab_image(img_)) {
+          cam_status_ok_ = true;
+          rclcpp::Time stamp = node_->now();
+          // publish image msg
+          if (this->img_pub_->getNumSubscribers() > 0) {
+            sensor_msgs::msg::Image::UniquePtr msg = std::make_unique<sensor_msgs::msg::Image>();
+            msg->header.stamp = stamp;
+            msg->header.frame_id = camera_frame_id_;
+            msg->encoding = "bgr8";
+            msg->width = img_.cols;
+            msg->height = img_.rows;
+            msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(img_.step);
+            msg->is_bigendian = false;
+            msg->data.assign(img_.datastart, img_.dataend);
+            img_pub_->publish(std::move(msg));
           }
+        } else {
+          // try to reopen camera
+          cam_status_ok_ = false;
+          if (reopen_cnt % fps_ == 0) {
+            cam_intercace_->close();
+            std::this_thread::sleep_for(100ms);
+            if (cam_intercace_->open()) {
+              RCLCPP_WARN(node_->get_logger(), "reopen camera successed!");
+            } else {
+              RCLCPP_WARN(node_->get_logger(), "reopen camera failed!");
+            }
+          }
+          reopen_cnt++;
         }
-        reopen_cnt++;
-      }
-    };
+      };
+  } else {
+    timer_callback = [this]() {
+        if (!run_flag_) {
+          return;
+        }
+        if (cam_intercace_->grab_image(img_)) {
+          cam_status_ok_ = true;
+          rclcpp::Time stamp = node_->now();
+          // publish image msg
+          if (this->cam_pub_->getNumSubscribers() > 0) {
+            sensor_msgs::msg::Image::SharedPtr msg = std::make_shared<sensor_msgs::msg::Image>();
+            msg->header.stamp = stamp;
+            msg->header.frame_id = camera_frame_id_;
+            msg->encoding = "bgr8";
+            msg->width = img_.cols;
+            msg->height = img_.rows;
+            msg->step = static_cast<sensor_msgs::msg::Image::_step_type>(img_.step);
+            msg->is_bigendian = false;
+            msg->data.assign(img_.datastart, img_.dataend);
+            cam_info_->header.stamp = stamp;
+            cam_info_->header.frame_id = camera_frame_id_;
+            cam_pub_->publish(*msg, *cam_info_);
+          }
+        } else {
+          // try to reopen camera
+          cam_status_ok_ = false;
+          if (reopen_cnt % fps_ == 0) {
+            cam_intercace_->close();
+            std::this_thread::sleep_for(100ms);
+            if (cam_intercace_->open()) {
+              RCLCPP_WARN(node_->get_logger(), "reopen camera successed!");
+            } else {
+              RCLCPP_WARN(node_->get_logger(), "reopen camera failed!");
+            }
+          }
+          reopen_cnt++;
+        }
+      };
+  }
   auto period_ms = std::chrono::milliseconds(static_cast<int64_t>(1000.0 / fps_));
   timer_ = node_->create_wall_timer(period_ms, timer_callback);
 }

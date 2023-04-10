@@ -30,8 +30,12 @@ namespace rmoss_base
 bool UartTransporter::set_param(int speed, int flow_ctrl, int databits, int stopbits, int parity)
 {
   // 设置串口数据帧格式
-  int speed_arr[] = {B115200, B19200, B9600, B4800, B2400, B1200, B300};
-  int name_arr[] = {115200, 19200, 9600, 4800, 2400, 1200, 300};
+  int speed_arr[] =
+  {B1152000, B1000000, B921600, B576000, B500000, B460800, B230400, B115200, B19200, B9600,
+    B4800, B2400, B1200, B300};
+  int name_arr[] =
+  {1152000, 1000000, 921600, 576000, 500000, 460800, 230400, 115200, 19200, 9600, 4800, 2400,
+    1200, 300};
   struct termios options;
   // tcgetattr(fd,&options)得到与fd指向对象的相关参数，并将它们保存于options,该函数还可以测试配置是否正确，
   // 该串口是否可用等。若调用成功，函数返回值为0，若调用失败，函数返回值为1.
@@ -154,11 +158,6 @@ bool UartTransporter::open()
   // 恢复串口为阻塞状态
   if (fcntl(fd_, F_SETFL, 0) < 0) {
     error_message_ = "fcntl failed";
-    return false;
-  }
-  // 测试是否为终端设备
-  if (0 == isatty(STDIN_FILENO)) {
-    error_message_ = "standard input is not a terminal device";
     return false;
   }
   // 设置串口数据帧格式

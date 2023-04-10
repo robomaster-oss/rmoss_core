@@ -27,7 +27,7 @@ class UartTransporter : public TransporterInterface
 public:
   UartTransporter(
     const std::string & device_path = "/dev/ttyUSB0", int speed = 115200,
-    int flow_ctrl = 0, int databits = 0, int stopbits = 1, int parity = 'N')
+    int flow_ctrl = 0, int databits = 8, int stopbits = 1, int parity = 'N')
   : device_path_(device_path), speed_(speed), flow_ctrl_(flow_ctrl),
     databits_(databits), stopbits_(stopbits), parity_(parity) {}
 

@@ -186,7 +186,6 @@ bool UartTransporter::is_open()
 int UartTransporter::read(void * buffer, size_t len)
 {
   int ret = ::read(fd_, buffer, len);
-  tcflush(fd_, TCIFLUSH);
   return ret;
 }
 

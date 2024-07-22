@@ -10,39 +10,20 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find package
 find_package(ament_cmake REQUIRED)
-find_package(ament_index_cpp REQUIRED)
-find_package(rcpputils REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(sensor_msgs REQUIRED)
-find_package(rmoss_interfaces REQUIRED)
-find_package(cv_bridge REQUIRED)
-find_package(OpenCV REQUIRED)
+add_subdirectory(common)
+add_subdirectory(math)
 
-# include
-include_directories(include)
-
-# create rmoss_tool lib
-aux_source_directory(${PROJECT_SOURCE_DIR}/src DIR_SRCS)
-add_library(${PROJECT_NAME} SHARED ${DIR_SRCS})
-ament_target_dependencies(${PROJECT_NAME}
-  rclcpp
-  ament_index_cpp
-  rcpputils
-  sensor_msgs
-  rmoss_interfaces
-  cv_bridge
-  OpenCV
-)
+add_library(${PROJECT_NAME}::common ALIAS common)
+add_library(${PROJECT_NAME}::math ALIAS math)
 
 # Install include directories
-install(DIRECTORY include/
+install(DIRECTORY common/include/ math/include/
   DESTINATION include
 )
 
 # Install libraries
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS common math
   EXPORT ${PROJECT_NAME}
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
@@ -57,12 +38,19 @@ ament_export_dependencies(sensor_msgs)
 ament_export_dependencies(image_transport)
 ament_export_dependencies(cv_bridge)
 ament_export_dependencies(OpenCV)
+ament_export_dependencies(rmoss_interfaces)
+ament_export_dependencies(rcpputils)
+ament_export_dependencies(ament_index_cpp)
+ament_export_dependencies(eigen3_cmake_module)
+ament_export_dependencies(Eigen3)
+ament_export_dependencies(Ceres)
 
 # test
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
-  add_subdirectory(test)
+  add_subdirectory(common/test)
+  add_subdirectory(math/test)
 endif()
 
 ament_package()

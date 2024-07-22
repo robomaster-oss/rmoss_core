@@ -44,7 +44,7 @@ public:
    */
   bool solve_pnp(
     std::vector<cv::Point2f> & points2d, std::vector<cv::Point3f> & points3d,
-    cv::Point3f & position);
+    cv::Point3f & position, cv::SolvePnPMethod method = cv::SOLVEPNP_ITERATIVE);
   /**
    * @brief 逆投影，已知深度，2d->3d点求解
    *

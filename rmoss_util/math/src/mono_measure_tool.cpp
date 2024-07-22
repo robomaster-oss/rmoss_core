@@ -37,7 +37,8 @@ bool MonoMeasureTool::set_camera_info(
 }
 
 bool MonoMeasureTool::solve_pnp(
-  std::vector<cv::Point2f> & points2d, std::vector<cv::Point3f> & points3d, cv::Point3f & position)
+  std::vector<cv::Point2f> & points2d, std::vector<cv::Point3f> & points3d, cv::Point3f & position,
+  cv::SolvePnPMethod method)
 {
   if (points2d.size() != points3d.size()) {
     return false;  // 投影点数量不匹配
@@ -45,7 +46,7 @@ bool MonoMeasureTool::solve_pnp(
   // cv::Mat rot = cv::Mat::eye(3, 3, CV_64FC1);
   cv::Mat trans = cv::Mat::zeros(3, 1, CV_64FC1);
   cv::Mat r;  // 旋转向量
-  solvePnP(points3d, points2d, camera_intrinsic_, camera_distortion_, r, trans);
+  solvePnP(points3d, points2d, camera_intrinsic_, camera_distortion_, r, trans, method);
   position = cv::Point3f(trans);
   return true;
 }
